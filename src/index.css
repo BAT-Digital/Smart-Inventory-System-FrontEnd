@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+.custom-ant-table .ant-table-thead > tr > th {
+    background-color: #335C67;
+    color: white;
+    text-align: center;
+  }
+
+
+.custom-border-table .ant-table,
+.custom-border-table .ant-table-container,
+.custom-border-table .ant-table-cell {
+    border-color: #1E1E1E !important;
+}
+
+.custom-border-table .ant-table-thead > tr > th,
+.custom-border-table .ant-table-tbody > tr > td {
+    border-color: #1E1E1E !important;
+}
+
+/* Center Ant Design Table Pagination */
+.custom-ant-table .ant-table-pagination {
+  display: flex;
+  justify-content: center;
+}
+
+
+
+.custom-modal .ant-modal-content {
+  background-color: #335C67 !important;
+  border-radius: 12px;
+}
+
+.custom-modal .ant-modal-header {
+  background-color: #335C67 !important;
+  border-bottom: none;
+}
+
+.custom-modal .ant-modal-title {
+  color: white !important;
+}
+
+.no-rounded-table .ant-table-container {
+  border-radius: 0 !important;
+}
+
+.no-rounded-table .ant-table {
+  border-radius: 0 !important;
+}
+
+  
