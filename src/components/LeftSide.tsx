@@ -1,7 +1,7 @@
 import { Card, Table } from "antd";
 import edit from "../assets/icons/edit.png";
 import backArrow from "../assets/icons/backArrow.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { ColumnsType } from "antd/es/table";
 
 interface DataType {
@@ -16,28 +16,6 @@ const dataSource: DataType[] = [
   { key: "1", number: 1, name: "Item A", quantity: 2, price: 100 },
   { key: "2", number: 2, name: "Item B", quantity: 1, price: 200 },
   { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
   // Add more to test scrolling
 ];
 
@@ -49,6 +27,7 @@ const columns: ColumnsType<DataType> = [
 ];
 
 export const LeftSide = () => {
+  const navigate = useNavigate();
   return (
     <div className="h-full">
       <Card
@@ -70,9 +49,16 @@ export const LeftSide = () => {
         title={
           <div className="flex justify-between items-center text-base font-semibold text-white">
             <div className="flex items-center">
-              <Link to="/sales">
-                <img src={backArrow} alt="" className="h-3 w-auto pr-3" />
-              </Link>
+              <button
+                className="group cursor-pointer"
+                onClick={() => navigate(-1)}
+              >
+                <img
+                  src={backArrow}
+                  alt=""
+                  className="h-3 w-auto pr-3 transition-transform duration-200 group-hover:scale-110"
+                />
+              </button>
               <span>Имя Чека</span>
             </div>
             <img src={edit} alt="" className="h-6 w-auto " />

@@ -1,6 +1,7 @@
 // hooks/useCategories.ts
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Product } from "./useProducts";
 
 export interface Category {
   categoryId: number;
@@ -21,4 +22,27 @@ export const useCategories = () => {
   }, []);
 
   return { categories, loading };
+};
+
+interface Props {
+  category: String;
+}
+
+export const useProductsByCategory = ({ category }: Props) => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  console.log(category);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8080/api/products/by-category/${category}`)
+      .then((res) => setProducts(res.data))
+      .catch((err) => console.error("Failed to fetch categories:", err))
+      .finally(() => setLoading(false));
+  }, []);
+
+  console.log(products);
+
+  return { products, loading };
 };

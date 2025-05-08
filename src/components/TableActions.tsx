@@ -1,5 +1,5 @@
 import { Input, Button } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import React from "react";
 import plus from "../assets/icons/+.png";
 import plusCard from "../assets/icons/plus.png";
@@ -49,12 +49,17 @@ export const AccountingTableActions: React.FC<TableActionsProps> = ({
   onSearch,
   onScan,
 }) => {
+  const navigate = useNavigate();
   return (
     <div className="flex justify-between items-center mb-2 gap-2 flex-wrap">
       <div className="flex items-center">
-        <Link to="/arrival">
-          <img src={backArrowCard} alt="" className="h-10 w-auto px-2" />
-        </Link>
+        <button className="group cursor-pointer" onClick={() => navigate(-1)}>
+          <img
+            src={backArrowCard}
+            alt=""
+            className="h-10 w-auto px-2 transition-transform duration-200 group-hover:scale-110"
+          />
+        </button>
         <Input.Search
           placeholder="Поиск"
           onSearch={onSearch}
@@ -84,12 +89,17 @@ export const AccountingInUseTableActions: React.FC<TableActionsProps> = ({
   onSearch,
   onScan,
 }) => {
+  const navigate = useNavigate();
   return (
     <div className="flex justify-between items-center mb-2 gap-2 flex-wrap">
       <div className="flex items-center">
-        <Link to="/arrival">
-          <img src={backArrowCard} alt="" className="h-10 w-auto px-2" />
-        </Link>
+        <button className="group cursor-pointer" onClick={() => navigate(-1)}>
+          <img
+            src={backArrowCard}
+            alt=""
+            className="h-10 w-auto px-2 transition-transform duration-200 group-hover:scale-110"
+          />
+        </button>
         <Input.Search
           placeholder="Поиск"
           onSearch={onSearch}
@@ -133,12 +143,17 @@ export const AccountingInUseTableActions: React.FC<TableActionsProps> = ({
 export const AccountingCategoriesProductsTableActions: React.FC<
   CategoriesTableActionsProps
 > = ({ onSearch, onScan, name }) => {
+  const navigate = useNavigate();
   return (
     <div className="flex justify-between items-center mb-2 gap-2 flex-wrap">
       <div className="flex items-center">
-        <Link to="/arrival">
-          <img src={backArrowCard} alt="" className="h-10 w-auto px-2" />
-        </Link>
+        <button className="group cursor-pointer" onClick={() => navigate(-1)}>
+          <img
+            src={backArrowCard}
+            alt=""
+            className="h-10 w-auto px-2 transition-transform duration-200 group-hover:scale-110"
+          />
+        </button>
         <Input.Search
           placeholder="Поиск"
           onSearch={onSearch}

@@ -2,9 +2,10 @@ import { Card } from "antd";
 import { Link } from "react-router-dom";
 import { ProductExpirySelectModal } from "../ProductExpirySelectModal";
 import { useState } from "react";
+import { Product } from "../../hooks/useProducts";
 
 interface RightSideProductCardGridProps {
-  products: string[];
+  products: Product[];
 }
 
 export const RightSideProductCardGrid: React.FC<
@@ -21,7 +22,7 @@ export const RightSideProductCardGrid: React.FC<
             to="/sales_item_product"
             key={index}
             onClick={() => {
-              setProductName(product);
+              setProductName(product.productName);
               setIsModalOpen(true);
             }}
           >
@@ -52,9 +53,11 @@ export const RightSideProductCardGrid: React.FC<
                 {/* Right side: Text */}
                 <div className="flex flex-col justify-center pl-5">
                   <div className="font-semibold text-white text-lg">
-                    {product}
+                    {product.productName}
                   </div>
-                  <div className="text-white text-sm italic">500 г</div>
+                  <div className="text-white text-sm italic">
+                    {product.volume} {product.unitOfMeasure}
+                  </div>
                 </div>
               </div>
             </Card>

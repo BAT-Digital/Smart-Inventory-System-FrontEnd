@@ -1,5 +1,7 @@
 import { Card, Input, Button } from "antd";
 import { RightSideProductCardGrid } from "./RightSideProductCardGrid";
+import { useProductsByCategory } from "../../hooks/useCategories";
+import { useLocation } from "react-router-dom";
 
 interface RightSideCategoriesProps {
   onSearch: (value: string) => void;
@@ -8,7 +10,10 @@ interface RightSideCategoriesProps {
 export const RightSideProducts: React.FC<RightSideCategoriesProps> = ({
   onSearch,
 }) => {
-  const products = Array.from({ length: 20 }, (_, i) => `Продукт ${i + 1}`);
+  const location = useLocation();
+  const { category } = location.state || { category: "Категория не указана" };
+
+  const { products } = useProductsByCategory({ category });
 
   return (
     <div className="h-full">

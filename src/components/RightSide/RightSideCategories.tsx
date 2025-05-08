@@ -1,5 +1,6 @@
 import { Card, Input, Button } from "antd";
 import { RightSideCardGrid } from "./RightSideCardGrid";
+import { useCategories } from "../../hooks/useCategories";
 
 interface RightSideCategoriesProps {
   onSearch: (value: string) => void;
@@ -8,7 +9,9 @@ interface RightSideCategoriesProps {
 export const RightSideCategories: React.FC<RightSideCategoriesProps> = ({
   onSearch,
 }) => {
-  const categories = Array.from({ length: 20 }, (_, i) => `Категория ${i + 1}`);
+  const { categories } = useCategories();
+
+  const categoryNames = categories.map((c) => c.name);
 
   return (
     <div className="h-full">
@@ -47,7 +50,7 @@ export const RightSideCategories: React.FC<RightSideCategoriesProps> = ({
       >
         {/* Scrollable content */}
         <div className="flex-[8] overflow-y-auto max-h-[490px]">
-          <RightSideCardGrid categories={categories} />
+          <RightSideCardGrid categories={categoryNames} />
         </div>
 
         {/* Footer buttons */}
