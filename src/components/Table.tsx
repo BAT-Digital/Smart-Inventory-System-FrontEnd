@@ -1,4 +1,6 @@
 import { Table, Button } from "antd";
+import { useState } from "react";
+import { CompositionProductInfo } from "./CompositionProductInfo";
 
 const dataSource = [
   {
@@ -104,125 +106,6 @@ const columns = [
   },
 ];
 
-const productDataSource = [
-  {
-    key: "1",
-    id: 1,
-    name: "Молоко Родина",
-    perishable: "Да",
-    description: "Какое то молоко",
-    composition: "",
-    price: "5000",
-    volume: "1000",
-    unit: "мл",
-  },
-  {
-    key: "2",
-    id: 2,
-    name: "Латте",
-    perishable: "нет",
-    description: "Какое то латте",
-    composition: (
-      <Button
-        type="primary"
-        block
-        style={{ backgroundColor: "#335C67", color: "#FFFFFF" }}
-      >
-        Узнать
-      </Button>
-    ),
-    price: "5000",
-    volume: "1000",
-    unit: "мл",
-  },
-  {
-    key: "3",
-    id: 3,
-    name: "Молоко Родина",
-    perishable: "Да",
-    description: "Какое то молоко",
-    composition: "",
-    price: "5000",
-    volume: "1000",
-    unit: "мл",
-  },
-  {
-    key: "4",
-    id: 4,
-    name: "Молоко Родина",
-    perishable: "Да",
-    description: "Какое то молоко",
-    composition: "",
-    price: "5000",
-    volume: "1000",
-    unit: "мл",
-  },
-  {
-    key: "5",
-    id: 5,
-    name: "Молоко Родина",
-    perishable: "Да",
-    description: "Какое то молоко",
-    composition: "",
-    price: "5000",
-    volume: "1000",
-    unit: "мл",
-  },
-  {
-    key: "6",
-    id: 6,
-    name: "Латте",
-    perishable: "нет",
-    description: "Какое то латте",
-    composition: (
-      <Button
-        type="primary"
-        block
-        style={{ backgroundColor: "#335C67", color: "#FFFFFF" }}
-      >
-        Узнать
-      </Button>
-    ),
-    price: "5000",
-    volume: "1000",
-    unit: "мл",
-  },
-  {
-    key: "7",
-    id: 7,
-    name: "Молоко Родина",
-    perishable: "Да",
-    description: "Какое то молоко",
-    composition: "",
-    price: "5000",
-    volume: "1000",
-    unit: "мл",
-  },
-  {
-    key: "8",
-    id: 8,
-    name: "Молоко Родина",
-    perishable: "Да",
-    description: "Какое то молоко",
-    composition: "",
-    price: "5000",
-    volume: "1000",
-    unit: "мл",
-  },
-  {
-    key: "9",
-    id: 9,
-    name: "Молоко Родина",
-    perishable: "Да",
-    description: "Какое то молоко",
-    composition: "",
-    price: "5000",
-    volume: "1000",
-    unit: "мл",
-  },
-  // Add more rows here...
-];
-
 const productSoloDataSource = [
   {
     key: "1",
@@ -230,7 +113,6 @@ const productSoloDataSource = [
     name: "Молоко Родина",
     perishable: "Да",
     description: "Какое то молоко",
-    composition: "",
     price: "5000",
     volume: "1000",
     unit: "мл",
@@ -241,7 +123,6 @@ const productSoloDataSource = [
     name: "Латте",
     perishable: "нет",
     description: "Какое то латте",
-    composition: "",
     price: "5000",
     volume: "1000",
     unit: "мл",
@@ -252,7 +133,6 @@ const productSoloDataSource = [
     name: "Молоко Родина",
     perishable: "Да",
     description: "Какое то молоко",
-    composition: "",
     price: "5000",
     volume: "1000",
     unit: "мл",
@@ -263,7 +143,6 @@ const productSoloDataSource = [
     name: "Молоко Родина",
     perishable: "Да",
     description: "Какое то молоко",
-    composition: "",
     price: "5000",
     volume: "1000",
     unit: "мл",
@@ -274,7 +153,6 @@ const productSoloDataSource = [
     name: "Молоко Родина",
     perishable: "Да",
     description: "Какое то молоко",
-    composition: "",
     price: "5000",
     volume: "1000",
     unit: "мл",
@@ -285,7 +163,6 @@ const productSoloDataSource = [
     name: "Латте",
     perishable: "нет",
     description: "Какое то латте",
-    composition: "",
     price: "5000",
     volume: "1000",
     unit: "мл",
@@ -296,7 +173,6 @@ const productSoloDataSource = [
     name: "Молоко Родина",
     perishable: "Да",
     description: "Какое то молоко",
-    composition: "",
     price: "5000",
     volume: "1000",
     unit: "мл",
@@ -307,7 +183,6 @@ const productSoloDataSource = [
     name: "Молоко Родина",
     perishable: "Да",
     description: "Какое то молоко",
-    composition: "",
     price: "5000",
     volume: "1000",
     unit: "мл",
@@ -318,182 +193,6 @@ const productSoloDataSource = [
     name: "Молоко Родина",
     perishable: "Да",
     description: "Какое то молоко",
-    composition: "",
-    price: "5000",
-    volume: "1000",
-    unit: "мл",
-  },
-  // Add more rows here...
-];
-
-const productComplexDataSource = [
-  {
-    key: "1",
-    id: 1,
-    name: "Молоко Родина",
-    perishable: "Да",
-    description: "Какое то молоко",
-    composition: (
-      <Button
-        type="primary"
-        block
-        style={{ backgroundColor: "#335C67", color: "#FFFFFF" }}
-      >
-        Узнать
-      </Button>
-    ),
-    price: "5000",
-    volume: "1000",
-    unit: "мл",
-  },
-  {
-    key: "2",
-    id: 2,
-    name: "Латте",
-    perishable: "нет",
-    description: "Какое то латте",
-    composition: (
-      <Button
-        type="primary"
-        block
-        style={{ backgroundColor: "#335C67", color: "#FFFFFF" }}
-      >
-        Узнать
-      </Button>
-    ),
-    price: "5000",
-    volume: "1000",
-    unit: "мл",
-  },
-  {
-    key: "3",
-    id: 3,
-    name: "Молоко Родина",
-    perishable: "Да",
-    description: "Какое то молоко",
-    composition: (
-      <Button
-        type="primary"
-        block
-        style={{ backgroundColor: "#335C67", color: "#FFFFFF" }}
-      >
-        Узнать
-      </Button>
-    ),
-    price: "5000",
-    volume: "1000",
-    unit: "мл",
-  },
-  {
-    key: "4",
-    id: 4,
-    name: "Молоко Родина",
-    perishable: "Да",
-    description: "Какое то молоко",
-    composition: (
-      <Button
-        type="primary"
-        block
-        style={{ backgroundColor: "#335C67", color: "#FFFFFF" }}
-      >
-        Узнать
-      </Button>
-    ),
-    price: "5000",
-    volume: "1000",
-    unit: "мл",
-  },
-  {
-    key: "5",
-    id: 5,
-    name: "Молоко Родина",
-    perishable: "Да",
-    description: "Какое то молоко",
-    composition: (
-      <Button
-        type="primary"
-        block
-        style={{ backgroundColor: "#335C67", color: "#FFFFFF" }}
-      >
-        Узнать
-      </Button>
-    ),
-    price: "5000",
-    volume: "1000",
-    unit: "мл",
-  },
-  {
-    key: "6",
-    id: 6,
-    name: "Латте",
-    perishable: "нет",
-    description: "Какое то латте",
-    composition: (
-      <Button
-        type="primary"
-        block
-        style={{ backgroundColor: "#335C67", color: "#FFFFFF" }}
-      >
-        Узнать
-      </Button>
-    ),
-    price: "5000",
-    volume: "1000",
-    unit: "мл",
-  },
-  {
-    key: "7",
-    id: 7,
-    name: "Молоко Родина",
-    perishable: "Да",
-    description: "Какое то молоко",
-    composition: (
-      <Button
-        type="primary"
-        block
-        style={{ backgroundColor: "#335C67", color: "#FFFFFF" }}
-      >
-        Узнать
-      </Button>
-    ),
-    price: "5000",
-    volume: "1000",
-    unit: "мл",
-  },
-  {
-    key: "8",
-    id: 8,
-    name: "Молоко Родина",
-    perishable: "Да",
-    description: "Какое то молоко",
-    composition: (
-      <Button
-        type="primary"
-        block
-        style={{ backgroundColor: "#335C67", color: "#FFFFFF" }}
-      >
-        Узнать
-      </Button>
-    ),
-    price: "5000",
-    volume: "1000",
-    unit: "мл",
-  },
-  {
-    key: "9",
-    id: 9,
-    name: "Молоко Родина",
-    perishable: "Да",
-    description: "Какое то молоко",
-    composition: (
-      <Button
-        type="primary"
-        block
-        style={{ backgroundColor: "#335C67", color: "#FFFFFF" }}
-      >
-        Узнать
-      </Button>
-    ),
     price: "5000",
     volume: "1000",
     unit: "мл",
@@ -526,6 +225,44 @@ const prdouctColumns = [
     title: "Состав",
     dataIndex: "composition",
     key: "composition",
+  },
+  {
+    title: "Цена",
+    dataIndex: "price",
+    key: "price",
+  },
+  {
+    title: "Объем",
+    dataIndex: "volume",
+    key: "volume",
+  },
+  {
+    title: "Единица измерения",
+    dataIndex: "unit",
+    key: "unit",
+  },
+];
+
+const prdouctSoloColumns = [
+  {
+    title: "ID",
+    dataIndex: "id",
+    key: "id",
+  },
+  {
+    title: "Название товара",
+    dataIndex: "name",
+    key: "name",
+  },
+  {
+    title: "Скоропортищийся",
+    dataIndex: "perishable",
+    key: "perishable",
+  },
+  {
+    title: "Описание",
+    dataIndex: "description",
+    key: "description",
   },
   {
     title: "Цена",
@@ -689,22 +426,407 @@ interface Props {
 }
 
 export const AccountingProductTable: React.FC<Props> = ({ type }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const sampleProducts = [
+    "Молоко",
+    "Хлеб",
+    "Сыр",
+    "Яблоки",
+    "Мясо",
+    "Йогурт",
+    "Картофель",
+    "Масло",
+    "Помидоры",
+    "Огурцы",
+    "Макароны",
+    "Рис",
+    "Кофе",
+    "Чай",
+  ];
+
+  const productComplexDataSource = [
+    {
+      key: "1",
+      id: 1,
+      name: "Молоко Родина",
+      perishable: "Да",
+      description: "Какое то молоко",
+      composition: (
+        <Button
+          type="primary"
+          block
+          style={{
+            backgroundColor: "#335C67",
+            color: "#FFFFFF",
+          }}
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        >
+          Узнать
+        </Button>
+      ),
+      price: "5000",
+      volume: "1000",
+      unit: "мл",
+    },
+    {
+      key: "2",
+      id: 2,
+      name: "Латте",
+      perishable: "нет",
+      description: "Какое то латте",
+      composition: (
+        <Button
+          type="primary"
+          block
+          style={{
+            backgroundColor: "#335C67",
+            color: "#FFFFFF",
+          }}
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        >
+          Узнать
+        </Button>
+      ),
+      price: "5000",
+      volume: "1000",
+      unit: "мл",
+    },
+    {
+      key: "3",
+      id: 3,
+      name: "Молоко Родина",
+      perishable: "Да",
+      description: "Какое то молоко",
+      composition: (
+        <Button
+          type="primary"
+          block
+          style={{
+            backgroundColor: "#335C67",
+            color: "#FFFFFF",
+          }}
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        >
+          Узнать
+        </Button>
+      ),
+      price: "5000",
+      volume: "1000",
+      unit: "мл",
+    },
+    {
+      key: "4",
+      id: 4,
+      name: "Молоко Родина",
+      perishable: "Да",
+      description: "Какое то молоко",
+      composition: (
+        <Button
+          type="primary"
+          block
+          style={{
+            backgroundColor: "#335C67",
+            color: "#FFFFFF",
+          }}
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        >
+          Узнать
+        </Button>
+      ),
+      price: "5000",
+      volume: "1000",
+      unit: "мл",
+    },
+    {
+      key: "5",
+      id: 5,
+      name: "Молоко Родина",
+      perishable: "Да",
+      description: "Какое то молоко",
+      composition: (
+        <Button
+          type="primary"
+          block
+          style={{
+            backgroundColor: "#335C67",
+            color: "#FFFFFF",
+          }}
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        >
+          Узнать
+        </Button>
+      ),
+      price: "5000",
+      volume: "1000",
+      unit: "мл",
+    },
+    {
+      key: "6",
+      id: 6,
+      name: "Латте",
+      perishable: "нет",
+      description: "Какое то латте",
+      composition: (
+        <Button
+          type="primary"
+          block
+          style={{
+            backgroundColor: "#335C67",
+            color: "#FFFFFF",
+          }}
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        >
+          Узнать
+        </Button>
+      ),
+      price: "5000",
+      volume: "1000",
+      unit: "мл",
+    },
+    {
+      key: "7",
+      id: 7,
+      name: "Молоко Родина",
+      perishable: "Да",
+      description: "Какое то молоко",
+      composition: (
+        <Button
+          type="primary"
+          block
+          style={{
+            backgroundColor: "#335C67",
+            color: "#FFFFFF",
+          }}
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        >
+          Узнать
+        </Button>
+      ),
+      price: "5000",
+      volume: "1000",
+      unit: "мл",
+    },
+    {
+      key: "8",
+      id: 8,
+      name: "Молоко Родина",
+      perishable: "Да",
+      description: "Какое то молоко",
+      composition: (
+        <Button
+          type="primary"
+          block
+          style={{
+            backgroundColor: "#335C67",
+            color: "#FFFFFF",
+          }}
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        >
+          Узнать
+        </Button>
+      ),
+      price: "5000",
+      volume: "1000",
+      unit: "мл",
+    },
+    {
+      key: "9",
+      id: 9,
+      name: "Молоко Родина",
+      perishable: "Да",
+      description: "Какое то молоко",
+      composition: (
+        <Button
+          type="primary"
+          block
+          style={{
+            backgroundColor: "#335C67",
+            color: "#FFFFFF",
+          }}
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        >
+          Узнать
+        </Button>
+      ),
+      price: "5000",
+      volume: "1000",
+      unit: "мл",
+    },
+    // Add more rows here...
+  ];
+
+  const productDataSource = [
+    {
+      key: "1",
+      id: 1,
+      name: "Молоко Родина",
+      perishable: "Да",
+      description: "Какое то молоко",
+      composition: "",
+      price: "5000",
+      volume: "1000",
+      unit: "мл",
+    },
+    {
+      key: "2",
+      id: 2,
+      name: "Латте",
+      perishable: "нет",
+      description: "Какое то латте",
+      composition: (
+        <Button
+          type="primary"
+          block
+          style={{
+            backgroundColor: "#335C67",
+            color: "#FFFFFF",
+          }}
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        >
+          Узнать
+        </Button>
+      ),
+      price: "5000",
+      volume: "1000",
+      unit: "мл",
+    },
+    {
+      key: "3",
+      id: 3,
+      name: "Молоко Родина",
+      perishable: "Да",
+      description: "Какое то молоко",
+      composition: "",
+      price: "5000",
+      volume: "1000",
+      unit: "мл",
+    },
+    {
+      key: "4",
+      id: 4,
+      name: "Молоко Родина",
+      perishable: "Да",
+      description: "Какое то молоко",
+      composition: "",
+      price: "5000",
+      volume: "1000",
+      unit: "мл",
+    },
+    {
+      key: "5",
+      id: 5,
+      name: "Молоко Родина",
+      perishable: "Да",
+      description: "Какое то молоко",
+      composition: "",
+      price: "5000",
+      volume: "1000",
+      unit: "мл",
+    },
+    {
+      key: "6",
+      id: 6,
+      name: "Латте",
+      perishable: "нет",
+      description: "Какое то латте",
+      composition: (
+        <Button
+          type="primary"
+          block
+          style={{
+            backgroundColor: "#335C67",
+            color: "#FFFFFF",
+          }}
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        >
+          Узнать
+        </Button>
+      ),
+      price: "5000",
+      volume: "1000",
+      unit: "мл",
+    },
+    {
+      key: "7",
+      id: 7,
+      name: "Молоко Родина",
+      perishable: "Да",
+      description: "Какое то молоко",
+      composition: "",
+      price: "5000",
+      volume: "1000",
+      unit: "мл",
+    },
+    {
+      key: "8",
+      id: 8,
+      name: "Молоко Родина",
+      perishable: "Да",
+      description: "Какое то молоко",
+      composition: "",
+      price: "5000",
+      volume: "1000",
+      unit: "мл",
+    },
+    {
+      key: "9",
+      id: 9,
+      name: "Молоко Родина",
+      perishable: "Да",
+      description: "Какое то молоко",
+      composition: "",
+      price: "5000",
+      volume: "1000",
+      unit: "мл",
+    },
+    // Add more rows here...
+  ];
+
   return (
-    <div className="px-4">
-      <Table
-        dataSource={
-          type === "solo"
-            ? productSoloDataSource
-            : type === "complex"
-            ? productComplexDataSource
-            : productDataSource
-        }
-        columns={prdouctColumns}
-        pagination={{ pageSize: 7 }}
-        bordered
-        className="custom-ant-table custom-border-table"
+    <>
+      <div className="px-4">
+        <Table
+          dataSource={
+            type === "solo"
+              ? productSoloDataSource
+              : type === "complex"
+              ? productComplexDataSource
+              : productDataSource
+          }
+          columns={type === "solo" ? prdouctSoloColumns : prdouctColumns}
+          pagination={{ pageSize: 7 }}
+          bordered
+          className="custom-ant-table custom-border-table"
+        />
+      </div>
+      <CompositionProductInfo
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        products={sampleProducts}
       />
-    </div>
+    </>
   );
 };
 

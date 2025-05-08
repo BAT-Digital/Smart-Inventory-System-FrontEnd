@@ -10,7 +10,7 @@ export const Navbar = () => {
   return (
     <div className="bg-[#335C67] text-white shadow-md">
       <div className="max-w-full px-15 mx-auto py-3 flex justify-between items-center">
-        <div className="flex items-center">
+        <div className="flex items-center flex-grow">
           <div>
             <Link to="/dashboard">
               <img src={miniLogo} alt="" className="h-7 w-auto px-2" />
@@ -19,61 +19,63 @@ export const Navbar = () => {
           <Link to="/dashboard">
             <div className="text-2xl font-bold mr-10">Stocku</div>
           </Link>
-          <Menu
-            mode="horizontal"
-            className="bg-[#335C67] border-none"
-            selectable={false}
-          >
-            <Menu.Item
-              key="1"
-              className="bg-[#335C67] hover:bg-[#335C67] active:bg-[#335C67]"
-              style={{ backgroundColor: "#335C67" }}
+          <div className="flex-grow">
+            <Menu
+              mode="horizontal"
+              className="bg-[#335C67] border-none "
+              selectable={true}
+              style={{
+                backgroundColor: "#335C67",
+                borderBottom: "none", // ← this line is key
+                boxShadow: "none",
+              }}
             >
-              <Link to="/dashboard" style={{ color: "white" }} className="mx-3">
-                Dashboard
-              </Link>
-            </Menu.Item>
-            <Menu.Item
-              key="2"
-              className="bg-[#335C67] hover:bg-[#335C67] active:bg-[#335C67]"
-              style={{ backgroundColor: "#335C67" }}
-            >
-              <Link
-                to="/accounting"
-                style={{ color: "white" }}
-                className="mx-3"
+              <Menu.Item
+                key="1"
+                className="bg-[#335C67] hover:bg-[#335C67] active:bg-[#335C67]"
+                style={{ backgroundColor: "#335C67" }}
               >
-                Accounting
-              </Link>
-            </Menu.Item>
-            <Menu.Item
-              key="3"
-              className="bg-[#335C67] hover:bg-[#335C67] active:bg-[#335C67]"
-              style={{ backgroundColor: "#335C67" }}
-            >
-              <Link to="/arrival" style={{ color: "white" }} className="mx-3">
-                Arrival
-              </Link>
-            </Menu.Item>
-            <Menu.Item
-              key="4"
-              className="bg-[#335C67] hover:bg-[#335C67] active:bg-[#335C67]"
-              style={{ backgroundColor: "#335C67" }}
-            >
-              <Link to="/sales" style={{ color: "white" }} className="mx-3">
-                Sales
-              </Link>
-            </Menu.Item>
-            <Menu.Item
-              key="5"
-              className="bg-[#335C67] hover:bg-[#335C67] active:bg-[#335C67]"
-              style={{ backgroundColor: "#335C67" }}
-            >
-              <Link to="/reports" style={{ color: "white" }} className="mx-3">
-                Reports
-              </Link>
-            </Menu.Item>
-          </Menu>
+                <Link
+                  to="/dashboard"
+                  style={{ color: "white" }}
+                  className="mx-3"
+                >
+                  Dashboard
+                </Link>
+              </Menu.Item>
+              <Menu.Item
+                key="2"
+                className="bg-[#335C67] hover:bg-[#335C67] active:bg-[#335C67]"
+                style={{ backgroundColor: "#335C67" }}
+              >
+                <Link
+                  to="/accounting"
+                  style={{ color: "white" }}
+                  className="mx-3"
+                >
+                  Accounting
+                </Link>
+              </Menu.Item>
+              <Menu.Item
+                key="3"
+                className="bg-[#335C67] hover:bg-[#335C67] active:bg-[#335C67]"
+                style={{ backgroundColor: "#335C67" }}
+              >
+                <Link to="/arrival" style={{ color: "white" }} className="mx-3">
+                  Arrival
+                </Link>
+              </Menu.Item>
+              <Menu.Item
+                key="4"
+                className="bg-[#335C67] hover:bg-[#335C67] active:bg-[#335C67]"
+                style={{ backgroundColor: "#335C67" }}
+              >
+                <Link to="/sales" style={{ color: "white" }} className="mx-3">
+                  Sales
+                </Link>
+              </Menu.Item>
+            </Menu>
+          </div>
         </div>
         <div className="flex items-center">
           <Link to="/settings">
