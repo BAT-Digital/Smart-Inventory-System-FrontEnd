@@ -1,9 +1,16 @@
-import { Modal, Button, Table } from "antd";
+import { Modal, Table } from "antd";
+
+// CompositionProductInfo.tsx
+type Ingredient = {
+  name: string;
+  volume: string | number;
+  unit: string;
+};
 
 type Props = {
   open: boolean;
   onClose: () => void;
-  products: string[];
+  products: Ingredient[]; // updated from string[]
 };
 
 const prdouctColumns = [
@@ -27,44 +34,6 @@ const prdouctColumns = [
   },
 ];
 
-const productItems = [
-  {
-    name: "Молоко",
-    volume: "100",
-    unit: "мл",
-  },
-  {
-    name: "Молоко",
-    volume: "100",
-    unit: "мл",
-  },
-  {
-    name: "Молоко",
-    volume: "100",
-    unit: "мл",
-  },
-  {
-    name: "Молоко",
-    volume: "100",
-    unit: "мл",
-  },
-  {
-    name: "Молоко",
-    volume: "100",
-    unit: "мл",
-  },
-  {
-    name: "Молоко",
-    volume: "100",
-    unit: "мл",
-  },
-  {
-    name: "Молоко",
-    volume: "100",
-    unit: "мл",
-  },
-];
-
 export const CompositionProductInfo = ({ open, onClose, products }: Props) => {
   return (
     <>
@@ -79,7 +48,7 @@ export const CompositionProductInfo = ({ open, onClose, products }: Props) => {
         footer={null}
         centered
         className="custom-modal"
-        width={500}
+        width={400}
       >
         <div
           className="max-h-100 overflow-y-auto  "
@@ -87,18 +56,13 @@ export const CompositionProductInfo = ({ open, onClose, products }: Props) => {
         >
           <div className="">
             <Table
-              dataSource={productItems}
+              dataSource={products}
               columns={prdouctColumns}
               pagination={false}
               bordered
               className="custom-ant-table custom-border-table"
             />
           </div>
-        </div>
-        <div className="flex justify-between">
-          <Button onClick={onClose} className="w-full" size="large">
-            Закрыть
-          </Button>
         </div>
       </Modal>
     </>

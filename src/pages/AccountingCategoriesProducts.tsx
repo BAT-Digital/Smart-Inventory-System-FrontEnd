@@ -1,6 +1,6 @@
 import { Navbar } from "../components/Navbar";
 import background from "../assets/background.png";
-import { AccountingProductTable } from "../components/Table";
+import { AccountingCategoryProductTable } from "../components/Table";
 import { AccountingCategoriesProductsTableActions } from "../components/TableActions";
 import { useState } from "react";
 import { AddFullProductDataModal } from "../components/AddProductDataModal";
@@ -10,6 +10,7 @@ export const AccountingCategoriesProducts = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const location = useLocation();
   const { name } = location.state || { name: "Категория не указана" };
+  const { type } = location.state || { type: "Категория не указана" };
 
   const handleSearch = (value: string) => {
     console.log("Searching:", value);
@@ -34,7 +35,7 @@ export const AccountingCategoriesProducts = () => {
               name={name}
             />
           </div>
-          <AccountingProductTable type="all" />
+          <AccountingCategoryProductTable type={type} name={name} />
         </div>
       </div>
       <AddFullProductDataModal

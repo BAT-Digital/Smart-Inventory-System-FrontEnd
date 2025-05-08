@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 interface AccountingCategoriesCardGrid {
   categories: string[];
+  type: String;
 }
 
 const COLORS = [
@@ -17,12 +18,15 @@ const getRandomColor = () => COLORS[Math.floor(Math.random() * COLORS.length)];
 
 export const AccountingCategoriesCardGrid: React.FC<
   AccountingCategoriesCardGrid
-> = ({ categories }) => {
+> = ({ categories, type }) => {
   return (
     <div className="max-h-[520px] overflow-y-auto p-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {categories.map((category, index) => (
-          <Link to="/accounting_categories_products" state={{ name: category }}>
+          <Link
+            to="/accounting_categories_products"
+            state={{ name: category, type: type }}
+          >
             <Card
               key={index}
               className="flex min-h-60 items-center justify-center text-center font-semibold"

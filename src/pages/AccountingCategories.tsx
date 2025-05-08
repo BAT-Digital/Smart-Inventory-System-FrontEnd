@@ -6,16 +6,21 @@ import { AccountingCategoriesCardGrid } from "../components/Accounting/Accountin
 import { useState } from "react";
 import { AddCategoryModal } from "../components/AddCategory";
 import { AddSupplierModal } from "../components/AddSupplier";
+import { useCategories } from "../hooks/useCategories";
+import { useSuppliers } from "../hooks/useSuppliers";
 
 interface Props {
   type: String;
 }
 
 export const AccountingCategories: React.FC<Props> = ({ type }) => {
-  const categories = Array.from({ length: 20 }, (_, i) => `КАТЕГОРИЯ ${i + 1}`);
-  const suppliers = Array.from({ length: 20 }, (_, i) => `ПОСТАВЩИК ${i + 1}`);
+  const { categories } = useCategories();
+  const { suppliers } = useSuppliers();
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isSupplierModalOpen, setIsSupplierModalOpen] = useState(false);
+
+  const categoryNames = categories.map((c) => c.name);
+  const supplierNames = suppliers.map((c) => c.name);
 
   const handleCategorySubmit = () => {
     setIsCategoryModalOpen(true);
@@ -53,8 +58,10 @@ export const AccountingCategories: React.FC<Props> = ({ type }) => {
               </Button>
             </div>
             <AccountingCategoriesCardGrid
-              categories={type == "supplier" ? suppliers : categories}
-            ></AccountingCategoriesCardGrid>
+              categories={type === "supplier" ? supplierNames : categoryNames}
+              type={type}
+            />
+
             <div
               className="flex items-center justify-center font-bold pt-2"
               style={{ fontSize: 16, textDecoration: "underline" }}
