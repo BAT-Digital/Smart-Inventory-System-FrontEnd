@@ -32,8 +32,6 @@ export const useProductsByCategory = ({ category }: Props) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
-  console.log(category);
-
   useEffect(() => {
     axios
       .get(`http://localhost:8080/api/products/by-category/${category}`)
@@ -45,4 +43,24 @@ export const useProductsByCategory = ({ category }: Props) => {
   console.log(products);
 
   return { products, loading };
+};
+
+interface supplierProps {
+  selectedSupplier: string;
+}
+
+export const useProductsBySupplier = ({ selectedSupplier }: supplierProps) => {
+  const [productsBySupplier, setProductsBySupplier] = useState<Product[]>([]);
+  const [productsBySupplierLoading, setProductsBySupplierLoading] =
+    useState(true);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8080/api/products/by-supplier/${selectedSupplier}`)
+      .then((res) => setProductsBySupplier(res.data))
+      .catch((err) => console.error("Failed to fetch suppliers:", err))
+      .finally(() => setProductsBySupplierLoading(false));
+  }, []);
+
+  return { productsBySupplier, productsBySupplierLoading };
 };

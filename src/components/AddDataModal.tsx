@@ -1,7 +1,9 @@
 import { Modal, Input, Button, Form, Select } from "antd";
 import { AddProductModal } from "./AddProductModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AlerModal } from "./AlertModal";
+import { useSuppliers } from "../hooks/useSuppliers";
+import { sendBatchArrival } from "../services/batchArrivalApi";
 const { Option } = Select;
 
 type Props = {
@@ -14,13 +16,38 @@ export const AddDataModal = ({ open, onClose }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [selectedSupplier, setSelectedSupplier] = useState("something");
+  const { suppliers } = useSuppliers();
 
-  const handleSubmit = () => {
-    form.validateFields().then((values) => {
-      console.log("Form values:", values);
+  const [batchArrivalId, setBatchArrivalId] = useState<number>(0);
+
+  useEffect(() => {
+    if (selectedSupplier !== "something") {
       setIsModalOpen(true);
-      onClose(); // Close modal after submitting
-    });
+    }
+  }, [selectedSupplier]);
+
+  const handleSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+      const supplierObj = suppliers.find((s) => s.name === values.supplier);
+      if (!supplierObj) {
+        throw new Error("Supplier not found");
+      }
+
+      // Send request to backend
+      const response = await sendBatchArrival(
+        supplierObj.supplierId,
+        values.notes || ""
+      );
+
+      setBatchArrivalId(response.arrivalId);
+      // Trigger next modal (AddProductModal)
+      setSelectedSupplier(values.supplier);
+      onClose();
+    } catch (error) {
+      console.error("Submission error:", error);
+    }
   };
 
   const handleAdd = () => {
@@ -29,9 +56,16 @@ export const AddDataModal = ({ open, onClose }: Props) => {
         `Новая партия от ${values.supplier} была успешно добавлена`
       );
       setIsModalOpen(false);
+      setSelectedSupplier("something");
       setAlertVisible(true);
       onClose(); // Close modal after submitting
     });
+  };
+
+  const handleClose = () => {
+    setIsModalOpen(false);
+    setSelectedSupplier("something");
+    onClose();
   };
 
   return (
@@ -55,10 +89,9 @@ export const AddDataModal = ({ open, onClose }: Props) => {
             rules={[{ required: true, message: "Выберите поставщика" }]}
           >
             <Select placeholder="Поставщик*">
-              <Option value="Лучшие кофейные зерна">
-                Лучшие кофейные зерна
-              </Option>
-              <Option value="Arabica Premium">Arabica Premium</Option>
+              {suppliers.map((supplier) => (
+                <Option value={supplier.name}>{supplier.name}</Option>
+              ))}
             </Select>
           </Form.Item>
           <Form.Item name="notes">
@@ -97,7 +130,14 @@ export const AddDataModal = ({ open, onClose }: Props) => {
         showCancel={false}
       ></AlerModal>
 
-      <AddProductModal open={isModalOpen} onClose={handleAdd} />
+      <AddProductModal
+        key={selectedSupplier}
+        open={isModalOpen}
+        onClose={handleClose}
+        onAdd={handleAdd}
+        selectedSupplier={selectedSupplier}
+        batchArrivalId={batchArrivalId}
+      />
     </>
   );
 };

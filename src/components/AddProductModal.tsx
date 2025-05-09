@@ -1,36 +1,38 @@
-import { Modal, Button, Form } from "antd";
+import { Modal, Button, Form, Select, Input, DatePicker } from "antd";
 import plus from "../assets/icons/plustWhite.png";
 import { useState } from "react";
 import classNames from "classnames";
 import { AddFullProductDataModal } from "./AddProductDataModal";
+import { useProductsBySupplier } from "../hooks/useCategories";
+import { submitBatchArrivalItems } from "../services/batchArrivalItemApi";
+const { Option } = Select;
 
 type Props = {
   open: boolean;
   onClose: () => void;
+  onAdd: () => void;
+  selectedSupplier: string;
+  batchArrivalId: number;
 };
 
-const sampleProducts = [
-  "Молоко",
-  "Хлеб",
-  "Сыр",
-  "Яблоки",
-  "Мясо",
-  "Йогурт",
-  "Картофель",
-  "Масло",
-  "Помидоры",
-  "Огурцы",
-  "Макароны",
-  "Рис",
-  "Кофе",
-  "Чай",
-];
+type Product = {
+  productId: number;
+  productName: string;
+};
 
-export const AddProductModal = ({ open, onClose }: Props) => {
-  const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
+export const AddProductModal = ({
+  open,
+  onClose,
+  onAdd,
+  selectedSupplier,
+  batchArrivalId,
+}: Props) => {
+  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDataModalOpen, setIsDataModalOpen] = useState(false);
+  const { productsBySupplier } = useProductsBySupplier({ selectedSupplier });
 
-  const handleProductClick = (product: string) => {
+  const handleProductClick = (product: Product) => {
     setSelectedProducts((prevSelected) => {
       if (prevSelected.includes(product)) {
         return prevSelected.filter((p) => p !== product); // Unselect
@@ -43,7 +45,7 @@ export const AddProductModal = ({ open, onClose }: Props) => {
   const handleSubmit = () => {
     if (!selectedProducts) return;
     console.log("Selected products:", selectedProducts);
-    onClose();
+    setIsDataModalOpen(true);
   };
 
   return (
@@ -77,9 +79,9 @@ export const AddProductModal = ({ open, onClose }: Props) => {
             className="max-h-60 overflow-y-auto grid p-2 gap-2 bg-[#F2F2F0]"
             style={{ borderRadius: 4 }}
           >
-            {sampleProducts.map((product, index) => (
+            {productsBySupplier.map((product) => (
               <div
-                key={index}
+                key={product.productId}
                 onClick={() => handleProductClick(product)}
                 className={classNames(
                   "p-3 rounded cursor-pointer border transition-all",
@@ -91,7 +93,7 @@ export const AddProductModal = ({ open, onClose }: Props) => {
                   }
                 )}
               >
-                {product}
+                {product.productName}
               </div>
             ))}
           </div>
@@ -117,6 +119,126 @@ export const AddProductModal = ({ open, onClose }: Props) => {
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
+      <AddProductDataBatchModal
+        open={isDataModalOpen}
+        onClose={() => {
+          setIsDataModalOpen(false);
+        }}
+        onAdd={onAdd}
+        selectedProducts={selectedProducts}
+        batchArrivalId={batchArrivalId}
+      ></AddProductDataBatchModal>
     </>
+  );
+};
+
+type DataModalProps = {
+  open: boolean;
+  onClose: () => void;
+  onAdd: () => void;
+  selectedProducts: Product[];
+  batchArrivalId: number;
+};
+
+export const AddProductDataBatchModal = ({
+  open,
+  onClose,
+  onAdd,
+  selectedProducts,
+  batchArrivalId,
+}: DataModalProps) => {
+  const [form] = Form.useForm();
+
+  const handleSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+      await submitBatchArrivalItems(values, selectedProducts, batchArrivalId);
+      onAdd();
+    } catch (error) {
+      console.error("Error submitting batch arrival items:", error);
+    }
+  };
+
+  return (
+    <Modal
+      title={
+        <span className="text-white font-semibold flex justify-center mb-4">
+          Данные продуктов
+        </span>
+      }
+      open={open}
+      onCancel={onClose}
+      footer={null}
+      centered
+      className="custom-modal"
+      width={400}
+    >
+      <Form form={form} layout="vertical">
+        <div
+          style={{
+            maxHeight: "300px",
+            overflowY: "auto",
+          }}
+        >
+          {selectedProducts.map((product, index) => (
+            <>
+              <Form.Item
+                key={product.productId}
+                style={{ marginBottom: "8px", color: "white" }}
+                className="flex justify-center"
+              >
+                {product.productName}
+              </Form.Item>
+              <div
+                className="flex justify-between"
+                style={{ marginBottom: "-16px" }}
+              >
+                <div className="mr-2">
+                  <Form.Item
+                    name={["items", index, "quantityReceived"]}
+                    rules={[{ required: true, message: "Введите количество" }]}
+                  >
+                    <Input placeholder="Количетсво" />
+                  </Form.Item>
+                </div>
+                <div className="ml-2">
+                  <Form.Item
+                    name={["items", index, "unitCost"]}
+                    rules={[{ required: true, message: "Введите цену" }]}
+                  >
+                    <Input placeholder="Цена" />
+                  </Form.Item>
+                </div>
+              </div>
+              <Form.Item
+                name={["items", index, "expiryDate"]}
+                rules={[{ required: true, message: "Выберите дату" }]}
+              >
+                <DatePicker
+                  format="YYYY-MM-DD"
+                  placeholder="Срок годности"
+                  className="w-full"
+                />
+              </Form.Item>
+            </>
+          ))}
+        </div>
+
+        <div className="flex justify-between">
+          <Button
+            type="primary"
+            onClick={handleSubmit}
+            style={{ backgroundColor: "#FFF3B0", color: "#1E1E1E" }}
+            className="w-1/2 mr-2"
+            size="large"
+          >
+            Добавить
+          </Button>
+          <Button onClick={onClose} className="w-1/2 ml-2" size="large">
+            Отмена
+          </Button>
+        </div>
+      </Form>
+    </Modal>
   );
 };

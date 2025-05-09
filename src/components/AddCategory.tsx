@@ -26,7 +26,7 @@ export const AddCategoryModal = ({ open, onClose }: Props) => {
       <Modal
         title={
           <span className="text-white font-semibold flex justify-center mb-4">
-            Новый чек
+            Новая категория
           </span>
         }
         open={open}
