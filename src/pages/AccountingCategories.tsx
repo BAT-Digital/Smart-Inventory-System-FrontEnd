@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const AccountingCategories: React.FC<Props> = ({ type }) => {
-  const { categories } = useCategories();
+  const { categories, refetch: refetchCategories } = useCategories();
   const { suppliers } = useSuppliers();
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isSupplierModalOpen, setIsSupplierModalOpen] = useState(false);
@@ -28,6 +28,10 @@ export const AccountingCategories: React.FC<Props> = ({ type }) => {
 
   const handleSupplierySubmit = () => {
     setIsSupplierModalOpen(true);
+  };
+
+  const handleCategoryAdded = () => {
+    refetchCategories();
   };
 
   return (
@@ -75,6 +79,7 @@ export const AccountingCategories: React.FC<Props> = ({ type }) => {
       <AddCategoryModal
         open={isCategoryModalOpen}
         onClose={() => setIsCategoryModalOpen(false)}
+        onSuccess={handleCategoryAdded}
       />
       <AddSupplierModal
         open={isSupplierModalOpen}

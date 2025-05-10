@@ -1,5 +1,5 @@
 // hooks/useCategories.ts
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { Product } from "./useProducts";
 
@@ -13,7 +13,8 @@ export const useCategories = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchCategories = useCallback(() => {
+    setLoading(true);
     axios
       .get("http://localhost:8080/api/categories")
       .then((res) => setCategories(res.data))
@@ -21,7 +22,10 @@ export const useCategories = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  return { categories, loading };
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+  return { categories, loading, refetch: fetchCategories };
 };
 
 interface Props {
