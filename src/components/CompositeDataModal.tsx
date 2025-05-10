@@ -1,0 +1,172 @@
+import { Button, Form, Input, Modal, Select } from "antd";
+import plusWhite from "../assets/icons/plustWhite.png";
+import trash from "../assets/icons/trash.png";
+import { useState } from "react";
+const { Option } = Select;
+
+type Props = {
+  open: boolean;
+  onClose: () => void;
+};
+
+type CompositeItem = {
+  name: string;
+  volume: string;
+};
+
+const sampleProducts = [
+  "Молоко",
+  "Хлеб",
+  "Сыр",
+  "Яблоки",
+  "Мясо",
+  "Йогурт",
+  "Картофель",
+  "Масло",
+  "Помидоры",
+  "Огурцы",
+  "Макароны",
+  "Рис",
+  "Кофе",
+  "Чай",
+];
+
+export const CompositeDataModal = ({ open, onClose }: Props) => {
+  const [form] = Form.useForm();
+  const [compositeItems, setCompositeItems] = useState([
+    { name: "", volume: "" },
+    { name: "", volume: "" },
+  ]);
+
+  const addCompositeItem = () => {
+    setCompositeItems([...compositeItems, { name: "", volume: "" }]);
+  };
+
+  const handleCompositeChange = (
+    index: number,
+    field: keyof CompositeItem,
+    value: string
+  ) => {
+    const updatedItems = [...compositeItems];
+    updatedItems[index] = {
+      ...updatedItems[index],
+      [field]: value,
+    };
+    setCompositeItems(updatedItems);
+  };
+
+  const handleDeleteComposite = (index: number) => {
+    const updatedItems = compositeItems.filter((_, i) => i !== index);
+    setCompositeItems(updatedItems);
+  };
+
+  return (
+    <>
+      <Modal
+        title={
+          <span className="text-white font-semibold flex justify-center mb-4">
+            Предоставьте данные о комплексном товаре
+          </span>
+        }
+        open={open}
+        onCancel={onClose}
+        onOk={() => {
+          console.log("Composite Product Components:", compositeItems);
+          onClose();
+        }}
+        footer={null}
+        centered
+        className="custom-modal"
+        width={400}
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item
+            name="Название"
+            rules={[{ message: "Название товара!!" }]}
+            style={{ marginBottom: "8px" }}
+          >
+            <Input placeholder="Название" />
+          </Form.Item>
+          <Button
+            type="primary"
+            onClick={addCompositeItem}
+            style={{
+              backgroundColor: "#AF0F0F",
+              color: "white",
+              marginBottom: "8px",
+            }}
+            className="w-full"
+            size="middle"
+          >
+            <img src={plusWhite} alt="" className="h-5" />
+          </Button>
+          <div
+            style={{
+              maxHeight: "300px",
+              overflowY: "auto",
+              paddingRight: "8px",
+            }}
+          >
+            {compositeItems.map((item, index) => (
+              <div
+                key={index}
+                style={{
+                  border: "1px solid #ccc",
+                  borderRadius: "8px",
+                  padding: "12px",
+                  marginBottom: "12px",
+                  backgroundColor: "#fafafa",
+                }}
+              >
+                <Select
+                  placeholder="Название продукта"
+                  className="w-full"
+                  style={{ marginBottom: "8px" }}
+                >
+                  {sampleProducts.map((product) => (
+                    <Option value={product}>{product}</Option>
+                  ))}
+                </Select>
+                <Input
+                  placeholder="Объем продукта"
+                  value={item.volume}
+                  onChange={(e) =>
+                    handleCompositeChange(index, "volume", e.target.value)
+                  }
+                />
+                <div className="w-full flex justify-end mt-2">
+                  <Button
+                    size="small"
+                    onClick={() => handleDeleteComposite(index)}
+                    style={{
+                      backgroundColor: "#383531",
+                      color: "white",
+                      marginBottom: "8px",
+                    }}
+                    className=""
+                  >
+                    <img src={trash} alt="trash" className="h-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="flex justify-between">
+            <Button
+              type="primary"
+              onClick={onClose}
+              style={{ backgroundColor: "#FFF3B0", color: "#1E1E1E" }}
+              className="w-1/2 mr-2"
+              size="large"
+            >
+              Добавить
+            </Button>
+            <Button onClick={onClose} className="w-1/2 ml-2" size="large">
+              Отмена
+            </Button>
+          </div>
+        </Form>
+      </Modal>
+    </>
+  );
+};
