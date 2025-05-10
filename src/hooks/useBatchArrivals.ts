@@ -1,6 +1,6 @@
 // hooks/useBatchArrivals.ts
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../utils/axios";
 
 export const useBatchArrivals = () => {
   const [data, setData] = useState([]);
@@ -8,7 +8,7 @@ export const useBatchArrivals = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/batch-arrivals")
+      .get("/api/batch-arrivals")
       .then((res) => {
         const mapped = res.data.map((item: any, index: number) => ({
           key: index,

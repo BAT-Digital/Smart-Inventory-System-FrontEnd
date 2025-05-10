@@ -1,6 +1,6 @@
 // hooks/useProducts.ts
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../utils/axios";
 
 export interface Product {
   productId: number;
@@ -21,7 +21,7 @@ export const useProducts = () => {
 
   useEffect(() => {
     axios
-      .get<Product[]>("http://localhost:8080/api/products")
+      .get<Product[]>("/api/products")
       .then((res) => setProducts(res.data))
       .catch((err) => {
         console.error("Error fetching products:", err);
@@ -46,8 +46,8 @@ export const useCategoryProducts = ({ type, name }: Props) => {
   useEffect(() => {
     const endpoint =
       type === "category"
-        ? `http://localhost:8080/api/products/by-category/${name}`
-        : `http://localhost:8080/api/products/by-supplier/${name}`;
+        ? `/api/products/by-category/${name}`
+        : `/api/products/by-supplier/${name}`;
 
     axios
       .get<Product[]>(endpoint)
@@ -69,7 +69,7 @@ export const useComplexProducts = () => {
 
   useEffect(() => {
     axios
-      .get<Product[]>("http://localhost:8080/api/products/composite/true")
+      .get<Product[]>("/api/products/composite/true")
       .then((res) => setComplexProducts(res.data))
       .catch((err) => {
         console.error("Error fetching products:", err);
@@ -88,7 +88,7 @@ export const useSoloProducts = () => {
 
   useEffect(() => {
     axios
-      .get<Product[]>("http://localhost:8080/api/products/composite/false")
+      .get<Product[]>("/api/products/composite/false")
       .then((res) => setSoloProducts(res.data))
       .catch((err) => {
         console.error("Error fetching products:", err);
@@ -106,7 +106,7 @@ export const useProductInUse = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/products-in-use")
+      .get("/api/products-in-use")
       .then((res) => {
         const mapped = res.data.map((item: any, index: number) => ({
           key: index,

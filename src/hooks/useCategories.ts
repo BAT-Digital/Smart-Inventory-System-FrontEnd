@@ -1,6 +1,6 @@
 // hooks/useCategories.ts
 import { useCallback, useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../utils/axios";
 import { Product } from "./useProducts";
 
 export interface Category {
@@ -16,7 +16,7 @@ export const useCategories = () => {
   const fetchCategories = useCallback(() => {
     setLoading(true);
     axios
-      .get("http://localhost:8080/api/categories")
+      .get("/api/categories")
       .then((res) => setCategories(res.data))
       .catch((err) => console.error("Failed to fetch categories:", err))
       .finally(() => setLoading(false));
@@ -38,7 +38,7 @@ export const useProductsByCategory = ({ category }: Props) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/products/by-category/${category}`)
+      .get(`/api/products/by-category/${category}`)
       .then((res) => setProducts(res.data))
       .catch((err) => console.error("Failed to fetch categories:", err))
       .finally(() => setLoading(false));
@@ -60,7 +60,7 @@ export const useProductsBySupplier = ({ selectedSupplier }: supplierProps) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/products/by-supplier/${selectedSupplier}`)
+      .get(`/api/products/by-supplier/${selectedSupplier}`)
       .then((res) => setProductsBySupplier(res.data))
       .catch((err) => console.error("Failed to fetch suppliers:", err))
       .finally(() => setProductsBySupplierLoading(false));

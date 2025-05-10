@@ -86,23 +86,6 @@ export const AddProductDataModal = ({ open, onClose }: Props) => {
   );
 };
 
-const sampleProducts = [
-  "Молоко",
-  "Хлеб",
-  "Сыр",
-  "Яблоки",
-  "Мясо",
-  "Йогурт",
-  "Картофель",
-  "Масло",
-  "Помидоры",
-  "Огурцы",
-  "Макароны",
-  "Рис",
-  "Кофе",
-  "Чай",
-];
-
 export const AddFullProductDataModal = ({ open, onClose }: Props) => {
   const [form] = Form.useForm();
   const [alertVisible, setAlertVisible] = useState(false);

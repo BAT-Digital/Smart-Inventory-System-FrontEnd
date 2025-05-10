@@ -1,5 +1,5 @@
 // src/api/recipeApi.ts
-import axios from "axios";
+import axios from "../utils/axios";
 
 export type Ingredient = {
   name: string;
@@ -11,7 +11,7 @@ export const fetchCompositionByProductId = async (
   productId: number
 ): Promise<Ingredient[]> => {
   const response = await axios.get(
-    `http://localhost:8080/api/product-recipes/by-final-product-id/${productId}`
+    `/api/product-recipes/by-final-product-id/${productId}`
   );
 
   return response.data.map((item: any) => ({

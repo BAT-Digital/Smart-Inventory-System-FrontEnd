@@ -1,6 +1,6 @@
 // hooks/useCategories.ts
 import { useCallback, useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../utils/axios";
 
 export interface Supplier {
   supplierId: number;
@@ -16,7 +16,7 @@ export const useSuppliers = () => {
   const fetchSuppliers = useCallback(() => {
     setLoading(true);
     axios
-      .get("http://localhost:8080/api/suppliers")
+      .get("/api/suppliers")
       .then((res) => setSuppliers(res.data))
       .catch((err) => console.error("Failed to fetch suppliers:", err))
       .finally(() => setLoading(false));
