@@ -111,6 +111,7 @@ export const AddFullProductDataModal = ({
   const [customSupplier, setCustomSupplier] = useState<Supplier | null>(null);
   const [name, setName] = useState<string>("");
   const [showCompositeModal, setShowCompositeModal] = useState(false);
+  const [finalProductId, setFinalProductId] = useState(0);
 
   const { categories, refetch: refetchCategories } = useCategories();
   const { suppliers, refetch: refetchSuppliers } = useSuppliers();
@@ -126,10 +127,38 @@ export const AddFullProductDataModal = ({
   const handleSubmit = () => {
     form.validateFields().then(async (values) => {
       try {
-        if (values.characteristics === "Комплексный") {
-          // Show modal instead of submitting directly
-          setName(values.name);
-          setShowCompositeModal(true);
+        if (values.isComposite === "true") {
+          try {
+            const productDTO: ProductDTO = {
+              categoryId: values.category,
+              productName: values.productName,
+              barcode: values.barcode,
+              isPerishable: values.isPerishable,
+              isComposite: values.isComposite,
+              unitOfMeasure: values.unitOfMeasure,
+              supplierId: values.supplier,
+              description: values.description,
+              price: values.price,
+              volume: values.volume,
+            };
+
+            const response = await sendProduct(productDTO);
+
+            const productId = parseInt(response);
+
+            if (Number.isNaN(productId)) {
+              setAlertMessage(response);
+              setAlertVisible(true);
+              onClose();
+            } else {
+              setName(values.productName);
+              setFinalProductId(productId);
+              setAlertMessage(`${values.productName} был успешно добавлен`);
+              setShowCompositeModal(true);
+            }
+          } catch (error) {
+            console.error("Submission error:", error);
+          }
         } else {
           try {
             const productDTO: ProductDTO = {
@@ -371,6 +400,11 @@ export const AddFullProductDataModal = ({
           open={showCompositeModal}
           onClose={() => setShowCompositeModal(false)}
           name={name}
+          finalProductId={finalProductId}
+          onSuccess={() => {
+            setAlertVisible(true);
+            onSuccess();
+          }}
         />
       </Modal>
 

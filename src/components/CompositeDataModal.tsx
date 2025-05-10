@@ -3,12 +3,15 @@ import plusWhite from "../assets/icons/plustWhite.png";
 import trash from "../assets/icons/trash.png";
 import { useState } from "react";
 import { useProducts } from "../hooks/useProducts";
+import { submitProductRecipes } from "../services/productRecipeApi";
 const { Option } = Select;
 
 type Props = {
   open: boolean;
   onClose: () => void;
   name: string;
+  finalProductId: number;
+  onSuccess: () => void;
 };
 
 type CompositeItem = {
@@ -16,7 +19,13 @@ type CompositeItem = {
   volume: string;
 };
 
-export const CompositeDataModal = ({ open, onClose, name }: Props) => {
+export const CompositeDataModal = ({
+  open,
+  onClose,
+  name,
+  finalProductId,
+  onSuccess,
+}: Props) => {
   const [form] = Form.useForm();
   const [compositeItems, setCompositeItems] = useState([
     { name: "", volume: "" },
@@ -45,6 +54,19 @@ export const CompositeDataModal = ({ open, onClose, name }: Props) => {
   const handleDeleteComposite = (index: number) => {
     const updatedItems = compositeItems.filter((_, i) => i !== index);
     setCompositeItems(updatedItems);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+
+      await submitProductRecipes(values, compositeItems, finalProductId);
+
+      onSuccess();
+      onClose();
+    } catch (error) {
+      console.error("Submission error:", error);
+    }
   };
 
   return (
@@ -106,24 +128,28 @@ export const CompositeDataModal = ({ open, onClose, name }: Props) => {
                   backgroundColor: "#fafafa",
                 }}
               >
-                <Select
-                  placeholder="Название продукта"
-                  className="w-full"
-                  style={{ marginBottom: "8px" }}
-                >
-                  {products.map((product) => (
-                    <Option value={product.productId}>
-                      {product.productName}
-                    </Option>
-                  ))}
-                </Select>
-                <Input
-                  placeholder="Объем продукта"
-                  value={item.volume}
-                  onChange={(e) =>
-                    handleCompositeChange(index, "volume", e.target.value)
-                  }
-                />
+                <Form.Item name={["items", index, "ingredientId"]}>
+                  <Select
+                    placeholder="Название продукта"
+                    className="w-full"
+                    style={{ marginBottom: "8px" }}
+                  >
+                    {products.map((product) => (
+                      <Option value={product.productId}>
+                        {product.productName}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+                <Form.Item name={["items", index, "quantityReceived"]}>
+                  <Input
+                    placeholder="Объем продукта"
+                    value={item.volume}
+                    onChange={(e) =>
+                      handleCompositeChange(index, "volume", e.target.value)
+                    }
+                  />
+                </Form.Item>
                 <div className="w-full flex justify-end mt-2">
                   <Button
                     size="small"
@@ -144,7 +170,7 @@ export const CompositeDataModal = ({ open, onClose, name }: Props) => {
           <div className="flex justify-between">
             <Button
               type="primary"
-              onClick={onClose}
+              onClick={handleSubmit}
               style={{ backgroundColor: "#FFF3B0", color: "#1E1E1E" }}
               className="w-1/2 mr-2"
               size="large"
