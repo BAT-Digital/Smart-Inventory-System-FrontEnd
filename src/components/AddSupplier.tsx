@@ -1,24 +1,31 @@
 import { Modal, Input, Button, Form } from "antd";
 import { useState } from "react";
 import { AlerModal } from "./AlertModal";
+import { sendSupplier } from "../services/supplierApi";
 
 type Props = {
   open: boolean;
   onClose: () => void;
+  onSuccess: () => void;
 };
 
-export const AddSupplierModal = ({ open, onClose }: Props) => {
+export const AddSupplierModal = ({ open, onClose, onSuccess }: Props) => {
   const [form] = Form.useForm();
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
-  const handleSubmit = () => {
-    form.validateFields().then((values) => {
-      console.log("Form values:", values);
+  const handleSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+
+      await sendSupplier(values.supplier, values.address, values.contact_info);
+
       setAlertMessage(`Новый поставщик ${values.supplier} был добавлен`);
       setAlertVisible(true);
-      onClose(); // Close modal after submitting
-    });
+      onClose();
+    } catch (error) {
+      console.error("Submission error:", error);
+    }
   };
 
   return (
@@ -75,6 +82,7 @@ export const AddSupplierModal = ({ open, onClose }: Props) => {
           setAlertVisible(false);
           setAlertMessage(null);
           onClose();
+          onSuccess();
         }}
         onCancel={() => {
           // handle cancel

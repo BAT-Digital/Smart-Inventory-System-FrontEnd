@@ -18,7 +18,7 @@ export const AddCategoryModal = ({ open, onClose, onSuccess }: Props) => {
     try {
       const values = await form.validateFields();
 
-      const response = await sendCategory(values.category, values.description);
+      await sendCategory(values.category, values.description);
 
       setAlertMessage(`Новая категория ${values.category} была создана`);
       setAlertVisible(true);

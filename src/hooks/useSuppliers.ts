@@ -1,5 +1,5 @@
 // hooks/useCategories.ts
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 
 export interface Supplier {
@@ -13,7 +13,8 @@ export const useSuppliers = () => {
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchSuppliers = useCallback(() => {
+    setLoading(true);
     axios
       .get("http://localhost:8080/api/suppliers")
       .then((res) => setSuppliers(res.data))
@@ -21,5 +22,9 @@ export const useSuppliers = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  return { suppliers, loading };
+  useEffect(() => {
+    fetchSuppliers();
+  }, [fetchSuppliers]);
+
+  return { suppliers, loading, refetch: fetchSuppliers };
 };
