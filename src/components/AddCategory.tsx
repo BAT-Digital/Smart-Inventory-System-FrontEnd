@@ -2,11 +2,12 @@ import { Modal, Input, Button, Form } from "antd";
 import { useState } from "react";
 import { AlerModal } from "./AlertModal";
 import { sendCategory } from "../services/categoryApi";
+import { Category } from "../hooks/useCategories";
 
 type Props = {
   open: boolean;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (category: Category) => void;
 };
 
 export const AddCategoryModal = ({ open, onClose, onSuccess }: Props) => {
@@ -18,10 +19,14 @@ export const AddCategoryModal = ({ open, onClose, onSuccess }: Props) => {
     try {
       const values = await form.validateFields();
 
-      await sendCategory(values.category, values.description);
+      const newCategory: Category = await sendCategory(
+        values.category,
+        values.description
+      );
 
       setAlertMessage(`Новая категория ${values.category} была создана`);
       setAlertVisible(true);
+      onSuccess(newCategory);
       onClose();
     } catch (error) {
       console.error("Submission error:", error);
@@ -79,7 +84,6 @@ export const AddCategoryModal = ({ open, onClose, onSuccess }: Props) => {
           setAlertVisible(false);
           setAlertMessage(null);
           onClose();
-          onSuccess();
         }}
         onCancel={() => {
           // handle cancel

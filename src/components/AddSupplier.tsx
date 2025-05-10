@@ -2,11 +2,12 @@ import { Modal, Input, Button, Form } from "antd";
 import { useState } from "react";
 import { AlerModal } from "./AlertModal";
 import { sendSupplier } from "../services/supplierApi";
+import { Supplier } from "../hooks/useSuppliers";
 
 type Props = {
   open: boolean;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (supplier: Supplier) => void;
 };
 
 export const AddSupplierModal = ({ open, onClose, onSuccess }: Props) => {
@@ -18,10 +19,15 @@ export const AddSupplierModal = ({ open, onClose, onSuccess }: Props) => {
     try {
       const values = await form.validateFields();
 
-      await sendSupplier(values.supplier, values.address, values.contact_info);
+      const newSupplier: Supplier = await sendSupplier(
+        values.supplier,
+        values.address,
+        values.contact_info
+      );
 
       setAlertMessage(`Новый поставщик ${values.supplier} был добавлен`);
       setAlertVisible(true);
+      onSuccess(newSupplier);
       onClose();
     } catch (error) {
       console.error("Submission error:", error);
@@ -82,7 +88,6 @@ export const AddSupplierModal = ({ open, onClose, onSuccess }: Props) => {
           setAlertVisible(false);
           setAlertMessage(null);
           onClose();
-          onSuccess();
         }}
         onCancel={() => {
           // handle cancel

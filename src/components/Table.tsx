@@ -3,6 +3,7 @@ import { useState } from "react";
 import { CompositionProductInfo } from "./CompositionProductInfo";
 import { useBatchArrivals } from "../hooks/useBatchArrivals";
 import {
+  Product,
   useCategoryProducts,
   useComplexProducts,
   useProductInUse,
@@ -175,10 +176,10 @@ export const ReceiptTable = () => {
 
 interface Props {
   type: String;
+  products: Product[];
 }
 
-export const AccountingProductTable: React.FC<Props> = ({ type }) => {
-  const { products, loading, error } = useProducts();
+export const AccountingProductTable: React.FC<Props> = ({ type, products }) => {
   const { complexProducts, complexLoading, complexError } =
     useComplexProducts();
   const { soloProducts, soloLoading, soloError } = useSoloProducts();

@@ -1,8 +1,8 @@
 // hooks/useProducts.ts
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "../utils/axios";
 
-export interface Product {
+export type Product = {
   productId: number;
   productName: string;
   barcode: string;
@@ -12,14 +12,15 @@ export interface Product {
   description: string;
   price: string;
   volume: string;
-}
+};
 
 export const useProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const fetchProducts = useCallback(() => {
+    setLoading(true);
     axios
       .get<Product[]>("/api/products")
       .then((res) => setProducts(res.data))
@@ -30,13 +31,17 @@ export const useProducts = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  return { products, loading, error };
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
+  return { products, loading, error, refetch: fetchProducts };
 };
 
-interface Props {
+type Props = {
   type: String;
   name: String;
-}
+};
 
 export const useCategoryProducts = ({ type, name }: Props) => {
   const [categoryProducts, setCategoryProducts] = useState<Product[]>([]);

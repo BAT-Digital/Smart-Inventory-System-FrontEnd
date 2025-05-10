@@ -3,11 +3,11 @@ import { useCallback, useEffect, useState } from "react";
 import axios from "../utils/axios";
 import { Product } from "./useProducts";
 
-export interface Category {
+export type Category = {
   categoryId: number;
   name: string;
   description: string;
-}
+};
 
 export const useCategories = () => {
   const [categories, setCategories] = useState<Category[]>([]);

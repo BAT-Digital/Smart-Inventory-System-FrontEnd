@@ -2,11 +2,13 @@ import { Button, Form, Input, Modal, Select } from "antd";
 import plusWhite from "../assets/icons/plustWhite.png";
 import trash from "../assets/icons/trash.png";
 import { useState } from "react";
+import { useProducts } from "../hooks/useProducts";
 const { Option } = Select;
 
 type Props = {
   open: boolean;
   onClose: () => void;
+  name: string;
 };
 
 type CompositeItem = {
@@ -14,24 +16,7 @@ type CompositeItem = {
   volume: string;
 };
 
-const sampleProducts = [
-  "Молоко",
-  "Хлеб",
-  "Сыр",
-  "Яблоки",
-  "Мясо",
-  "Йогурт",
-  "Картофель",
-  "Масло",
-  "Помидоры",
-  "Огурцы",
-  "Макароны",
-  "Рис",
-  "Кофе",
-  "Чай",
-];
-
-export const CompositeDataModal = ({ open, onClose }: Props) => {
+export const CompositeDataModal = ({ open, onClose, name }: Props) => {
   const [form] = Form.useForm();
   const [compositeItems, setCompositeItems] = useState([
     { name: "", volume: "" },
@@ -41,6 +26,8 @@ export const CompositeDataModal = ({ open, onClose }: Props) => {
   const addCompositeItem = () => {
     setCompositeItems([...compositeItems, { name: "", volume: "" }]);
   };
+
+  const { products } = useProducts();
 
   const handleCompositeChange = (
     index: number,
@@ -83,9 +70,10 @@ export const CompositeDataModal = ({ open, onClose }: Props) => {
           <Form.Item
             name="Название"
             rules={[{ message: "Название товара!!" }]}
-            style={{ marginBottom: "8px" }}
+            style={{ marginBottom: "8px", color: "white" }}
+            className="flex justify-center"
           >
-            <Input placeholder="Название" />
+            <span style={{ fontSize: 18 }}>{name}</span>
           </Form.Item>
           <Button
             type="primary"
@@ -123,8 +111,10 @@ export const CompositeDataModal = ({ open, onClose }: Props) => {
                   className="w-full"
                   style={{ marginBottom: "8px" }}
                 >
-                  {sampleProducts.map((product) => (
-                    <Option value={product}>{product}</Option>
+                  {products.map((product) => (
+                    <Option value={product.productId}>
+                      {product.productName}
+                    </Option>
                   ))}
                 </Select>
                 <Input

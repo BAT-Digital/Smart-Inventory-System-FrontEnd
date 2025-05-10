@@ -5,6 +5,9 @@ import { AlerModal } from "./AlertModal";
 import { AddCategoryModal } from "./AddCategory";
 import { AddSupplierModal } from "./AddSupplier";
 import { CompositeDataModal } from "./CompositeDataModal";
+import { Category, useCategories } from "../hooks/useCategories";
+import { Supplier, useSuppliers } from "../hooks/useSuppliers";
+import { ProductDTO, sendProduct } from "../services/productApi";
 
 type Props = {
   open: boolean;
@@ -86,30 +89,69 @@ export const AddProductDataModal = ({ open, onClose }: Props) => {
   );
 };
 
-export const AddFullProductDataModal = ({ open, onClose }: Props) => {
+type FullProductProps = {
+  open: boolean;
+  onClose: () => void;
+  onSuccess: () => void;
+};
+
+export const AddFullProductDataModal = ({
+  open,
+  onClose,
+  onSuccess,
+}: FullProductProps) => {
   const [form] = Form.useForm();
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [showUnitModal, setShowUnitModal] = useState(false);
   const [customUnit, setCustomUnit] = useState<string | null>(null);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const [customCategory, setCustomCategory] = useState<string | null>(null);
+  const [customCategory, setCustomCategory] = useState<Category | null>(null);
   const [showSupplierModal, setShowSupplierModal] = useState(false);
-  const [customSupplier, setCustomSupplier] = useState<string | null>(null);
+  const [customSupplier, setCustomSupplier] = useState<Supplier | null>(null);
+  const [name, setName] = useState<string>("");
   const [showCompositeModal, setShowCompositeModal] = useState(false);
 
+  const { categories, refetch: refetchCategories } = useCategories();
+  const { suppliers, refetch: refetchSuppliers } = useSuppliers();
+
+  const handleCategoryAdded = () => {
+    refetchCategories();
+  };
+
+  const handleSupplierAdded = () => {
+    refetchSuppliers();
+  };
+
   const handleSubmit = () => {
-    form.validateFields().then((values) => {
+    form.validateFields().then(async (values) => {
       try {
         if (values.characteristics === "Комплексный") {
           // Show modal instead of submitting directly
+          setName(values.name);
           setShowCompositeModal(true);
         } else {
-          // Submit form as usual
-          console.log("Form values:", values);
-          const productName = values.name || "Продукт";
-          setAlertMessage(`${productName} был успешно добавлен`);
-          setAlertVisible(true);
+          try {
+            const productDTO: ProductDTO = {
+              categoryId: values.category,
+              productName: values.productName,
+              barcode: values.barcode,
+              isPerishable: values.isPerishable,
+              isComposite: values.isComposite,
+              unitOfMeasure: values.unitOfMeasure,
+              supplierId: values.supplier,
+              description: values.description,
+              price: values.price,
+              volume: values.volume,
+            };
+            await sendProduct(productDTO);
+
+            setAlertMessage(`${values.productName} был успешно добавлен`);
+            setAlertVisible(true);
+            onSuccess();
+          } catch (error) {
+            console.error("Submission error:", error);
+          }
         }
       } catch (errorInfo) {
         console.log("Validation failed:", errorInfo);
@@ -139,7 +181,7 @@ export const AddFullProductDataModal = ({ open, onClose }: Props) => {
         width={400}
       >
         <Form form={form} layout="vertical">
-          <Form.Item name="name" style={{ marginBottom: "8px" }}>
+          <Form.Item name="productName" style={{ marginBottom: "8px" }}>
             <Input placeholder="Название" />
           </Form.Item>
           <Form.Item name="barcode" style={{ marginBottom: "8px" }}>
@@ -152,7 +194,7 @@ export const AddFullProductDataModal = ({ open, onClose }: Props) => {
               </Form.Item>
             </div>
             <div className="ml-2 flex-col-1 w-full">
-              <Form.Item name="unit">
+              <Form.Item name="unitOfMeasure">
                 <Select
                   placeholder="Единица измерения"
                   onChange={(value) => {
@@ -189,12 +231,11 @@ export const AddFullProductDataModal = ({ open, onClose }: Props) => {
                   setCustomSupplier(null);
                 }
               }}
+              value={form.getFieldValue("supplier")}
             >
-              <Option value="л">л</Option>
-              <Option value="мл">мл</Option>
-              <Option value="штук(-и)">штук(-и)</Option>
-              <Option value="г">г</Option>
-              <Option value="мг">мг</Option>
+              {suppliers.map((supplier) => (
+                <Option value={supplier.supplierId}>{supplier.name}</Option>
+              ))}
               <Option value="другое">другое</Option>
             </Select>
           </Form.Item>
@@ -204,18 +245,16 @@ export const AddFullProductDataModal = ({ open, onClose }: Props) => {
               onChange={(value) => {
                 if (value === "другое") {
                   setShowCategoryModal(true);
-                  form.setFieldValue("category", null); // reset the select field to prevent re-trigger
+                  form.setFieldValue("category", null); // reset
                 } else {
-                  setCustomCategory(null);
+                  setCustomCategory(null); // clear custom
                 }
               }}
-              value={customCategory || form.getFieldValue("category")}
+              value={form.getFieldValue("category")}
             >
-              <Option value="л">л</Option>
-              <Option value="мл">мл</Option>
-              <Option value="штук(-и)">штук(-и)</Option>
-              <Option value="г">г</Option>
-              <Option value="мг">мг</Option>
+              {categories.map((category) => (
+                <Option value={category.categoryId}>{category.name}</Option>
+              ))}
               <Option value="другое">другое</Option>
             </Select>
           </Form.Item>
@@ -225,10 +264,16 @@ export const AddFullProductDataModal = ({ open, onClose }: Props) => {
           <Form.Item name="description" style={{ marginBottom: "8px" }}>
             <Input.TextArea placeholder="описание" />
           </Form.Item>
-          <Form.Item name="characteristics" style={{ marginBottom: "8px" }}>
+          <Form.Item name="isPerishable" style={{ marginBottom: "8px" }}>
+            <Select placeholder="Is perishable?">
+              <Option value="true">Perishable</Option>
+              <Option value="false">NonPerishable</Option>
+            </Select>
+          </Form.Item>
+          <Form.Item name="isComposite" style={{ marginBottom: "8px" }}>
             <Select placeholder="Характеристика продукта">
-              <Option value="Единичный">Единичный</Option>
-              <Option value="Комплексный">Комплексный</Option>
+              <Option value="false">Единичный</Option>
+              <Option value="true">Комплексный</Option>
             </Select>
           </Form.Item>
           <div className="flex justify-between">
@@ -251,14 +296,22 @@ export const AddFullProductDataModal = ({ open, onClose }: Props) => {
         <AddCategoryModal
           open={showCategoryModal}
           onClose={handleExtraModalClose}
-          onSuccess={() => {}}
+          onSuccess={(newCategory) => {
+            setCustomCategory(newCategory);
+            form.setFieldValue("category", newCategory.categoryId);
+            handleCategoryAdded(); // ✅ auto-select it
+          }}
         />
 
         {/* Supplier Modal */}
         <AddSupplierModal
           open={showSupplierModal}
           onClose={handleExtraModalClose}
-          onSuccess={() => {}}
+          onSuccess={(newSupplier) => {
+            setCustomSupplier(newSupplier);
+            form.setFieldValue("supplier", newSupplier.supplierId);
+            handleSupplierAdded();
+          }}
         />
 
         {/* Unit Modal */}
@@ -317,6 +370,7 @@ export const AddFullProductDataModal = ({ open, onClose }: Props) => {
         <CompositeDataModal
           open={showCompositeModal}
           onClose={() => setShowCompositeModal(false)}
+          name={name}
         />
       </Modal>
 

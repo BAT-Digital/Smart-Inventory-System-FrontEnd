@@ -2,12 +2,12 @@
 import { useCallback, useEffect, useState } from "react";
 import axios from "../utils/axios";
 
-export interface Supplier {
+export type Supplier = {
   supplierId: number;
   name: string;
   address: string;
   contactInfo: string;
-}
+};
 
 export const useSuppliers = () => {
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);

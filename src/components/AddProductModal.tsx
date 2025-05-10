@@ -1,11 +1,10 @@
-import { Modal, Button, Form, Select, Input, DatePicker } from "antd";
+import { Modal, Button, Form, Input, DatePicker } from "antd";
 import plus from "../assets/icons/plustWhite.png";
 import { useState } from "react";
 import classNames from "classnames";
 import { AddFullProductDataModal } from "./AddProductDataModal";
 import { useProductsBySupplier } from "../hooks/useCategories";
 import { submitBatchArrivalItems } from "../services/batchArrivalItemApi";
-const { Option } = Select;
 
 type Props = {
   open: boolean;
@@ -118,6 +117,7 @@ export const AddProductModal = ({
       <AddFullProductDataModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onSuccess={() => {}}
       />
       <AddProductDataBatchModal
         open={isDataModalOpen}

@@ -4,6 +4,7 @@ import { AccountingProductTable } from "../components/Table";
 import { AccountingTableActions } from "../components/TableActions";
 import { useState } from "react";
 import { AddFullProductDataModal } from "../components/AddProductDataModal";
+import { useProducts } from "../hooks/useProducts";
 
 interface Props {
   type: String;
@@ -11,6 +12,7 @@ interface Props {
 
 export const AccountingProducts: React.FC<Props> = ({ type }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { products, loading, error, refetch: reFetchProducts } = useProducts();
 
   const handleSearch = (value: string) => {
     console.log("Searching:", value);
@@ -34,7 +36,7 @@ export const AccountingProducts: React.FC<Props> = ({ type }) => {
               onScan={handleScan}
             />
           </div>
-          <AccountingProductTable type={type} />
+          <AccountingProductTable type={type} products={products} />
           <div
             className="flex items-center justify-center font-bold "
             style={{ fontSize: 16, textDecoration: "underline" }}
@@ -46,6 +48,7 @@ export const AccountingProducts: React.FC<Props> = ({ type }) => {
       <AddFullProductDataModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onSuccess={reFetchProducts}
       />
     </div>
   );
