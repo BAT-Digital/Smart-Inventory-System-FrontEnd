@@ -16,7 +16,7 @@ export const fetchCompositionByProductId = async (
 
   return response.data.map((item: any) => ({
     name: item.ingredient.productName,
-    volume: item.ingredient.volume,
+    volume: item.quantityRequired,
     unit: item.ingredient.unitOfMeasure,
   }));
 };

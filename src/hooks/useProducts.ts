@@ -72,7 +72,8 @@ export const useComplexProducts = () => {
   const [complexLoading, setComplexLoading] = useState<boolean>(true);
   const [complexError, setComplexError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const fetchComplexProducts = useCallback(() => {
+    setComplexLoading(true);
     axios
       .get<Product[]>("/api/products/composite/true")
       .then((res) => setComplexProducts(res.data))
@@ -83,7 +84,16 @@ export const useComplexProducts = () => {
       .finally(() => setComplexLoading(false));
   }, []);
 
-  return { complexProducts, complexLoading, complexError };
+  useEffect(() => {
+    fetchComplexProducts();
+  }, [fetchComplexProducts]);
+
+  return {
+    complexProducts,
+    complexLoading,
+    complexError,
+    refetch: fetchComplexProducts,
+  };
 };
 
 export const useSoloProducts = () => {
@@ -91,7 +101,8 @@ export const useSoloProducts = () => {
   const [soloLoading, setSoloLoading] = useState<boolean>(true);
   const [soloError, setSoloError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const fetchSoloProducts = useCallback(() => {
+    setSoloLoading(true);
     axios
       .get<Product[]>("/api/products/composite/false")
       .then((res) => setSoloProducts(res.data))
@@ -102,7 +113,11 @@ export const useSoloProducts = () => {
       .finally(() => setSoloLoading(false));
   }, []);
 
-  return { soloProducts, soloLoading, soloError };
+  useEffect(() => {
+    fetchSoloProducts();
+  }, [fetchSoloProducts]);
+
+  return { soloProducts, soloLoading, soloError, refetch: fetchSoloProducts };
 };
 
 export const useProductInUse = () => {

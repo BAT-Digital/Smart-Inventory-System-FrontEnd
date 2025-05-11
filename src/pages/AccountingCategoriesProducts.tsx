@@ -41,6 +41,7 @@ export const AccountingCategoriesProducts = () => {
       <AddFullProductDataModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onSuccess={() => {}}
       />
     </div>
   );

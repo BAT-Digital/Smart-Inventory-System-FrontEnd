@@ -4,15 +4,112 @@ import { AccountingProductTable } from "../components/Table";
 import { AccountingTableActions } from "../components/TableActions";
 import { useState } from "react";
 import { AddFullProductDataModal } from "../components/AddProductDataModal";
-import { useProducts } from "../hooks/useProducts";
+import {
+  useComplexProducts,
+  useProducts,
+  useSoloProducts,
+} from "../hooks/useProducts";
 
 interface Props {
   type: String;
 }
 
+const prdouctSoloColumns = [
+  {
+    title: "ID",
+    dataIndex: "id",
+    key: "id",
+  },
+  {
+    title: "Название товара",
+    dataIndex: "name",
+    key: "name",
+  },
+  {
+    title: "Скоропортищийся",
+    dataIndex: "perishable",
+    key: "perishable",
+  },
+  {
+    title: "Описание",
+    dataIndex: "description",
+    key: "description",
+  },
+  {
+    title: "Цена",
+    dataIndex: "price",
+    key: "price",
+  },
+  {
+    title: "Объем",
+    dataIndex: "volume",
+    key: "volume",
+  },
+  {
+    title: "Единица измерения",
+    dataIndex: "unit",
+    key: "unit",
+  },
+];
+
+const prdouctColumns = [
+  {
+    title: "ID",
+    dataIndex: "id",
+    key: "id",
+  },
+  {
+    title: "Название товара",
+    dataIndex: "name",
+    key: "name",
+  },
+  {
+    title: "Скоропортищийся",
+    dataIndex: "perishable",
+    key: "perishable",
+  },
+  {
+    title: "Описание",
+    dataIndex: "description",
+    key: "description",
+  },
+  {
+    title: "Состав",
+    dataIndex: "composition",
+    key: "composition",
+  },
+  {
+    title: "Цена",
+    dataIndex: "price",
+    key: "price",
+  },
+  {
+    title: "Объем",
+    dataIndex: "volume",
+    key: "volume",
+  },
+  {
+    title: "Единица измерения",
+    dataIndex: "unit",
+    key: "unit",
+  },
+];
+
 export const AccountingProducts: React.FC<Props> = ({ type }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { products, loading, error, refetch: reFetchProducts } = useProducts();
+  const { products, loading, refetch: reFetchProducts } = useProducts();
+  const {
+    complexProducts,
+    complexLoading,
+
+    refetch: reFetchComplexProducts,
+  } = useComplexProducts();
+  const {
+    soloProducts,
+    soloLoading,
+
+    refetch: reFetchSoloProducts,
+  } = useSoloProducts();
 
   const handleSearch = (value: string) => {
     console.log("Searching:", value);
@@ -36,7 +133,23 @@ export const AccountingProducts: React.FC<Props> = ({ type }) => {
               onScan={handleScan}
             />
           </div>
-          <AccountingProductTable type={type} products={products} />
+          <AccountingProductTable
+            products={
+              type === "solo"
+                ? soloProducts
+                : type === "complex"
+                ? complexProducts
+                : products
+            }
+            columns={type === "solo" ? prdouctSoloColumns : prdouctColumns}
+            loading={
+              type === "solo"
+                ? soloLoading
+                : type === "complex"
+                ? complexLoading
+                : loading
+            }
+          />
           <div
             className="flex items-center justify-center font-bold "
             style={{ fontSize: 16, textDecoration: "underline" }}
@@ -48,7 +161,13 @@ export const AccountingProducts: React.FC<Props> = ({ type }) => {
       <AddFullProductDataModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSuccess={reFetchProducts}
+        onSuccess={
+          type === "solo"
+            ? reFetchSoloProducts
+            : type === "complex"
+            ? reFetchComplexProducts
+            : reFetchProducts
+        }
       />
     </div>
   );
