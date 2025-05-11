@@ -4,9 +4,15 @@ import { AccountingProductInUseTable } from "../components/Table";
 import { useState } from "react";
 import { AccountingInUseTableActions } from "../components/TableActions";
 import { AddProductDataModal } from "../components/AddProductDataModal";
+import { useProductInUse } from "../hooks/useProducts";
 
 export const AccountingInUse = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const {
+    productInUseDataSource,
+    productInUseloading,
+    refetch: reFetchProductsInUse,
+  } = useProductInUse();
 
   const handleSearch = (value: string) => {
     console.log("Searching:", value);
@@ -30,7 +36,10 @@ export const AccountingInUse = () => {
               onScan={handleScan}
             />
           </div>
-          <AccountingProductInUseTable />
+          <AccountingProductInUseTable
+            products={productInUseDataSource}
+            loading={productInUseloading}
+          />
           <div
             className="flex items-center justify-center font-bold "
             style={{ fontSize: 16, textDecoration: "underline" }}
@@ -42,6 +51,7 @@ export const AccountingInUse = () => {
       <AddProductDataModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onSuccess={reFetchProductsInUse}
       />
     </div>
   );

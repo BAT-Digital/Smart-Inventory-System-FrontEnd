@@ -290,16 +290,22 @@ const prdouctInUseColumns = [
   },
 ];
 
-export const AccountingProductInUseTable = () => {
-  const { productInUseDataSource, productInUseloading } = useProductInUse();
+type ProductInUseProps = {
+  products: never[];
+  loading: boolean;
+};
 
+export const AccountingProductInUseTable: React.FC<ProductInUseProps> = ({
+  products,
+  loading,
+}) => {
   return (
     <div className="px-4">
       <Table
-        dataSource={productInUseDataSource}
+        dataSource={products}
         columns={prdouctInUseColumns}
         pagination={{ pageSize: 8 }}
-        loading={productInUseloading}
+        loading={loading}
         bordered
         className="custom-ant-table custom-border-table"
       />

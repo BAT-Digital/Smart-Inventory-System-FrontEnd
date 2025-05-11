@@ -1,4 +1,4 @@
-import { Modal, Input, Button, Form, Select } from "antd";
+import { Modal, Input, Button, Form, Select, message } from "antd";
 import { useState } from "react";
 const { Option } = Select;
 import { AlerModal } from "./AlertModal";
@@ -8,20 +8,108 @@ import { CompositeDataModal } from "./CompositeDataModal";
 import { Category, useCategories } from "../hooks/useCategories";
 import { Supplier, useSuppliers } from "../hooks/useSuppliers";
 import { ProductDTO, sendProduct } from "../services/productApi";
+import { useProducts } from "../hooks/useProducts";
+import axios from "../utils/axios";
+import {
+  moveToProductInUse,
+  ProductRequestDTO,
+} from "../services/productInUseApi";
 
 type Props = {
   open: boolean;
   onClose: () => void;
+  onSuccess: () => void;
 };
 
-export const AddProductDataModal = ({ open, onClose }: Props) => {
-  const [form] = Form.useForm();
+export type BatchArrivalItem = {
+  batchItemId: number;
+  quantityRemaining: number;
+  expiryDate: string; // or Date if you prefer
+};
 
-  const handleSubmit = () => {
-    form.validateFields().then((values) => {
-      console.log("Form values:", values);
-      onClose(); // Close modal after submitting
-    });
+export const AddProductDataModal = ({ open, onClose, onSuccess }: Props) => {
+  const [form] = Form.useForm();
+  const { products } = useProducts();
+  const [batchItems, setBatchItems] = useState<BatchArrivalItem[]>([]);
+  const [loadingBatchItems, setLoadingBatchItems] = useState(false);
+  const [selectedBarcode, setSelectedBarcode] = useState<string | null>(null);
+  const [quantity, setQuantity] = useState(0);
+
+  const handleProductChange = async (barcode: string) => {
+    setSelectedBarcode(barcode);
+    form.setFieldsValue({ expiry_date: undefined, quantity: undefined });
+    setQuantity(0); // Reset related fields
+
+    if (!barcode) {
+      setBatchItems([]);
+      return;
+    }
+
+    try {
+      setLoadingBatchItems(true);
+      const response = await axios.get<BatchArrivalItem[]>(
+        `/api/batch-arrival-items/by-barcode/${barcode}`
+      );
+      if (response.data.length === 1) {
+        setQuantity(response.data[0].quantityRemaining);
+      }
+      setBatchItems(response.data);
+    } catch (error) {
+      console.error("Error fetching batch items:", error);
+      // Handle error as needed
+    } finally {
+      setLoadingBatchItems(false);
+    }
+  };
+
+  const handleExpiryDateChange = async (expiryDate: string) => {
+    if (!selectedBarcode || !expiryDate) return;
+
+    try {
+      const response = await axios.get<BatchArrivalItem[]>(
+        `/api/batch-arrival-items/by-barcode-and-expiry`,
+        {
+          params: {
+            barcode: selectedBarcode,
+            expiryDate: expiryDate,
+          },
+        }
+      );
+
+      // Calculate total quantity remaining
+      const totalQuantity = response.data.reduce(
+        (sum, item) => sum + Number(item.quantityRemaining),
+        0
+      );
+
+      // Set the quantity field value
+      setQuantity(totalQuantity);
+    } catch (error) {
+      console.error("Error fetching batch items by expiry:", error);
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+
+      const productRequest: ProductRequestDTO = {
+        userId: 2,
+        barcode: selectedBarcode!,
+        expirationDate: values.expiry_date,
+        quantity: values.quantity,
+      };
+
+      console.log(productRequest);
+
+      await moveToProductInUse([productRequest]);
+      message.success("Product moved successfully");
+      onSuccess();
+      onClose();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      message.error("Failed to move product");
+    }
   };
 
   return (
@@ -40,35 +128,44 @@ export const AddProductDataModal = ({ open, onClose }: Props) => {
     >
       <Form form={form} layout="vertical">
         <Form.Item
-          name="supplier"
+          name="product"
           style={{ marginBottom: "8px" }}
           rules={[{ required: true, message: "Название Продукта*" }]}
         >
-          <Select placeholder="Название Продукта*">
-            <Option value="Молоко">Молоко</Option>
-            <Option value="Латте">Латте</Option>
+          <Select placeholder="Продукт*" onChange={handleProductChange}>
+            {products.map((product) => (
+              <Option value={product.barcode}>{product.productName}</Option>
+            ))}
           </Select>
         </Form.Item>
 
-        <div className="flex justify-between" style={{ marginBottom: "-16px" }}>
-          <div className="mr-2">
+        <div style={{ marginBottom: "-16px" }}>
+          <Form.Item name="expiry_date">
+            <Select
+              placeholder="Срок годности"
+              loading={loadingBatchItems}
+              disabled={batchItems.length === 0}
+              onChange={handleExpiryDateChange}
+            >
+              {batchItems.map((item) => (
+                <Option key={item.batchItemId} value={item.expiryDate}>
+                  {item.expiryDate} (Остаток: {item.quantityRemaining})
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </div>
+
+        <div className="flex" style={{ marginBottom: "-10px" }}>
+          <div className="mr-1">
             <Form.Item name="quantity">
               <Input placeholder="Количетсво" />
             </Form.Item>
           </div>
-          <div className="ml-2">
-            <Form.Item name="price">
-              <Input placeholder="Цена" />
-            </Form.Item>
+          <div className="ml-1">
+            <span style={{ color: "white", fontSize: 18 }}>из {quantity}</span>
           </div>
         </div>
-
-        <Form.Item name="expiary_date">
-          <Select placeholder="Срок годности">
-            <Option value="Молоко">Молоко</Option>
-            <Option value="Латте">Латте</Option>
-          </Select>
-        </Form.Item>
 
         <div className="flex justify-between">
           <Button

@@ -124,7 +124,8 @@ export const useProductInUse = () => {
   const [productInUseDataSource, setData] = useState([]);
   const [productInUseloading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchProductsInUse = useCallback(() => {
+    setLoading(true);
     axios
       .get("/api/products-in-use")
       .then((res) => {
@@ -143,5 +144,13 @@ export const useProductInUse = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  return { productInUseDataSource, productInUseloading };
+  useEffect(() => {
+    fetchProductsInUse();
+  }, [fetchProductsInUse]);
+
+  return {
+    productInUseDataSource,
+    productInUseloading,
+    refetch: fetchProductsInUse,
+  };
 };
