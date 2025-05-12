@@ -1,6 +1,8 @@
 import { Modal, Button, Form, Radio, Typography } from "antd";
 import { useState } from "react";
 import { AlerModal } from "./AlertModal";
+import { BatchArrivalItem } from "./AddProductDataModal";
+import { SalesItemQuantityModal } from "./SalesItemQuantityModal";
 
 const options = [
   "Молоко Родина 1000 мл (01.02.2025)",
@@ -13,14 +15,17 @@ type Props = {
   open: boolean;
   onClose: () => void;
   productName: string;
+  batchItems: BatchArrivalItem[];
 };
 
 export const ProductExpirySelectModal = ({
   open,
   onClose,
   productName,
+  batchItems,
 }: Props) => {
   const [form] = Form.useForm();
+  const [isQuantityModalOpen, setIsQuantityModalOpen] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -28,9 +33,8 @@ export const ProductExpirySelectModal = ({
   const handleSubmit = () => {
     form.validateFields().then((values) => {
       console.log("Form values:", values);
-      setAlertMessage(`${productName} добавлен`);
-      setAlertVisible(true);
       onClose(); // Close modal after submitting
+      setIsQuantityModalOpen(true);
     });
   };
 
@@ -57,22 +61,24 @@ export const ProductExpirySelectModal = ({
         width={400}
       >
         <Form form={form} layout="vertical">
-          <Radio.Group
-            onChange={(e) => setSelectedOption(e.target.value)}
-            value={selectedOption}
-            className="flex flex-col gap-3 px-4"
-          >
-            {options.map((option, idx) => (
-              <Radio
-                key={idx}
-                value={option}
-                className=" font-semibold"
-                style={{ color: "white", fontSize: 16, marginBottom: "10px" }}
-              >
-                {option}
-              </Radio>
-            ))}
-          </Radio.Group>
+          <Form.Item name="expiryDate">
+            <Radio.Group
+              onChange={(e) => setSelectedOption(e.target.value)}
+              value={selectedOption}
+              className="flex flex-col gap-3 px-4"
+            >
+              {batchItems.map((option, idx) => (
+                <Radio
+                  key={idx}
+                  value={option.expiryDate}
+                  className=" font-semibold"
+                  style={{ color: "white", fontSize: 16, marginBottom: "10px" }}
+                >
+                  {option.expiryDate}
+                </Radio>
+              ))}
+            </Radio.Group>
+          </Form.Item>
           <div className="flex justify-between mt-4">
             <Button
               type="primary"
@@ -105,6 +111,12 @@ export const ProductExpirySelectModal = ({
         }}
         showCancel={false}
       ></AlerModal>
+
+      <SalesItemQuantityModal
+        open={isQuantityModalOpen}
+        onClose={() => setIsQuantityModalOpen(false)}
+        onSuccess={() => {}}
+      />
     </>
   );
 };

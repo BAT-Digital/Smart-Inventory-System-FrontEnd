@@ -3,9 +3,17 @@ import background from "../assets/background.png";
 import { LeftSide } from "../components/LeftSide";
 import { RightSideCategories } from "../components/RightSide/RightSideCategories";
 import { useParams } from "react-router-dom";
+import { useSalesItems } from "../hooks/useSalesItems";
 
 export const SalesItem = () => {
-  const { transactionId } = useParams<{ transactionId: string }>();
+  const { transactionId: transactionIdStr } = useParams<{
+    transactionId: string;
+  }>();
+  const transactionId = parseInt(transactionIdStr!);
+
+  const { salesItems, refetch: reFetchSalesItems } = useSalesItems({
+    transactionId,
+  });
   const handleSearch = (value: string) => {
     console.log("Searching:", value);
   };
@@ -22,7 +30,7 @@ export const SalesItem = () => {
         <div className="w-full max-w-7xl flex px-4 mt-12">
           {/* Left side stretches full height */}
           <div className="w-[25%] mr-4 h-full">
-            <LeftSide transactionId={parseInt(transactionId!)} />
+            <LeftSide transactionId={transactionId} salesItems={salesItems} />
           </div>
 
           {/* Right side stretches full height */}

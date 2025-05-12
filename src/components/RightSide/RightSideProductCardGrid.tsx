@@ -1,18 +1,50 @@
 import { Card } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { ProductExpirySelectModal } from "../ProductExpirySelectModal";
 import { useState } from "react";
 import { Product } from "../../hooks/useProducts";
+import { BatchArrivalItem } from "../AddProductDataModal";
+import axios from "../../utils/axios";
+import { SalesItemQuantityModal } from "../SalesItemQuantityModal";
 
-interface RightSideProductCardGridProps {
+type RightSideProductCardGridProps = {
   products: Product[];
-}
+  onSuccess: () => {};
+};
 
 export const RightSideProductCardGrid: React.FC<
   RightSideProductCardGridProps
-> = ({ products }) => {
+> = ({ products, onSuccess }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isQuantityModalOpen, setIsQuantityModalOpen] = useState(false);
   const [productName, setProductName] = useState(" ");
+  const [selectedBarcode, setSelectedBarcode] = useState<string | null>(null);
+  const [batchItems, setBatchItems] = useState<BatchArrivalItem[]>([]);
+  const [loadingBatchItems, setLoadingBatchItems] = useState(false);
+  const { transactionId } = useParams<{ transactionId: string }>();
+  const [productId, setProductId] = useState(0);
+
+  const handleProductChange = async (barcode: string) => {
+    setSelectedBarcode(barcode);
+
+    if (!barcode) {
+      setBatchItems([]);
+      return;
+    }
+
+    try {
+      setLoadingBatchItems(true);
+      const response = await axios.get<BatchArrivalItem[]>(
+        `/api/batch-arrival-items/by-barcode/${barcode}`
+      );
+      setBatchItems(response.data);
+    } catch (error) {
+      console.error("Error fetching batch items:", error);
+      // Handle error as needed
+    } finally {
+      setLoadingBatchItems(false);
+    }
+  };
 
   return (
     <>
@@ -22,7 +54,13 @@ export const RightSideProductCardGrid: React.FC<
             key={index}
             onClick={() => {
               setProductName(product.productName);
-              setIsModalOpen(true);
+              setProductId(product.productId);
+              if (product.isPerishable) {
+                handleProductChange(product.barcode);
+                setIsModalOpen(true);
+              } else {
+                setIsQuantityModalOpen(true);
+              }
             }}
           >
             <Card
@@ -67,6 +105,16 @@ export const RightSideProductCardGrid: React.FC<
       <ProductExpirySelectModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        productName={productName}
+        batchItems={batchItems}
+      />
+
+      <SalesItemQuantityModal
+        open={isQuantityModalOpen}
+        onClose={() => setIsQuantityModalOpen(false)}
+        onSuccess={onSuccess}
+        transactionId={parseInt(transactionId!)}
+        productId={productId}
         productName={productName}
       />
     </>

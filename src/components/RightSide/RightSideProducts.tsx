@@ -5,10 +5,12 @@ import { useLocation } from "react-router-dom";
 
 interface RightSideCategoriesProps {
   onSearch: (value: string) => void;
+  onSuccess: () => {};
 }
 
 export const RightSideProducts: React.FC<RightSideCategoriesProps> = ({
   onSearch,
+  onSuccess,
 }) => {
   const location = useLocation();
   const { category } = location.state || { category: "Категория не указана" };
@@ -52,7 +54,7 @@ export const RightSideProducts: React.FC<RightSideCategoriesProps> = ({
       >
         {/* Scrollable content */}
         <div className="flex-[8] overflow-y-auto max-h-[490px]">
-          <RightSideProductCardGrid products={products} />
+          <RightSideProductCardGrid products={products} onSuccess={onSuccess} />
         </div>
 
         {/* Footer buttons */}

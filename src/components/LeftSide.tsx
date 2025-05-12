@@ -3,7 +3,11 @@ import edit from "../assets/icons/edit.png";
 import backArrow from "../assets/icons/backArrow.png";
 import { Link, useNavigate } from "react-router-dom";
 import type { ColumnsType } from "antd/es/table";
-import { useSalesItems, useSalesItemsName } from "../hooks/useSalesItems";
+import {
+  SalesItem,
+  useSalesItems,
+  useSalesItemsName,
+} from "../hooks/useSalesItems";
 import { useState } from "react";
 
 type DataType = {
@@ -23,13 +27,10 @@ const columns: ColumnsType<DataType> = [
 
 type Props = {
   transactionId: number;
+  salesItems: SalesItem[];
 };
 
-export const LeftSide: React.FC<Props> = ({ transactionId }) => {
-  const { salesItems, refetch: fetchSalesItems } = useSalesItems({
-    transactionId,
-  });
-
+export const LeftSide: React.FC<Props> = ({ transactionId, salesItems }) => {
   const dataSource: DataType[] = salesItems.map((salesItem, index) => ({
     key: salesItem.salesItemId,
     number: index + 1,
