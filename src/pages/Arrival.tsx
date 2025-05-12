@@ -4,9 +4,11 @@ import { ReceiptTable } from "../components/Table";
 import { TableActions } from "../components/TableActions";
 import { useState } from "react";
 import { AddDataModal } from "../components/AddDataModal";
+import { useBatchArrivals } from "../hooks/useBatchArrivals";
 
 export const Arrival = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { data, loading, refetch: reFetchBatchArrivals } = useBatchArrivals();
 
   const handleSearch = (value: string) => {
     console.log("Searching:", value);
@@ -27,10 +29,14 @@ export const Arrival = () => {
           <div className="px-4">
             <TableActions onSearch={handleSearch} onScan={handleScan} />
           </div>
-          <ReceiptTable />
+          <ReceiptTable data={data} loading={loading} />
         </div>
       </div>
-      <AddDataModal open={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <AddDataModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={reFetchBatchArrivals}
+      />
     </div>
   );
 };

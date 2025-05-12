@@ -1,12 +1,13 @@
 // hooks/useBatchArrivals.ts
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "../utils/axios";
 
 export const useBatchArrivals = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchBatchArrivals = useCallback(() => {
+    setLoading(true);
     axios
       .get("/api/batch-arrivals")
       .then((res) => {
@@ -24,5 +25,9 @@ export const useBatchArrivals = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  return { data, loading };
+  useEffect(() => {
+    fetchBatchArrivals();
+  }, [fetchBatchArrivals]);
+
+  return { data, loading, refetch: fetchBatchArrivals };
 };
