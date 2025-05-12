@@ -19,7 +19,7 @@ export const useSalesTransactions = () => {
   const fetchSalesTransactions = useCallback(() => {
     setLoading(true);
     axios
-      .get("/api/sales-transactions")
+      .get('/api/sales-transactions/by-status?status="PROCESSING"')
       .then((res) => setSalesTransactions(res.data))
       .catch((err) => console.error("Failed to fetch salesTransactions:", err))
       .finally(() => setLoading(false));

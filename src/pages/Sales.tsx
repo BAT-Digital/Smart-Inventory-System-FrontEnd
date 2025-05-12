@@ -9,7 +9,8 @@ import { useSalesTransactions } from "../hooks/useSalesTransactions";
 
 export const Sales = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { salesTransactions } = useSalesTransactions();
+  const { salesTransactions, refetch: reFetchSalesTransactions } =
+    useSalesTransactions();
 
   const handleSubmit = () => {
     setIsModalOpen(true);
@@ -43,7 +44,11 @@ export const Sales = () => {
         </div>
       </div>
 
-      <AddCheckModal open={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <AddCheckModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={reFetchSalesTransactions}
+      />
     </>
   );
 };
