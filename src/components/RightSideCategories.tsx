@@ -5,11 +5,13 @@ import { useCategories } from "../hooks/useCategories";
 type RightSideCategoriesProps = {
   onSearch: (value: string) => void;
   onCategorySelect: (category: string) => void;
+  handleSell: () => {};
 };
 
 export const RightSideCategories: React.FC<RightSideCategoriesProps> = ({
   onSearch,
   onCategorySelect,
+  handleSell,
 }) => {
   const { categories } = useCategories();
 
@@ -84,8 +86,9 @@ export const RightSideCategories: React.FC<RightSideCategoriesProps> = ({
                   minHeight: "46px",
                 }}
                 size="large"
+                onClick={handleSell}
               >
-                Сохранить
+                Продать
               </Button>
             </div>
             <Button

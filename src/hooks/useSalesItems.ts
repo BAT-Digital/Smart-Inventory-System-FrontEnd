@@ -9,6 +9,7 @@ export type SalesItem = {
   salesTransaction: SalesTransaction;
   product: Product;
   quantity: number;
+  expiryDate: string | null;
 };
 
 type Props = {

@@ -4,7 +4,6 @@ import backArrow from "../assets/icons/backArrow.png";
 import { useNavigate } from "react-router-dom";
 import type { ColumnsType } from "antd/es/table";
 import { SalesItem, useSalesItemsName } from "../hooks/useSalesItems";
-
 type DataType = {
   key: number;
   number: number;
@@ -26,6 +25,10 @@ type Props = {
 };
 
 export const LeftSide: React.FC<Props> = ({ transactionId, salesItems }) => {
+  const total = salesItems.reduce(
+    (sum, item) => sum + Number(item.product.price) * item.quantity,
+    0
+  );
   const dataSource: DataType[] = salesItems.map((salesItem, index) => ({
     key: salesItem.salesItemId,
     number: index + 1,
@@ -93,7 +96,7 @@ export const LeftSide: React.FC<Props> = ({ transactionId, salesItems }) => {
 
         {/* Bottom Price */}
         <div className="flex-[2] p-4 border-t flex justify-end bg-[#335C67]">
-          <div className="text-lg font-semibold text-white">Итого: 550 ₸</div>
+          <div className="text-lg font-semibold text-white">{total}</div>
         </div>
       </Card>
     </div>

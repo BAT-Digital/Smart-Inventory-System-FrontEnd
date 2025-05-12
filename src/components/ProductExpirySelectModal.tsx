@@ -4,11 +4,6 @@ import { AlerModal } from "./AlertModal";
 import { BatchArrivalItem } from "./AddProductDataModal";
 import { SalesItemQuantityModal } from "./SalesItemQuantityModal";
 
-const options = [
-  "Молоко Родина 1000 мл (01.02.2025)",
-  "Молоко Родина 1000 мл (15.02.2025)",
-];
-
 const { Text } = Typography;
 
 type Props = {

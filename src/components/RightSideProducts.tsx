@@ -8,6 +8,7 @@ type RightSideCategoriesProps = {
   onSuccess: () => {};
   category: string;
   onBack: () => void;
+  handleSell: () => {};
 };
 
 export const RightSideProducts: React.FC<RightSideCategoriesProps> = ({
@@ -15,6 +16,7 @@ export const RightSideProducts: React.FC<RightSideCategoriesProps> = ({
   onSuccess,
   category,
   onBack,
+  handleSell,
 }) => {
   const { products } = useProductsByCategory({ category });
 
@@ -91,8 +93,9 @@ export const RightSideProducts: React.FC<RightSideCategoriesProps> = ({
                   minHeight: "46px",
                 }}
                 size="large"
+                onClick={handleSell}
               >
-                Сохранить
+                Продать
               </Button>
             </div>
             <Button

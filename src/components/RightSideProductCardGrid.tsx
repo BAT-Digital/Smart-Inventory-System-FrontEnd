@@ -1,5 +1,5 @@
 import { Card } from "antd";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { ProductExpirySelectModal } from "./ProductExpirySelectModal";
 import { useState } from "react";
 import { Product } from "../hooks/useProducts";
