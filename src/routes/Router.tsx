@@ -3,7 +3,6 @@ import { Login } from "../pages/Login";
 import { Arrival } from "../pages/Arrival";
 import { Sales } from "../pages/Sales";
 import { SalesItem } from "../pages/SalesItem";
-import { SalesItemProduct } from "../pages/SalesItemProduct";
 import { Accounting } from "../pages/Accounting";
 import { AccountingCategories } from "../pages/AccountingCategories";
 import { AccountingProducts } from "../pages/AccountingProducts";
@@ -46,10 +45,6 @@ export default function AppRoutes() {
         <Route path="/arrival" element={<Arrival />} />
         <Route path="/sales" element={<Sales />} />
         <Route path="/sales_item/:transactionId" element={<SalesItem />} />
-        <Route
-          path="/sales_item_product/:transactionId"
-          element={<SalesItemProduct />}
-        />
       </Routes>
     </Router>
   );

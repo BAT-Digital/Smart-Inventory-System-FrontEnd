@@ -1,11 +1,11 @@
 import { Card } from "antd";
 import { Link, useParams } from "react-router-dom";
-import { ProductExpirySelectModal } from "../ProductExpirySelectModal";
+import { ProductExpirySelectModal } from "./ProductExpirySelectModal";
 import { useState } from "react";
-import { Product } from "../../hooks/useProducts";
-import { BatchArrivalItem } from "../AddProductDataModal";
-import axios from "../../utils/axios";
-import { SalesItemQuantityModal } from "../SalesItemQuantityModal";
+import { Product } from "../hooks/useProducts";
+import { BatchArrivalItem } from "./AddProductDataModal";
+import axios from "../utils/axios";
+import { SalesItemQuantityModal } from "./SalesItemQuantityModal";
 
 type RightSideProductCardGridProps = {
   products: Product[];
@@ -107,6 +107,9 @@ export const RightSideProductCardGrid: React.FC<
         onClose={() => setIsModalOpen(false)}
         productName={productName}
         batchItems={batchItems}
+        onSuccess={onSuccess}
+        transactionId={parseInt(transactionId!)}
+        productId={productId}
       />
 
       <SalesItemQuantityModal
@@ -116,6 +119,7 @@ export const RightSideProductCardGrid: React.FC<
         transactionId={parseInt(transactionId!)}
         productId={productId}
         productName={productName}
+        expiryDate={null}
       />
     </>
   );

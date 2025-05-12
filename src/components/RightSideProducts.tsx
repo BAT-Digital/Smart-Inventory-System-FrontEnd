@@ -1,17 +1,22 @@
 import { Card, Input, Button } from "antd";
-import { RightSideCardGrid } from "./RightSideCardGrid";
-import { useCategories } from "../../hooks/useCategories";
+import { RightSideProductCardGrid } from "./RightSideProductCardGrid";
+import { useProductsByCategory } from "../hooks/useCategories";
+import backArrow from "../assets/icons/backArrow.png";
 
-interface RightSideCategoriesProps {
+type RightSideCategoriesProps = {
   onSearch: (value: string) => void;
-}
+  onSuccess: () => {};
+  category: string;
+  onBack: () => void;
+};
 
-export const RightSideCategories: React.FC<RightSideCategoriesProps> = ({
+export const RightSideProducts: React.FC<RightSideCategoriesProps> = ({
   onSearch,
+  onSuccess,
+  category,
+  onBack,
 }) => {
-  const { categories } = useCategories();
-
-  const categoryNames = categories.map((c) => c.name);
+  const { products } = useProductsByCategory({ category });
 
   return (
     <div className="h-full">
@@ -34,8 +39,15 @@ export const RightSideCategories: React.FC<RightSideCategoriesProps> = ({
         }}
         title={
           <div className="flex justify-between items-center text-base font-semibold text-white">
+            <button className="group cursor-pointer" onClick={onBack}>
+              <img
+                src={backArrow}
+                alt=""
+                className="h-3 w-auto pr-3 transition-transform duration-200 group-hover:scale-110"
+              />
+            </button>
             <div className="flex items-center">
-              <span>Категории</span>
+              <span>{category}</span>
             </div>
             <div>
               <Input.Search
@@ -50,7 +62,7 @@ export const RightSideCategories: React.FC<RightSideCategoriesProps> = ({
       >
         {/* Scrollable content */}
         <div className="flex-[8] overflow-y-auto max-h-[490px]">
-          <RightSideCardGrid categories={categoryNames} />
+          <RightSideProductCardGrid products={products} onSuccess={onSuccess} />
         </div>
 
         {/* Footer buttons */}

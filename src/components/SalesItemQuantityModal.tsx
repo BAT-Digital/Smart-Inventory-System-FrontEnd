@@ -10,6 +10,7 @@ type Props = {
   transactionId: number;
   productId: number;
   productName: string;
+  expiryDate: string | null;
 };
 
 export const SalesItemQuantityModal = ({
@@ -19,6 +20,7 @@ export const SalesItemQuantityModal = ({
   transactionId,
   productId,
   productName,
+  expiryDate,
 }: Props) => {
   const [form] = Form.useForm();
   const [alertVisible, setAlertVisible] = useState(false);
@@ -31,7 +33,7 @@ export const SalesItemQuantityModal = ({
       const salesItemDTO: SalesItemDTO = {
         transactionId: transactionId,
         productId: productId,
-        expiryDate: null,
+        expiryDate: expiryDate,
         quantity: values.quantity,
       };
 

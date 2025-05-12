@@ -16,6 +16,9 @@ type Props = {
   onClose: () => void;
   productName: string;
   batchItems: BatchArrivalItem[];
+  onSuccess: () => void;
+  transactionId: number;
+  productId: number;
 };
 
 export const ProductExpirySelectModal = ({
@@ -23,18 +26,25 @@ export const ProductExpirySelectModal = ({
   onClose,
   productName,
   batchItems,
+  onSuccess,
+  transactionId,
+  productId,
 }: Props) => {
   const [form] = Form.useForm();
   const [isQuantityModalOpen, setIsQuantityModalOpen] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [expiryDate, setExpiryDate] = useState<string | null>(null);
 
   const handleSubmit = () => {
     form.validateFields().then((values) => {
       console.log("Form values:", values);
-      onClose(); // Close modal after submitting
+
+      setExpiryDate(values.expiryDate);
+
       setIsQuantityModalOpen(true);
+      onClose(); // Close modal after submitting
     });
   };
 
@@ -115,7 +125,11 @@ export const ProductExpirySelectModal = ({
       <SalesItemQuantityModal
         open={isQuantityModalOpen}
         onClose={() => setIsQuantityModalOpen(false)}
-        onSuccess={() => {}}
+        onSuccess={onSuccess}
+        transactionId={transactionId}
+        productId={productId}
+        productName={productName}
+        expiryDate={expiryDate}
       />
     </>
   );

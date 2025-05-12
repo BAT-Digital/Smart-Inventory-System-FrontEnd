@@ -1,14 +1,9 @@
 import { Card, Table } from "antd";
 import edit from "../assets/icons/edit.png";
 import backArrow from "../assets/icons/backArrow.png";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import type { ColumnsType } from "antd/es/table";
-import {
-  SalesItem,
-  useSalesItems,
-  useSalesItemsName,
-} from "../hooks/useSalesItems";
-import { useState } from "react";
+import { SalesItem, useSalesItemsName } from "../hooks/useSalesItems";
 
 type DataType = {
   key: number;

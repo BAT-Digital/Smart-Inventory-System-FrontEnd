@@ -1,21 +1,19 @@
 import { Card, Input, Button } from "antd";
-import { RightSideProductCardGrid } from "./RightSideProductCardGrid";
-import { useProductsByCategory } from "../../hooks/useCategories";
-import { useLocation } from "react-router-dom";
+import { RightSideCardGrid } from "./RightSideCardGrid";
+import { useCategories } from "../hooks/useCategories";
 
-interface RightSideCategoriesProps {
+type RightSideCategoriesProps = {
   onSearch: (value: string) => void;
-  onSuccess: () => {};
-}
+  onCategorySelect: (category: string) => void;
+};
 
-export const RightSideProducts: React.FC<RightSideCategoriesProps> = ({
+export const RightSideCategories: React.FC<RightSideCategoriesProps> = ({
   onSearch,
-  onSuccess,
+  onCategorySelect,
 }) => {
-  const location = useLocation();
-  const { category } = location.state || { category: "Категория не указана" };
+  const { categories } = useCategories();
 
-  const { products } = useProductsByCategory({ category });
+  const categoryNames = categories.map((c) => c.name);
 
   return (
     <div className="h-full">
@@ -54,7 +52,10 @@ export const RightSideProducts: React.FC<RightSideCategoriesProps> = ({
       >
         {/* Scrollable content */}
         <div className="flex-[8] overflow-y-auto max-h-[490px]">
-          <RightSideProductCardGrid products={products} onSuccess={onSuccess} />
+          <RightSideCardGrid
+            categories={categoryNames}
+            onCategorySelect={onCategorySelect}
+          />
         </div>
 
         {/* Footer buttons */}
