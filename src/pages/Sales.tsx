@@ -5,9 +5,11 @@ import CardGrid from "../components/CardGrid";
 import { Button } from "antd";
 import { useState } from "react";
 import { AddCheckModal } from "../components/AddCheckModal";
+import { useSalesTransactions } from "../hooks/useSalesTransactions";
 
 export const Sales = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { salesTransactions } = useSalesTransactions();
 
   const handleSubmit = () => {
     setIsModalOpen(true);
@@ -36,7 +38,7 @@ export const Sales = () => {
                 <img src={plus} alt="" className="h-5 w-auto" />
               </Button>
             </div>
-            <CardGrid></CardGrid>
+            <CardGrid salesTransactions={salesTransactions}></CardGrid>
           </div>
         </div>
       </div>
