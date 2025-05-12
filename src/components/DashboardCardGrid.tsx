@@ -1,7 +1,13 @@
-import { Card, Button, Select } from "antd";
+import { Card, Button, Select, List } from "antd";
+import {
+  useOldestLowRemaining,
+  useTopProducts,
+} from "../hooks/useDashboardApi";
 const { Option } = Select;
 
 export const DashboardCardGrid = () => {
+  const { topProducts } = useTopProducts();
+  const { batchItems } = useOldestLowRemaining();
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 ">
       {/* Оборот */}
@@ -40,7 +46,9 @@ export const DashboardCardGrid = () => {
         title="Топ продаваемых продуктов:"
         bordered={false}
       >
-        {/* Add content */}
+        {topProducts.map((product) => (
+          <div key={product.productId}>{product.productName}</div>
+        ))}
       </Card>
 
       {/* Заработок */}
@@ -73,8 +81,12 @@ export const DashboardCardGrid = () => {
         title="Рекомендуется приобрести:"
         bordered={false}
       >
-        {/* Content */}
-        <div className="h-24 bg-gray-200 rounded"></div>
+        {batchItems.map((item) => (
+          <div key={item.product.productName}>
+            {item.product.productName} :::::: quantity remaining:{" "}
+            {item.quantityRemaining}
+          </div>
+        ))}
       </Card>
 
       {/* Возможная дата будущей поставки */}
