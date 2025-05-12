@@ -18,8 +18,7 @@ export const RightSideProductCardGrid: React.FC<
     <>
       <div className="grid grid-cols-3 gap-6 p-4">
         {products.map((product, index) => (
-          <Link
-            to="/sales_item_product"
+          <div
             key={index}
             onClick={() => {
               setProductName(product.productName);
@@ -61,7 +60,7 @@ export const RightSideProductCardGrid: React.FC<
                 </div>
               </div>
             </Card>
-          </Link>
+          </div>
         ))}
       </div>
 

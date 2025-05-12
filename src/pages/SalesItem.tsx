@@ -2,8 +2,10 @@ import { Navbar } from "../components/Navbar";
 import background from "../assets/background.png";
 import { LeftSide } from "../components/LeftSide";
 import { RightSideCategories } from "../components/RightSide/RightSideCategories";
+import { useParams } from "react-router-dom";
 
 export const SalesItem = () => {
+  const { transactionId } = useParams<{ transactionId: string }>();
   const handleSearch = (value: string) => {
     console.log("Searching:", value);
   };
@@ -20,7 +22,7 @@ export const SalesItem = () => {
         <div className="w-full max-w-7xl flex px-4 mt-12">
           {/* Left side stretches full height */}
           <div className="w-[25%] mr-4 h-full">
-            <LeftSide />
+            <LeftSide transactionId={parseInt(transactionId!)} />
           </div>
 
           {/* Right side stretches full height */}

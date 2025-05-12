@@ -14,7 +14,7 @@ export const RightSideCardGrid: React.FC<RightSideCardGridProps> = ({
   return (
     <div className="grid grid-cols-3 gap-4 p-4">
       {categories.map((category, index) => (
-        <Link to="/sales_item_product" state={{ category: category }}>
+        <Link to="/sales_item_product/1" state={{ category: category }}>
           <Card
             key={index}
             className="flex items-center justify-center text-center font-semibold"

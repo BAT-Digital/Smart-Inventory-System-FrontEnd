@@ -45,8 +45,11 @@ export default function AppRoutes() {
         <Route path="/accounting_in_use" element={<AccountingInUse />} />
         <Route path="/arrival" element={<Arrival />} />
         <Route path="/sales" element={<Sales />} />
-        <Route path="/sales_item" element={<SalesItem />} />
-        <Route path="/sales_item_product" element={<SalesItemProduct />} />
+        <Route path="/sales_item/:transactionId" element={<SalesItem />} />
+        <Route
+          path="/sales_item_product/:transactionId"
+          element={<SalesItemProduct />}
+        />
       </Routes>
     </Router>
   );

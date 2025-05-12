@@ -11,7 +11,7 @@ const CardGrid: React.FC<Props> = ({ salesTransactions }) => {
     <div className="max-h-[520px] overflow-y-auto p-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {salesTransactions.map((salesTransaction) => (
-          <Link to="/sales_item">
+          <Link to={`/sales_item/${salesTransaction.transactionId}`}>
             <Card
               key={salesTransaction.transactionId}
               className="h-60 shadow-md rounded-xl border border-gray-200"

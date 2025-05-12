@@ -3,21 +3,16 @@ import edit from "../assets/icons/edit.png";
 import backArrow from "../assets/icons/backArrow.png";
 import { Link, useNavigate } from "react-router-dom";
 import type { ColumnsType } from "antd/es/table";
+import { useSalesItems, useSalesItemsName } from "../hooks/useSalesItems";
+import { useState } from "react";
 
-interface DataType {
-  key: string;
+type DataType = {
+  key: number;
   number: number;
   name: string;
   quantity: number;
   price: number;
-}
-
-const dataSource: DataType[] = [
-  { key: "1", number: 1, name: "Item A", quantity: 2, price: 100 },
-  { key: "2", number: 2, name: "Item B", quantity: 1, price: 200 },
-  { key: "3", number: 3, name: "Item C", quantity: 5, price: 50 },
-  // Add more to test scrolling
-];
+};
 
 const columns: ColumnsType<DataType> = [
   { title: "№", dataIndex: "number", key: "number", width: 50 },
@@ -26,7 +21,25 @@ const columns: ColumnsType<DataType> = [
   { title: "Price", dataIndex: "price", key: "price", width: 100 },
 ];
 
-export const LeftSide = () => {
+type Props = {
+  transactionId: number;
+};
+
+export const LeftSide: React.FC<Props> = ({ transactionId }) => {
+  const { salesItems, refetch: fetchSalesItems } = useSalesItems({
+    transactionId,
+  });
+
+  const dataSource: DataType[] = salesItems.map((salesItem, index) => ({
+    key: salesItem.salesItemId,
+    number: index + 1,
+    name: salesItem.product.productName,
+    quantity: salesItem.quantity,
+    price: parseInt(salesItem.product.price) * salesItem.quantity,
+  }));
+
+  const name = useSalesItemsName({ transactionId });
+
   const navigate = useNavigate();
   return (
     <div className="h-full">
@@ -59,7 +72,7 @@ export const LeftSide = () => {
                   className="h-3 w-auto pr-3 transition-transform duration-200 group-hover:scale-110"
                 />
               </button>
-              <span>Имя Чека</span>
+              <span>{name}</span>
             </div>
             <img src={edit} alt="" className="h-6 w-auto " />
           </div>
