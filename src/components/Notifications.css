@@ -1,0 +1,198 @@
+.notifications-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(2px);
+    z-index: 1000;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.notifications-container {
+    position: fixed;
+    top: 60px;
+    right: 20px;
+    width: 400px;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    transform-origin: top right;
+    animation: slideIn 0.3s ease-out;
+}
+
+.notifications-header {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-bottom: 1px solid #eee;
+    background-color: #f8f9fa;
+    border-radius: 8px 8px 0 0;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.notifications-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.notification-count {
+    background-color: #007bff;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.notifications-list {
+    padding: 10px;
+}
+
+.notifications-empty {
+    padding: 20px;
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+}
+
+.notification-item {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: #f8f9fa;
+    border-left: 4px solid #007bff;
+    animation: fadeIn 0.3s ease-out;
+    transition: all 0.2s ease-out;
+    text-align: left;
+}
+
+.notification-item:hover {
+    transform: translateX(-5px);
+    background-color: #f0f0f0;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.notification-type {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.notification-time {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.notification-message {
+    color: #333;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    margin: 8px 0;
+}
+
+.notification-metadata {
+    background-color: #f8f9fa;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.notification-category {
+    color: #6c757d;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+/* Notification type-specific styles */
+.notification-item.LOW_STOCK {
+    border-left-color: #ffc107;
+}
+
+.notification-item.EXPIRATION_ALERT {
+    border-left-color: #dc3545;
+}
+
+.notification-item.NEW_BATCH {
+    border-left-color: #28a745;
+}
+
+.notification-item.SALE_COMPLETED {
+    border-left-color: #17a2b8;
+}
+
+.notification-item.HIGH_VALUE_SALE {
+    border-left-color: #9c27b0;
+}
+
+.notification-item.SYSTEM {
+    border-left-color: #6c757d;
+}
+
+/* Animation keyframes */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Scrollbar styling */
+.notifications-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.notifications-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.notifications-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.notifications-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Remove connection status styles */
+.connection-status {
+    display: none;
+}
+
+.connection-status.connected,
+.connection-status.disconnected {
+    display: none;
+}
+  
