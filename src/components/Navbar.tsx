@@ -5,8 +5,12 @@ import miniLogo from "../assets/miniLogo.png";
 import bell from "../assets/icons/bell.png";
 import settings from "../assets/icons/settings.png";
 import profile from "../assets/icons/profile.png";
+import { useNotifications } from "../contexts/NotificationContext"; 
 
 export const Navbar = () => {
+  const { notifications, toggleNotifications } = useNotifications();
+  const unreadCount = notifications.length;
+
   return (
     <div className="bg-[#335C67] text-white shadow-md">
       <div className="max-w-full px-15 mx-auto py-3 flex justify-between items-center">
@@ -22,11 +26,11 @@ export const Navbar = () => {
           <div className="flex-grow">
             <Menu
               mode="horizontal"
-              className="bg-[#335C67] border-none "
+              className="bg-[#335C67] border-none"
               selectable={true}
               style={{
                 backgroundColor: "#335C67",
-                borderBottom: "none", // ← this line is key
+                borderBottom: "none",
                 boxShadow: "none",
               }}
             >
@@ -81,9 +85,17 @@ export const Navbar = () => {
           <Link to="/settings">
             <img src={settings} alt="" className="h-7 w-auto px-2" />
           </Link>
-          <Link to="/notifications">
+          <button 
+            onClick={toggleNotifications}
+            className="relative"
+          >
             <img src={bell} alt="" className="h-6 w-auto px-2" />
-          </Link>
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {unreadCount}
+              </span>
+            )}
+          </button>
           <Link to="/profile">
             <img src={profile} alt="" className="h-7 w-auto px-2" />
           </Link>
