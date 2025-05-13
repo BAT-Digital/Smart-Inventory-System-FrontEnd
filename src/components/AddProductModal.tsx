@@ -246,7 +246,14 @@ export const AddProductDataBatchModal = ({
           >
             Add
           </Button>
-          <Button onClick={onClose} className="w-1/2 ml-2" size="large">
+          <Button
+            onClick={() => {
+              form.resetFields();
+              onClose();
+            }}
+            className="w-1/2 ml-2"
+            size="large"
+          >
             Cancel
           </Button>
         </div>

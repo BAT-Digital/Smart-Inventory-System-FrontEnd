@@ -44,6 +44,7 @@ export const SalesItemQuantityModal = ({
       setAlertMessage(`${productName} был добавлен`);
       setAlertVisible(true);
       onSuccess();
+      form.resetFields();
       onClose();
     } catch (error) {
       console.error("Submission error:", error);
@@ -88,7 +89,14 @@ export const SalesItemQuantityModal = ({
             >
               Добавить
             </Button>
-            <Button onClick={onClose} className="w-1/2 ml-2" size="large">
+            <Button
+              onClick={() => {
+                form.resetFields();
+                onClose();
+              }}
+              className="w-1/2 ml-2"
+              size="large"
+            >
               Отмена
             </Button>
           </div>

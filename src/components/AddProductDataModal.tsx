@@ -7,7 +7,7 @@ import { AddSupplierModal } from "./AddSupplier";
 import { CompositeDataModal } from "./CompositeDataModal";
 import { Category, useCategories } from "../hooks/useCategories";
 import { Supplier, useSuppliers } from "../hooks/useSuppliers";
-import { ProductDTO, sendProduct } from "../services/productApi";
+import { deleteProduct, ProductDTO, sendProduct } from "../services/productApi";
 import { useProducts } from "../hooks/useProducts";
 import axios from "../utils/axios";
 import {
@@ -249,6 +249,14 @@ export const AddFullProductDataModal = ({
     refetchSuppliers();
   };
 
+  const handleOnCancel = async () => {
+    try {
+      await deleteProduct(finalProductId);
+    } catch (error) {
+      console.error("handle On Cancel error:", error);
+    }
+  };
+
   const handleSubmit = () => {
     form.validateFields().then(async (values) => {
       try {
@@ -486,7 +494,14 @@ export const AddFullProductDataModal = ({
             >
               Add
             </Button>
-            <Button onClick={onClose} className="w-1/2 ml-2" size="large">
+            <Button
+              onClick={() => {
+                form.resetFields();
+                onClose();
+              }}
+              className="w-1/2 ml-2"
+              size="large"
+            >
               Cancel
             </Button>
           </div>
@@ -576,6 +591,7 @@ export const AddFullProductDataModal = ({
             setAlertVisible(true);
             onSuccess();
           }}
+          onCancel={handleOnCancel}
         />
       </Modal>
 
@@ -587,6 +603,7 @@ export const AddFullProductDataModal = ({
           // handle confirmation
           setAlertVisible(false);
           setAlertMessage(null);
+          form.resetFields();
           onClose();
         }}
         onCancel={() => {

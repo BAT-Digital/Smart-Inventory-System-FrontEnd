@@ -23,3 +23,13 @@ export const sendProduct = async (ProductDTO: ProductDTO) => {
     throw error;
   }
 };
+
+export const deleteProduct = async (id: number) => {
+  try {
+    const response = await axios.delete(`/api/products/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    throw error;
+  }
+};

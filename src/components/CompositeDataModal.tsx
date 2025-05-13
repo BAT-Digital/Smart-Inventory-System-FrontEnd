@@ -12,6 +12,7 @@ type Props = {
   name: string;
   finalProductId: number;
   onSuccess: () => void;
+  onCancel: () => void;
 };
 
 type CompositeItem = {
@@ -25,6 +26,7 @@ export const CompositeDataModal = ({
   name,
   finalProductId,
   onSuccess,
+  onCancel,
 }: Props) => {
   const [form] = Form.useForm();
   const [compositeItems, setCompositeItems] = useState([
@@ -78,7 +80,10 @@ export const CompositeDataModal = ({
           </span>
         }
         open={open}
-        onCancel={onClose}
+        onCancel={() => {
+          onCancel();
+          onClose();
+        }}
         onOk={() => {
           console.log("Composite Product Components:", compositeItems);
           onClose();
@@ -177,7 +182,14 @@ export const CompositeDataModal = ({
             >
               Add
             </Button>
-            <Button onClick={onClose} className="w-1/2 ml-2" size="large">
+            <Button
+              onClick={() => {
+                onCancel();
+                onClose();
+              }}
+              className="w-1/2 ml-2"
+              size="large"
+            >
               Cancel
             </Button>
           </div>

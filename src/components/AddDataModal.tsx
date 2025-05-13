@@ -119,7 +119,14 @@ export const AddDataModal = ({ open, onClose, onSuccess }: Props) => {
             >
               Add
             </Button>
-            <Button onClick={onClose} className="w-1/2 ml-2" size="large">
+            <Button
+              onClick={() => {
+                form.resetFields();
+                onClose();
+              }}
+              className="w-1/2 ml-2"
+              size="large"
+            >
               Cancel
             </Button>
           </div>
@@ -133,6 +140,7 @@ export const AddDataModal = ({ open, onClose, onSuccess }: Props) => {
           // handle confirmation
           setAlertVisible(false);
           setAlertMessage(null);
+          form.resetFields();
           onSuccess();
           onClose();
         }}
