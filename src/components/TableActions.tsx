@@ -23,7 +23,7 @@ export const TableActions: React.FC<TableActionsProps> = ({
   return (
     <div className="flex justify-between items-center mb-4 gap-2 flex-wrap">
       <Input.Search
-        placeholder="Поиск"
+        placeholder="Search"
         onSearch={onSearch}
         style={{ width: 200 }}
         allowClear
@@ -38,7 +38,7 @@ export const TableActions: React.FC<TableActionsProps> = ({
           onClick={onScan}
           style={{ backgroundColor: "#FFF3B0", color: "#1E1E1E" }}
         >
-          Отсканировать товар
+          Scan item
         </Button>
       </div>
     </div>
@@ -101,7 +101,7 @@ export const AccountingInUseTableActions: React.FC<TableActionsProps> = ({
           />
         </button>
         <Input.Search
-          placeholder="Поиск"
+          placeholder="Search"
           onSearch={onSearch}
           style={{ width: 200 }}
           allowClear
@@ -120,7 +120,7 @@ export const AccountingInUseTableActions: React.FC<TableActionsProps> = ({
             size="large"
             className="mr-2"
           >
-            Баркод
+            Barcode
           </Button>
           <Button
             type="primary"
@@ -155,7 +155,7 @@ export const AccountingCategoriesProductsTableActions: React.FC<
           />
         </button>
         <Input.Search
-          placeholder="Поиск"
+          placeholder="Search"
           onSearch={onSearch}
           style={{ width: 200 }}
           allowClear

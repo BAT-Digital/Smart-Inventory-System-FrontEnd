@@ -44,7 +44,7 @@ export const AccountingInUse = () => {
             className="flex items-center justify-center font-bold "
             style={{ fontSize: 16, textDecoration: "underline" }}
           >
-            В ИСПОЛЬЗОВАНИИ
+            PRODUCTS IN USE
           </div>
         </div>
       </div>

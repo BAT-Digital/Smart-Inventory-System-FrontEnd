@@ -88,7 +88,7 @@ export const AccountingCategories: React.FC<Props> = ({ type }) => {
               className="flex items-center justify-center font-bold pt-2"
               style={{ fontSize: 16, textDecoration: "underline" }}
             >
-              {type === "supplier" ? "ПО ПОСТАВЩИКАМ" : "ПО КАТЕГОРИЯМ"}
+              {type === "supplier" ? "BY SUPPLIERS" : "BY CATEGORIES"}
             </div>
           </div>
         </div>

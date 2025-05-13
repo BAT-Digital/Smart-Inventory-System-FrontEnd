@@ -57,7 +57,7 @@ export const RightSideProducts: React.FC<RightSideCategoriesProps> = ({
             </div>
             <div>
               <Input.Search
-                placeholder="Поиск"
+                placeholder="Search"
                 onSearch={onSearch}
                 style={{ width: 200 }}
                 allowClear
@@ -87,7 +87,7 @@ export const RightSideProducts: React.FC<RightSideCategoriesProps> = ({
                 className="mx-3"
                 onClick={onDelete}
               >
-                Ложное пробитие
+                Delete items
               </Button>
               <Button
                 type="primary"
@@ -100,7 +100,7 @@ export const RightSideProducts: React.FC<RightSideCategoriesProps> = ({
                 size="large"
                 onClick={handleSell}
               >
-                Продать
+                Sell
               </Button>
             </div>
             <Button
@@ -115,7 +115,7 @@ export const RightSideProducts: React.FC<RightSideCategoriesProps> = ({
               size="large"
               onClick={onCancel}
             >
-              Отмена
+              Cancel
             </Button>
           </div>
         </div>

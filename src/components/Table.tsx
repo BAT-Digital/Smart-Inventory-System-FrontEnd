@@ -1,12 +1,7 @@
 import { Table, Button } from "antd";
 import { useState } from "react";
 import { CompositionProductInfo } from "./CompositionProductInfo";
-import { useBatchArrivals } from "../hooks/useBatchArrivals";
-import {
-  Product,
-  useCategoryProducts,
-  useProductInUse,
-} from "../hooks/useProducts";
+import { Product, useCategoryProducts } from "../hooks/useProducts";
 import {
   fetchCompositionByProductId,
   Ingredient,
@@ -25,22 +20,22 @@ export const ReceiptTable = ({ data, loading }: ReceiptTableProps) => {
       key: "id",
     },
     {
-      title: "Поставщик",
+      title: "Supplier",
       dataIndex: "supplier",
       key: "supplier",
     },
     {
-      title: "Заметки",
+      title: "Notes",
       dataIndex: "notes",
       key: "notes",
     },
     {
-      title: "Принимающий",
+      title: "Receiver",
       dataIndex: "receiver",
       key: "receiver",
     },
     {
-      title: "Время поставки",
+      title: "Arrival time",
       dataIndex: "time",
       key: "time",
     },
@@ -140,10 +135,10 @@ export const AccountingProductTable: React.FC<Props> = ({
   );
 };
 
-interface CategoryProps {
+type CategoryProps = {
   type: String;
   name: String;
-}
+};
 
 const prdouctColumns = [
   {
@@ -152,37 +147,37 @@ const prdouctColumns = [
     key: "id",
   },
   {
-    title: "Название товара",
+    title: "Name",
     dataIndex: "name",
     key: "name",
   },
   {
-    title: "Скоропортищийся",
+    title: "Perishable",
     dataIndex: "perishable",
     key: "perishable",
   },
   {
-    title: "Описание",
+    title: "Description",
     dataIndex: "description",
     key: "description",
   },
   {
-    title: "Состав",
+    title: "Composition",
     dataIndex: "composition",
     key: "composition",
   },
   {
-    title: "Цена",
+    title: "Price",
     dataIndex: "price",
     key: "price",
   },
   {
-    title: "Объем",
+    title: "Volume",
     dataIndex: "volume",
     key: "volume",
   },
   {
-    title: "Единица измерения",
+    title: "Unit",
     dataIndex: "unit",
     key: "unit",
   },
@@ -229,7 +224,7 @@ export const AccountingCategoryProductTable: React.FC<CategoryProps> = ({
           setIsModalOpen(true);
         }}
       >
-        Узнать
+        Check
       </Button>
     ) : (
       ""
@@ -267,27 +262,27 @@ const prdouctInUseColumns = [
     key: "id",
   },
   {
-    title: "Название товара",
+    title: "Product name",
     dataIndex: "name",
     key: "name",
   },
   {
-    title: "Кем добавлено",
+    title: "Added by",
     dataIndex: "added_by",
     key: "added_by",
   },
   {
-    title: "Количетсво Поставлено",
+    title: "Quantity recieved",
     dataIndex: "quantity_recieved",
     key: "quantity_recieved",
   },
   {
-    title: "Количество Осталось",
+    title: "Quantity left",
     dataIndex: "quantity_left",
     key: "quantity_left",
   },
   {
-    title: "Дата поставки",
+    title: "Date recieved",
     dataIndex: "date_recieved",
     key: "date_recieved",
   },

@@ -74,7 +74,7 @@ export const CompositeDataModal = ({
       <Modal
         title={
           <span className="text-white font-semibold flex justify-center mb-4">
-            Предоставьте данные о комплексном товаре
+            Provide composite product data
           </span>
         }
         open={open}
@@ -90,8 +90,8 @@ export const CompositeDataModal = ({
       >
         <Form form={form} layout="vertical">
           <Form.Item
-            name="Название"
-            rules={[{ message: "Название товара!!" }]}
+            name="name"
+            rules={[{ message: "Name!!" }]}
             style={{ marginBottom: "8px", color: "white" }}
             className="flex justify-center"
           >
@@ -130,7 +130,7 @@ export const CompositeDataModal = ({
               >
                 <Form.Item name={["items", index, "ingredientId"]}>
                   <Select
-                    placeholder="Название продукта"
+                    placeholder="Product name"
                     className="w-full"
                     style={{ marginBottom: "8px" }}
                   >
@@ -143,7 +143,7 @@ export const CompositeDataModal = ({
                 </Form.Item>
                 <Form.Item name={["items", index, "quantityReceived"]}>
                   <Input
-                    placeholder="Объем продукта"
+                    placeholder="Volume"
                     value={item.volume}
                     onChange={(e) =>
                       handleCompositeChange(index, "volume", e.target.value)
@@ -175,10 +175,10 @@ export const CompositeDataModal = ({
               className="w-1/2 mr-2"
               size="large"
             >
-              Добавить
+              Add
             </Button>
             <Button onClick={onClose} className="w-1/2 ml-2" size="large">
-              Отмена
+              Cancel
             </Button>
           </div>
         </Form>

@@ -45,7 +45,7 @@ export const SalesItemDeleteModal = ({
       <Modal
         title={
           <span className="text-white font-semibold flex justify-center mb-4">
-            Выберите продукты
+            Choose products
           </span>
         }
         open={open}
@@ -86,7 +86,7 @@ export const SalesItemDeleteModal = ({
               className="w-1/2 mr-2"
               size="large"
             >
-              Удалить
+              Delete
             </Button>
             <Button
               onClick={() => {
@@ -96,7 +96,7 @@ export const SalesItemDeleteModal = ({
               className="w-1/2 ml-2"
               size="large"
             >
-              Отмена
+              Cancel
             </Button>
           </div>
         </Form>

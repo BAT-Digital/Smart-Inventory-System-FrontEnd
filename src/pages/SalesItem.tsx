@@ -33,7 +33,7 @@ export const SalesItem = () => {
     try {
       await deleteSalesTransaction(transactionId);
       navigation("/sales");
-      message.success("Deleted check");
+      message.success("Check deleted");
     } catch (error) {
       console.error("Delete Error:", error);
       message.error(`Delete Error: ${error}`);

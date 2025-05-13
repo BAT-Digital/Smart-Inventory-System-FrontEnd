@@ -28,7 +28,7 @@ const CardGrid: React.FC<Props> = ({ salesTransactions }) => {
             >
               <p>{salesTransaction.status}</p>
               <div className="absolute bottom-4 right-4 text-sm font-bold text-black">
-                Цена: {salesTransaction.totalAmount}
+                Total: ${salesTransaction.totalAmount}
               </div>
             </Card>
           </Link>

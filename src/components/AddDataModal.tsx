@@ -65,7 +65,7 @@ export const AddDataModal = ({ open, onClose, onSuccess }: Props) => {
   const handleAdd = () => {
     form.validateFields().then((values) => {
       setAlertMessage(
-        `Новая партия от ${values.supplier} была успешно добавлена`
+        `New batch from ${values.supplier} has been succesfully added`
       );
       setIsModalOpen(false);
       setSelectedSupplier("something");
@@ -85,7 +85,7 @@ export const AddDataModal = ({ open, onClose, onSuccess }: Props) => {
       <Modal
         title={
           <span className="text-white font-semibold flex justify-center mb-4">
-            Добавьте данные
+            Add data
           </span>
         }
         open={open}
@@ -98,16 +98,16 @@ export const AddDataModal = ({ open, onClose, onSuccess }: Props) => {
         <Form form={form} layout="vertical">
           <Form.Item
             name="supplier"
-            rules={[{ required: true, message: "Выберите поставщика" }]}
+            rules={[{ required: true, message: "Choose supplier" }]}
           >
-            <Select placeholder="Поставщик*">
+            <Select placeholder="Supplier*">
               {suppliers.map((supplier) => (
                 <Option value={supplier.name}>{supplier.name}</Option>
               ))}
             </Select>
           </Form.Item>
           <Form.Item name="notes">
-            <Input.TextArea placeholder="Напишите заметки..." rows={4} />
+            <Input.TextArea placeholder="Notes..." rows={4} />
           </Form.Item>
           <div className="flex justify-between">
             <Button
@@ -117,10 +117,10 @@ export const AddDataModal = ({ open, onClose, onSuccess }: Props) => {
               className="w-1/2 mr-2"
               size="large"
             >
-              Добавить
+              Add
             </Button>
             <Button onClick={onClose} className="w-1/2 ml-2" size="large">
-              Отмена
+              Cancel
             </Button>
           </div>
         </Form>

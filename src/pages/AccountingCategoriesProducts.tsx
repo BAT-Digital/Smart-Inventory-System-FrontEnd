@@ -9,8 +9,8 @@ import { useLocation } from "react-router-dom";
 export const AccountingCategoriesProducts = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const location = useLocation();
-  const { name } = location.state || { name: "Категория не указана" };
-  const { type } = location.state || { type: "Категория не указана" };
+  const { name } = location.state || { name: "No category" };
+  const { type } = location.state || { type: "No category" };
 
   const handleSearch = (value: string) => {
     console.log("Searching:", value);

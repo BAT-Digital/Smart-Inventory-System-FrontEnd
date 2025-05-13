@@ -10,9 +10,9 @@ import {
   useSoloProducts,
 } from "../hooks/useProducts";
 
-interface Props {
+type Props = {
   type: String;
-}
+};
 
 const prdouctSoloColumns = [
   {
@@ -21,32 +21,32 @@ const prdouctSoloColumns = [
     key: "id",
   },
   {
-    title: "Название товара",
+    title: "Product name",
     dataIndex: "name",
     key: "name",
   },
   {
-    title: "Скоропортищийся",
+    title: "Perishable",
     dataIndex: "perishable",
     key: "perishable",
   },
   {
-    title: "Описание",
+    title: "Description",
     dataIndex: "description",
     key: "description",
   },
   {
-    title: "Цена",
+    title: "Price",
     dataIndex: "price",
     key: "price",
   },
   {
-    title: "Объем",
+    title: "Volume",
     dataIndex: "volume",
     key: "volume",
   },
   {
-    title: "Единица измерения",
+    title: "Unit",
     dataIndex: "unit",
     key: "unit",
   },
@@ -59,37 +59,37 @@ const prdouctColumns = [
     key: "id",
   },
   {
-    title: "Название товара",
+    title: "Product name",
     dataIndex: "name",
     key: "name",
   },
   {
-    title: "Скоропортищийся",
+    title: "Perishable",
     dataIndex: "perishable",
     key: "perishable",
   },
   {
-    title: "Описание",
+    title: "Description",
     dataIndex: "description",
     key: "description",
   },
   {
-    title: "Состав",
+    title: "Composition",
     dataIndex: "composition",
     key: "composition",
   },
   {
-    title: "Цена",
+    title: "Price",
     dataIndex: "price",
     key: "price",
   },
   {
-    title: "Объем",
+    title: "Volume",
     dataIndex: "volume",
     key: "volume",
   },
   {
-    title: "Единица измерения",
+    title: "Unit",
     dataIndex: "unit",
     key: "unit",
   },

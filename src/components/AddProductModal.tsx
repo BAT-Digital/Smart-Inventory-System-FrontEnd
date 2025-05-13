@@ -54,7 +54,7 @@ export const AddProductModal = ({
       <Modal
         title={
           <span className="text-white font-semibold flex justify-center mb-4">
-            Добавьте продукт
+            Add products
           </span>
         }
         open={open}
@@ -110,7 +110,7 @@ export const AddProductModal = ({
               className="w-1/2 mr-2"
               size="large"
             >
-              Добавить
+              Add
             </Button>
             <Button
               onClick={() => {
@@ -120,7 +120,7 @@ export const AddProductModal = ({
               className="w-1/2 ml-2"
               size="large"
             >
-              Отмена
+              Cancel
             </Button>
           </div>
         </Form>
@@ -175,7 +175,7 @@ export const AddProductDataBatchModal = ({
     <Modal
       title={
         <span className="text-white font-semibold flex justify-center mb-4">
-          Данные продуктов
+          Products data
         </span>
       }
       open={open}
@@ -208,27 +208,27 @@ export const AddProductDataBatchModal = ({
                 <div className="mr-2">
                   <Form.Item
                     name={["items", index, "quantityReceived"]}
-                    rules={[{ required: true, message: "Введите количество" }]}
+                    rules={[{ required: true, message: "Enter quantity" }]}
                   >
-                    <Input placeholder="Количетсво" />
+                    <Input placeholder="Quantity" />
                   </Form.Item>
                 </div>
                 <div className="ml-2">
                   <Form.Item
                     name={["items", index, "unitCost"]}
-                    rules={[{ required: true, message: "Введите цену" }]}
+                    rules={[{ required: true, message: "Enter unit cost" }]}
                   >
-                    <Input placeholder="Цена" />
+                    <Input placeholder="Unit cost" />
                   </Form.Item>
                 </div>
               </div>
               <Form.Item
                 name={["items", index, "expiryDate"]}
-                rules={[{ required: true, message: "Выберите дату" }]}
+                rules={[{ required: true, message: "Choose date" }]}
               >
                 <DatePicker
                   format="YYYY-MM-DD"
-                  placeholder="Срок годности"
+                  placeholder="Expiry date"
                   className="w-full"
                 />
               </Form.Item>
@@ -244,10 +244,10 @@ export const AddProductDataBatchModal = ({
             className="w-1/2 mr-2"
             size="large"
           >
-            Добавить
+            Add
           </Button>
           <Button onClick={onClose} className="w-1/2 ml-2" size="large">
-            Отмена
+            Cancel
           </Button>
         </div>
       </Form>
