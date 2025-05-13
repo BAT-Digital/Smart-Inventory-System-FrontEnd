@@ -8,6 +8,8 @@ import { AddCategoryModal } from "../components/AddCategory";
 import { AddSupplierModal } from "../components/AddSupplier";
 import { useCategories } from "../hooks/useCategories";
 import { useSuppliers } from "../hooks/useSuppliers";
+import { useNavigate } from "react-router-dom";
+import backArrowCard from "../assets/icons/backArrowCard.png";
 
 interface Props {
   type: String;
@@ -18,6 +20,7 @@ export const AccountingCategories: React.FC<Props> = ({ type }) => {
   const { suppliers, refetch: refetchSuppliers } = useSuppliers();
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isSupplierModalOpen, setIsSupplierModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const categoryNames = categories.map((c) => c.name);
   const supplierNames = suppliers.map((c) => c.name);
@@ -47,7 +50,17 @@ export const AccountingCategories: React.FC<Props> = ({ type }) => {
         <Navbar />
         <div className=" flex items-center justify-center">
           <div className="w-full max-w-6xl px-4 mt-10">
-            <div className="flex flex-col pl-4 py-2">
+            <div className="flex pl-4 py-2">
+              <button
+                className="group cursor-pointer"
+                onClick={() => navigate(-1)}
+              >
+                <img
+                  src={backArrowCard}
+                  alt=""
+                  className="h-10 w-auto px-2 transition-transform duration-200 group-hover:scale-110"
+                />
+              </button>
               <Button
                 type="primary"
                 onClick={
@@ -61,6 +74,7 @@ export const AccountingCategories: React.FC<Props> = ({ type }) => {
                   border: "2px solid black",
                 }}
                 size="large"
+                className="w-full"
               >
                 <img src={plus} alt="" className="h-5 w-auto" />
               </Button>

@@ -45,7 +45,10 @@ export const AddCheckModal = ({ open, onClose, onSuccess }: Props) => {
         width={400}
       >
         <Form form={form} layout="vertical">
-          <Form.Item name="name">
+          <Form.Item
+            name="name"
+            rules={[{ required: true, message: "Please enter the name" }]}
+          >
             <Input placeholder="Название" />
           </Form.Item>
           <Form.Item name="notes">

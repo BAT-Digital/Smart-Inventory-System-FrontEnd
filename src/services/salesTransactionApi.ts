@@ -19,3 +19,15 @@ export const sendTransaction = async (credentials: string) => {
     throw error;
   }
 };
+
+export const deleteSalesTransaction = async (transactionId: number) => {
+  try {
+    const response = await axios.delete(
+      `/api/sales-transactions/${transactionId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting sales transaction:", error);
+    throw error;
+  }
+};

@@ -9,6 +9,8 @@ type RightSideCategoriesProps = {
   category: string;
   onBack: () => void;
   handleSell: () => {};
+  onDelete: () => void;
+  onCancel: () => {};
 };
 
 export const RightSideProducts: React.FC<RightSideCategoriesProps> = ({
@@ -17,6 +19,8 @@ export const RightSideProducts: React.FC<RightSideCategoriesProps> = ({
   category,
   onBack,
   handleSell,
+  onDelete,
+  onCancel,
 }) => {
   const { products } = useProductsByCategory({ category });
 
@@ -81,6 +85,7 @@ export const RightSideProducts: React.FC<RightSideCategoriesProps> = ({
                 }}
                 size="large"
                 className="mx-3"
+                onClick={onDelete}
               >
                 Ложное пробитие
               </Button>
@@ -108,6 +113,7 @@ export const RightSideProducts: React.FC<RightSideCategoriesProps> = ({
                 minHeight: "46px",
               }}
               size="large"
+              onClick={onCancel}
             >
               Отмена
             </Button>

@@ -114,8 +114,8 @@ export const AddProductDataModal = ({ open, onClose, onSuccess }: Props) => {
 
       console.log(productRequest);
 
-      await moveToProductInUse([productRequest]);
-      message.success("Product moved successfully");
+      const response = await moveToProductInUse([productRequest]);
+      message.info(response);
 
       form.resetFields(); // Reset all form fields
       setBatchItems([]); // Clear batch items
@@ -333,20 +333,34 @@ export const AddFullProductDataModal = ({
         width={400}
       >
         <Form form={form} layout="vertical">
-          <Form.Item name="productName" style={{ marginBottom: "8px" }}>
+          <Form.Item
+            name="productName"
+            rules={[{ required: true, message: "Please enter product name" }]}
+            style={{ marginBottom: "8px" }}
+          >
             <Input placeholder="Название" />
           </Form.Item>
-          <Form.Item name="barcode" style={{ marginBottom: "8px" }}>
+          <Form.Item
+            name="barcode"
+            rules={[{ required: true, message: "Please enter barcode" }]}
+            style={{ marginBottom: "8px" }}
+          >
             <Input placeholder="Баркод" />
           </Form.Item>
           <div className="flex" style={{ marginBottom: "-16px" }}>
             <div className="mr-2 flex-col-1 w-full">
-              <Form.Item name="volume">
+              <Form.Item
+                name="volume"
+                rules={[{ required: true, message: "Please enter volume" }]}
+              >
                 <Input placeholder="Объем" />
               </Form.Item>
             </div>
             <div className="ml-2 flex-col-1 w-full">
-              <Form.Item name="unitOfMeasure">
+              <Form.Item
+                name="unitOfMeasure"
+                rules={[{ required: true, message: "Please enter unit" }]}
+              >
                 <Select
                   placeholder="Единица измерения"
                   onChange={(value) => {
@@ -369,10 +383,18 @@ export const AddFullProductDataModal = ({
               </Form.Item>
             </div>
           </div>
-          <Form.Item name="quantity" style={{ marginBottom: "8px" }}>
+          <Form.Item
+            name="quantity"
+            style={{ marginBottom: "8px" }}
+            rules={[{ required: true, message: "Please enter quantity" }]}
+          >
             <Input placeholder="Количество едениц товара" />
           </Form.Item>
-          <Form.Item name="supplier" style={{ marginBottom: "8px" }}>
+          <Form.Item
+            name="supplier"
+            style={{ marginBottom: "8px" }}
+            rules={[{ required: true, message: "Please enter supplier" }]}
+          >
             <Select
               placeholder="Поставщик"
               onChange={(value) => {
@@ -391,7 +413,11 @@ export const AddFullProductDataModal = ({
               <Option value="другое">другое</Option>
             </Select>
           </Form.Item>
-          <Form.Item name="category" style={{ marginBottom: "8px" }}>
+          <Form.Item
+            name="category"
+            style={{ marginBottom: "8px" }}
+            rules={[{ required: true, message: "Please enter category" }]}
+          >
             <Select
               placeholder="Категория"
               onChange={(value) => {
@@ -410,19 +436,35 @@ export const AddFullProductDataModal = ({
               <Option value="другое">другое</Option>
             </Select>
           </Form.Item>
-          <Form.Item name="price" style={{ marginBottom: "8px" }}>
+          <Form.Item
+            name="price"
+            style={{ marginBottom: "8px" }}
+            rules={[{ required: true, message: "Please enter price" }]}
+          >
             <Input placeholder="Цена" />
           </Form.Item>
-          <Form.Item name="description" style={{ marginBottom: "8px" }}>
+          <Form.Item
+            name="description"
+            style={{ marginBottom: "8px" }}
+            rules={[{ required: true, message: "Please enter description" }]}
+          >
             <Input.TextArea placeholder="описание" />
           </Form.Item>
-          <Form.Item name="isPerishable" style={{ marginBottom: "8px" }}>
+          <Form.Item
+            name="isPerishable"
+            style={{ marginBottom: "8px" }}
+            rules={[{ required: true, message: "Please choose is perishable" }]}
+          >
             <Select placeholder="Is perishable?">
               <Option value="true">Perishable</Option>
               <Option value="false">NonPerishable</Option>
             </Select>
           </Form.Item>
-          <Form.Item name="isComposite" style={{ marginBottom: "8px" }}>
+          <Form.Item
+            name="isComposite"
+            style={{ marginBottom: "8px" }}
+            rules={[{ required: true, message: "Please choose is composite" }]}
+          >
             <Select placeholder="Характеристика продукта">
               <Option value="false">Единичный</Option>
               <Option value="true">Комплексный</Option>

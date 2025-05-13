@@ -8,6 +8,10 @@ import { useState } from "react";
 import { RightSideProducts } from "../components/RightSideProducts";
 import { ProductRequestDTO, sell } from "../services/saleApi";
 import { AlerModal } from "../components/AlertModal";
+import { message } from "antd";
+import Cookies from "js-cookie";
+import { SalesItemDeleteModal } from "../components/salesItemDeleteModal";
+import { deleteSalesTransaction } from "../services/salesTransactionApi";
 
 export const SalesItem = () => {
   const navigate = useNavigate();
@@ -18,16 +22,38 @@ export const SalesItem = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const navigation = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { salesItems, refetch: reFetchSalesItems } = useSalesItems({
     transactionId,
   });
 
-  const handleSell = async () => {
+  const handleCancel = async () => {
     try {
+      await deleteSalesTransaction(transactionId);
+      navigation("/sales");
+      message.success("Deleted check");
+    } catch (error) {
+      console.error("Delete Error:", error);
+      message.error(`Delete Error: ${error}`);
+    }
+  };
+
+  const handleSell = async () => {
+    const userIdCookie = Cookies.get("user_id");
+
+    if (!userIdCookie) {
+      message.error("Session expired. Please log in again.");
+      navigation("/");
+      return;
+    }
+
+    try {
+      const userId = parseInt(userIdCookie);
       const productRequestDTO: ProductRequestDTO[] = salesItems.map(
         (salesItem) => ({
-          userId: 1,
+          userId: userId,
           barcode: salesItem.product.barcode,
           expirationDate: salesItem.expiryDate,
           quantity: salesItem.quantity,
@@ -40,6 +66,7 @@ export const SalesItem = () => {
       setAlertVisible(true);
     } catch (error) {
       console.error("Sell Error:", error);
+      message.error(`Sell Error: ${error}`);
     }
   };
 
@@ -79,12 +106,20 @@ export const SalesItem = () => {
                   category={selectedCategory}
                   onBack={handleBackToCategories}
                   handleSell={handleSell}
+                  onDelete={() => {
+                    setIsModalOpen(true);
+                  }}
+                  onCancel={handleCancel}
                 />
               ) : (
                 <RightSideCategories
                   onSearch={handleSearch}
                   onCategorySelect={handleCategorySelected}
                   handleSell={handleSell}
+                  onDelete={() => {
+                    setIsModalOpen(true);
+                  }}
+                  onCancel={handleCancel}
                 />
               )}
             </div>
@@ -106,6 +141,13 @@ export const SalesItem = () => {
         }}
         showCancel={false}
       ></AlerModal>
+
+      <SalesItemDeleteModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        salesItems={salesItems}
+        onSuccess={reFetchSalesItems}
+      />
     </>
   );
 };

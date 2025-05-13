@@ -134,8 +134,10 @@ export const useProductInUse = () => {
           id: item.productId,
           name: item.product.productName,
           added_by: item.assignedBy.username,
-          quantity_recieved: item.volumeReceived,
-          quantity_left: item.volumeRemaining,
+          quantity_recieved:
+            item.volumeReceived + " " + item.product.unitOfMeasure,
+          quantity_left:
+            item.volumeRemaining + " " + item.product.unitOfMeasure,
           date_recieved: new Date(item.assignedDate).toLocaleString("ru-RU"),
         }));
         setData(mapped);
