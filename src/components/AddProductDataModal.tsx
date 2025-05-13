@@ -14,6 +14,8 @@ import {
   moveToProductInUse,
   ProductRequestDTO,
 } from "../services/productInUseApi";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   open: boolean;
@@ -34,6 +36,7 @@ export const AddProductDataModal = ({ open, onClose, onSuccess }: Props) => {
   const [loadingBatchItems, setLoadingBatchItems] = useState(false);
   const [selectedBarcode, setSelectedBarcode] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(0);
+  const navigation = useNavigate();
 
   const handleProductChange = async (barcode: string) => {
     setSelectedBarcode(barcode);
@@ -90,11 +93,20 @@ export const AddProductDataModal = ({ open, onClose, onSuccess }: Props) => {
   };
 
   const handleSubmit = async () => {
+    const userIdCookie = Cookies.get("user_id");
+
+    if (!userIdCookie) {
+      message.error("Session expired. Please log in again.");
+      navigation("/");
+      return;
+    }
+
     try {
       const values = await form.validateFields();
+      const userId = parseInt(userIdCookie);
 
       const productRequest: ProductRequestDTO = {
-        userId: 2,
+        userId: userId,
         barcode: selectedBarcode!,
         expirationDate: values.expiry_date,
         quantity: values.quantity,

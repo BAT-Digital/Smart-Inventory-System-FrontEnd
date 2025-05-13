@@ -5,7 +5,7 @@ import miniLogo from "../assets/miniLogo.png";
 import bell from "../assets/icons/bell.png";
 import settings from "../assets/icons/settings.png";
 import profile from "../assets/icons/profile.png";
-import { useNotifications } from "../contexts/NotificationContext"; 
+import { useNotifications } from "../contexts/NotificationContext";
 
 export const Navbar = () => {
   const { notifications, toggleNotifications } = useNotifications();
@@ -85,9 +85,9 @@ export const Navbar = () => {
           <Link to="/settings">
             <img src={settings} alt="" className="h-7 w-auto px-2" />
           </Link>
-          <button 
+          <button
             onClick={toggleNotifications}
-            className="relative"
+            className="relative cursor-pointer"
           >
             <img src={bell} alt="" className="h-6 w-auto px-2" />
             {unreadCount > 0 && (
