@@ -104,12 +104,26 @@ export const AddProductDataModal = ({ open, onClose, onSuccess }: Props) => {
 
       await moveToProductInUse([productRequest]);
       message.success("Product moved successfully");
+
+      form.resetFields(); // Reset all form fields
+      setBatchItems([]); // Clear batch items
+      setSelectedBarcode(null); // Reset barcode selection
+      setQuantity(0);
+
       onSuccess();
       onClose();
     } catch (error) {
       console.error("Error submitting form:", error);
       message.error("Failed to move product");
     }
+  };
+
+  const handleClose = () => {
+    form.resetFields();
+    setBatchItems([]);
+    setSelectedBarcode(null);
+    setQuantity(0);
+    onClose();
   };
 
   return (
@@ -120,7 +134,7 @@ export const AddProductDataModal = ({ open, onClose, onSuccess }: Props) => {
         </span>
       }
       open={open}
-      onCancel={onClose}
+      onCancel={handleClose}
       footer={null}
       centered
       className="custom-modal"
@@ -177,7 +191,7 @@ export const AddProductDataModal = ({ open, onClose, onSuccess }: Props) => {
           >
             Добавить
           </Button>
-          <Button onClick={onClose} className="w-1/2 ml-2" size="large">
+          <Button onClick={handleClose} className="w-1/2 ml-2" size="large">
             Отмена
           </Button>
         </div>
@@ -326,12 +340,12 @@ export const AddFullProductDataModal = ({
                   onChange={(value) => {
                     if (value === "другое") {
                       setShowUnitModal(true);
-                      form.setFieldValue("unit", null); // reset the select field to prevent re-trigger
+                      form.setFieldValue("unitOfMeasure", null); // reset the select field to prevent re-trigger
                     } else {
                       setCustomUnit(null);
                     }
                   }}
-                  value={customUnit || form.getFieldValue("unit")}
+                  value={customUnit || form.getFieldValue("unitOfMeasure")}
                 >
                   <Option value="л">л</Option>
                   <Option value="мл">мл</Option>
@@ -462,7 +476,7 @@ export const AddFullProductDataModal = ({
         >
           <Form form={form} layout="vertical">
             <Form.Item
-              name="unit"
+              name="unitOfMeasure"
               rules={[{ required: true, message: "Единица измерения!!" }]}
             >
               <Input

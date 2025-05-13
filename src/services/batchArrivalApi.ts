@@ -16,3 +16,13 @@ export const sendBatchArrival = async (supplierId: number, notes: string) => {
     throw error;
   }
 };
+
+export const deleteBatchArrival = async (id: number) => {
+  try {
+    const response = await axios.delete(`/api/batch-arrivals/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting batch arrival:", error);
+    throw error;
+  }
+};

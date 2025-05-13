@@ -3,15 +3,19 @@ import { AddProductModal } from "./AddProductModal";
 import { useEffect, useState } from "react";
 import { AlerModal } from "./AlertModal";
 import { useSuppliers } from "../hooks/useSuppliers";
-import { sendBatchArrival } from "../services/batchArrivalApi";
+import {
+  deleteBatchArrival,
+  sendBatchArrival,
+} from "../services/batchArrivalApi";
 const { Option } = Select;
 
 type Props = {
   open: boolean;
   onClose: () => void;
+  onSuccess: () => void;
 };
 
-export const AddDataModal = ({ open, onClose }: Props) => {
+export const AddDataModal = ({ open, onClose, onSuccess }: Props) => {
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
@@ -47,6 +51,14 @@ export const AddDataModal = ({ open, onClose }: Props) => {
       onClose();
     } catch (error) {
       console.error("Submission error:", error);
+    }
+  };
+
+  const handleOnCancel = async () => {
+    try {
+      await deleteBatchArrival(batchArrivalId);
+    } catch (error) {
+      console.error("handle On Cancel error:", error);
     }
   };
 
@@ -121,6 +133,7 @@ export const AddDataModal = ({ open, onClose }: Props) => {
           // handle confirmation
           setAlertVisible(false);
           setAlertMessage(null);
+          onSuccess();
           onClose();
         }}
         onCancel={() => {
@@ -135,6 +148,7 @@ export const AddDataModal = ({ open, onClose }: Props) => {
         open={isModalOpen}
         onClose={handleClose}
         onAdd={handleAdd}
+        onCancel={handleOnCancel}
         selectedSupplier={selectedSupplier}
         batchArrivalId={batchArrivalId}
       />

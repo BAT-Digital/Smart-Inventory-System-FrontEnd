@@ -12,6 +12,7 @@ type Props = {
   onAdd: () => void;
   selectedSupplier: string;
   batchArrivalId: number;
+  onCancel: () => void;
 };
 
 type Product = {
@@ -25,6 +26,7 @@ export const AddProductModal = ({
   onAdd,
   selectedSupplier,
   batchArrivalId,
+  onCancel,
 }: Props) => {
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -56,7 +58,10 @@ export const AddProductModal = ({
           </span>
         }
         open={open}
-        onCancel={onClose}
+        onCancel={() => {
+          onCancel();
+          onClose();
+        }}
         footer={null}
         centered
         className="custom-modal"
@@ -107,7 +112,14 @@ export const AddProductModal = ({
             >
               Добавить
             </Button>
-            <Button onClick={onClose} className="w-1/2 ml-2" size="large">
+            <Button
+              onClick={() => {
+                onCancel();
+                onClose();
+              }}
+              className="w-1/2 ml-2"
+              size="large"
+            >
               Отмена
             </Button>
           </div>

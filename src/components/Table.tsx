@@ -12,9 +12,12 @@ import {
   Ingredient,
 } from "../hooks/useProductRecipe";
 
-export const ReceiptTable = () => {
-  const { data, loading } = useBatchArrivals();
+type ReceiptTableProps = {
+  data: never[];
+  loading: boolean;
+};
 
+export const ReceiptTable = ({ data, loading }: ReceiptTableProps) => {
   const columns = [
     {
       title: "ID",
