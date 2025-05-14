@@ -1,50 +1,34 @@
-export type NotificationType =
-    // Inventory notifications
-    | 'LOW_STOCK'
-    | 'EXPIRATION_ALERT'
-    | 'NEW_BATCH'
-    | 'STOCK_ADJUSTMENT'
-    | 'INVENTORY_COUNT'
-    
-    // Sales notifications
-    | 'SALE_COMPLETED'
-    | 'HIGH_VALUE_SALE'
-    | 'REFUND_PROCESSED'
-    | 'DAILY_SALES_SUMMARY'
-    
-    // Supplier notifications
-    | 'ORDER_PLACED'
-    | 'ORDER_RECEIVED'
-    | 'ORDER_DELAYED'
-    | 'SUPPLIER_ISSUE'
-    
-    // System notifications
-    | 'SYSTEM_ERROR'
-    | 'SYSTEM_WARNING'
-    | 'SYSTEM_INFO'
-    | 'BACKUP_COMPLETED';
+export enum NotificationType {
+    LOW_STOCK = 'LOW_STOCK',
+    EXPIRATION_ALERT = 'EXPIRATION_ALERT',
+    AI_ANALYSIS_COMPLETED = 'AI_ANALYSIS_COMPLETED',
+    SYSTEM_ERROR = 'SYSTEM_ERROR',
+    SYSTEM_WARNING = 'SYSTEM_WARNING',
+    SYSTEM_INFO = 'SYSTEM_INFO'
+}
 
-export type NotificationCategory =
-    | 'INVENTORY'
-    | 'SALES'
-    | 'SUPPLIER'
-    | 'SYSTEM';
+export enum NotificationCategory {
+    INVENTORY = 'INVENTORY',
+    SYSTEM = 'SYSTEM'
+}
 
-export type NotificationPriority =
-    | 'LOW'
-    | 'NORMAL'
-    | 'HIGH'
-    | 'URGENT';
+export enum NotificationPriority {
+    LOW = 'LOW',
+    NORMAL = 'NORMAL',
+    HIGH = 'HIGH',
+    URGENT = 'URGENT'
+}
 
 export interface NotificationPayload {
     type: NotificationType;
     message: string;
     category: NotificationCategory;
     priority: NotificationPriority;
-    timestamp: string;
-    metadata: Record<string, string>;
+    metadata?: Record<string, string>;
+    timestamp?: string;
 }
 
 export interface Notification extends NotificationPayload {
     id: number;
+    read?: boolean;
 }

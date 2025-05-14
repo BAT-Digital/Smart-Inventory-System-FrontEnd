@@ -55,9 +55,8 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         };
 
         const topics = [
-            'inventory/alerts/#',
-            'inventory/events/#',
-            'sales/events/#'
+            'inventory/alerts/#',  // Covers inventory/alerts/stock and inventory/alerts/expiration
+            'system/events/#'      // Covers system/events/ai_analysis and system/events
         ];
 
         mqttService.connect();
