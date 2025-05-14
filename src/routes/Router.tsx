@@ -9,12 +9,16 @@ import { AccountingProducts } from "../pages/AccountingProducts";
 import { AccountingInUse } from "../pages/AccountingInUse";
 import { AccountingCategoriesProducts } from "../pages/AccountingCategoriesProducts";
 import { Dashboard } from "../pages/Dashboard";
+import { Profile } from "../pages/Profile";
+import { Settings } from "../pages/Settings";
 
 export default function AppRoutes() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/accounting" element={<Accounting />} />
         <Route

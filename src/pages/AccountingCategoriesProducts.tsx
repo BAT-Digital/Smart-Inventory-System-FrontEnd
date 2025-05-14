@@ -5,15 +5,23 @@ import { AccountingCategoriesProductsTableActions } from "../components/TableAct
 import { useState } from "react";
 import { AddFullProductDataModal } from "../components/AddProductDataModal";
 import { useLocation } from "react-router-dom";
+import { useCategoryProducts } from "../hooks/useProducts";
 
 export const AccountingCategoriesProducts = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const location = useLocation();
-  const { name } = location.state || { name: "Категория не указана" };
-  const { type } = location.state || { type: "Категория не указана" };
+  const { name } = location.state || { name: "No category" };
+  const { type } = location.state || { type: "No category" };
+
+  const { categoryProducts, categoryloading } = useCategoryProducts({
+    type,
+    name,
+    searchTerm,
+  });
 
   const handleSearch = (value: string) => {
-    console.log("Searching:", value);
+    setSearchTerm(value);
   };
 
   const handleScan = () => {
@@ -35,7 +43,10 @@ export const AccountingCategoriesProducts = () => {
               name={name}
             />
           </div>
-          <AccountingCategoryProductTable type={type} name={name} />
+          <AccountingCategoryProductTable
+            categoryProducts={categoryProducts}
+            categoryloading={categoryloading}
+          />
         </div>
       </div>
       <AddFullProductDataModal

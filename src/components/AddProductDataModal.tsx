@@ -5,9 +5,9 @@ import { AlerModal } from "./AlertModal";
 import { AddCategoryModal } from "./AddCategory";
 import { AddSupplierModal } from "./AddSupplier";
 import { CompositeDataModal } from "./CompositeDataModal";
-import { Category, useCategories } from "../hooks/useCategories";
-import { Supplier, useSuppliers } from "../hooks/useSuppliers";
-import { ProductDTO, sendProduct } from "../services/productApi";
+import { useCategories } from "../hooks/useCategories";
+import { useSuppliers } from "../hooks/useSuppliers";
+import { deleteProduct, ProductDTO, sendProduct } from "../services/productApi";
 import { useProducts } from "../hooks/useProducts";
 import axios from "../utils/axios";
 import {
@@ -114,8 +114,8 @@ export const AddProductDataModal = ({ open, onClose, onSuccess }: Props) => {
 
       console.log(productRequest);
 
-      await moveToProductInUse([productRequest]);
-      message.success("Product moved successfully");
+      const response = await moveToProductInUse([productRequest]);
+      message.info(response);
 
       form.resetFields(); // Reset all form fields
       setBatchItems([]); // Clear batch items
@@ -142,7 +142,7 @@ export const AddProductDataModal = ({ open, onClose, onSuccess }: Props) => {
     <Modal
       title={
         <span className="text-white font-semibold flex justify-center mb-4">
-          Данные продукта
+          Product data
         </span>
       }
       open={open}
@@ -156,9 +156,22 @@ export const AddProductDataModal = ({ open, onClose, onSuccess }: Props) => {
         <Form.Item
           name="product"
           style={{ marginBottom: "8px" }}
-          rules={[{ required: true, message: "Название Продукта*" }]}
+          rules={[{ required: true, message: "Product name*" }]}
         >
-          <Select placeholder="Продукт*" onChange={handleProductChange}>
+          <Select
+            showSearch
+            placeholder="Product*"
+            onChange={handleProductChange}
+            optionFilterProp="children"
+            filterOption={(
+              input: string,
+              option: { children: string } | undefined
+            ) =>
+              (option?.children ?? "")
+                .toLowerCase()
+                .includes(input.toLowerCase())
+            }
+          >
             {products.map((product) => (
               <Option value={product.barcode}>{product.productName}</Option>
             ))}
@@ -168,14 +181,14 @@ export const AddProductDataModal = ({ open, onClose, onSuccess }: Props) => {
         <div style={{ marginBottom: "-16px" }}>
           <Form.Item name="expiry_date">
             <Select
-              placeholder="Срок годности"
+              placeholder="Expiry date"
               loading={loadingBatchItems}
               disabled={batchItems.length === 0}
               onChange={handleExpiryDateChange}
             >
               {batchItems.map((item) => (
                 <Option key={item.batchItemId} value={item.expiryDate}>
-                  {item.expiryDate} (Остаток: {item.quantityRemaining})
+                  {item.expiryDate} (Quantity left: {item.quantityRemaining})
                 </Option>
               ))}
             </Select>
@@ -185,11 +198,13 @@ export const AddProductDataModal = ({ open, onClose, onSuccess }: Props) => {
         <div className="flex" style={{ marginBottom: "-10px" }}>
           <div className="mr-1">
             <Form.Item name="quantity">
-              <Input placeholder="Количетсво" />
+              <Input placeholder="Quantity" />
             </Form.Item>
           </div>
           <div className="ml-1">
-            <span style={{ color: "white", fontSize: 18 }}>из {quantity}</span>
+            <span style={{ color: "white", fontSize: 18 }}>
+              out of {quantity}
+            </span>
           </div>
         </div>
 
@@ -201,10 +216,10 @@ export const AddProductDataModal = ({ open, onClose, onSuccess }: Props) => {
             className="w-1/2 mr-2"
             size="large"
           >
-            Добавить
+            Add
           </Button>
           <Button onClick={handleClose} className="w-1/2 ml-2" size="large">
-            Отмена
+            Cancel
           </Button>
         </div>
       </Form>
@@ -229,9 +244,7 @@ export const AddFullProductDataModal = ({
   const [showUnitModal, setShowUnitModal] = useState(false);
   const [customUnit, setCustomUnit] = useState<string | null>(null);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const [customCategory, setCustomCategory] = useState<Category | null>(null);
   const [showSupplierModal, setShowSupplierModal] = useState(false);
-  const [customSupplier, setCustomSupplier] = useState<Supplier | null>(null);
   const [name, setName] = useState<string>("");
   const [showCompositeModal, setShowCompositeModal] = useState(false);
   const [finalProductId, setFinalProductId] = useState(0);
@@ -245,6 +258,14 @@ export const AddFullProductDataModal = ({
 
   const handleSupplierAdded = () => {
     refetchSuppliers();
+  };
+
+  const handleOnCancel = async () => {
+    try {
+      await deleteProduct(finalProductId);
+    } catch (error) {
+      console.error("handle On Cancel error:", error);
+    }
   };
 
   const handleSubmit = () => {
@@ -276,7 +297,9 @@ export const AddFullProductDataModal = ({
             } else {
               setName(values.productName);
               setFinalProductId(productId);
-              setAlertMessage(`${values.productName} был успешно добавлен`);
+              setAlertMessage(
+                `${values.productName} has been successfully added`
+              );
               setShowCompositeModal(true);
             }
           } catch (error) {
@@ -298,7 +321,9 @@ export const AddFullProductDataModal = ({
             };
             await sendProduct(productDTO);
 
-            setAlertMessage(`${values.productName} был успешно добавлен`);
+            setAlertMessage(
+              `${values.productName} has been successfully added`
+            );
             setAlertVisible(true);
             onSuccess();
           } catch (error) {
@@ -322,7 +347,7 @@ export const AddFullProductDataModal = ({
       <Modal
         title={
           <span className="text-white font-semibold flex justify-center mb-4">
-            Данные продукта
+            Product data
           </span>
         }
         open={open}
@@ -333,24 +358,38 @@ export const AddFullProductDataModal = ({
         width={400}
       >
         <Form form={form} layout="vertical">
-          <Form.Item name="productName" style={{ marginBottom: "8px" }}>
-            <Input placeholder="Название" />
+          <Form.Item
+            name="productName"
+            rules={[{ required: true, message: "Please enter product name" }]}
+            style={{ marginBottom: "8px" }}
+          >
+            <Input placeholder="Product name" />
           </Form.Item>
-          <Form.Item name="barcode" style={{ marginBottom: "8px" }}>
-            <Input placeholder="Баркод" />
+          <Form.Item
+            name="barcode"
+            rules={[{ required: true, message: "Please enter barcode" }]}
+            style={{ marginBottom: "8px" }}
+          >
+            <Input placeholder="Barcode" />
           </Form.Item>
           <div className="flex" style={{ marginBottom: "-16px" }}>
             <div className="mr-2 flex-col-1 w-full">
-              <Form.Item name="volume">
-                <Input placeholder="Объем" />
+              <Form.Item
+                name="volume"
+                rules={[{ required: true, message: "Please enter volume" }]}
+              >
+                <Input placeholder="Volume" />
               </Form.Item>
             </div>
             <div className="ml-2 flex-col-1 w-full">
-              <Form.Item name="unitOfMeasure">
+              <Form.Item
+                name="unitOfMeasure"
+                rules={[{ required: true, message: "Please enter unit" }]}
+              >
                 <Select
-                  placeholder="Единица измерения"
+                  placeholder="Unit"
                   onChange={(value) => {
-                    if (value === "другое") {
+                    if (value === "else") {
                       setShowUnitModal(true);
                       form.setFieldValue("unitOfMeasure", null); // reset the select field to prevent re-trigger
                     } else {
@@ -359,28 +398,44 @@ export const AddFullProductDataModal = ({
                   }}
                   value={customUnit || form.getFieldValue("unitOfMeasure")}
                 >
-                  <Option value="л">л</Option>
-                  <Option value="мл">мл</Option>
-                  <Option value="штук(-и)">штук(-и)</Option>
-                  <Option value="г">г</Option>
-                  <Option value="мг">мг</Option>
-                  <Option value="другое">другое</Option>
+                  <Option value="l">l</Option>
+                  <Option value="ml">ml</Option>
+                  <Option value="piece(-s)">piece(-s)</Option>
+                  <Option value="g">g</Option>
+                  <Option value="mg">mg</Option>
+                  <Option value="else">else</Option>
                 </Select>
               </Form.Item>
             </div>
           </div>
-          <Form.Item name="quantity" style={{ marginBottom: "8px" }}>
-            <Input placeholder="Количество едениц товара" />
+          <Form.Item
+            name="quantity"
+            style={{ marginBottom: "8px" }}
+            rules={[{ required: true, message: "Please enter quantity" }]}
+          >
+            <Input placeholder="Quantity" />
           </Form.Item>
-          <Form.Item name="supplier" style={{ marginBottom: "8px" }}>
+          <Form.Item
+            name="supplier"
+            style={{ marginBottom: "8px" }}
+            rules={[{ required: true, message: "Please enter supplier" }]}
+          >
             <Select
-              placeholder="Поставщик"
+              showSearch
+              placeholder="Supplier"
+              optionFilterProp="children"
+              filterOption={(
+                input: string,
+                option: { children: string } | undefined
+              ) =>
+                (option?.children ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
               onChange={(value) => {
-                if (value === "другое") {
+                if (value === "else") {
                   setShowSupplierModal(true);
                   form.setFieldValue("supplier", null); // reset the select field to prevent re-trigger
-                } else {
-                  setCustomSupplier(null);
                 }
               }}
               value={form.getFieldValue("supplier")}
@@ -388,18 +443,30 @@ export const AddFullProductDataModal = ({
               {suppliers.map((supplier) => (
                 <Option value={supplier.supplierId}>{supplier.name}</Option>
               ))}
-              <Option value="другое">другое</Option>
+              <Option value="else">else</Option>
             </Select>
           </Form.Item>
-          <Form.Item name="category" style={{ marginBottom: "8px" }}>
+          <Form.Item
+            name="category"
+            style={{ marginBottom: "8px" }}
+            rules={[{ required: true, message: "Please enter category" }]}
+          >
             <Select
-              placeholder="Категория"
+              showSearch
+              placeholder="Category"
+              optionFilterProp="children"
+              filterOption={(
+                input: string,
+                option: { children: string } | undefined
+              ) =>
+                (option?.children ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
               onChange={(value) => {
-                if (value === "другое") {
+                if (value === "else") {
                   setShowCategoryModal(true);
                   form.setFieldValue("category", null); // reset
-                } else {
-                  setCustomCategory(null); // clear custom
                 }
               }}
               value={form.getFieldValue("category")}
@@ -407,25 +474,41 @@ export const AddFullProductDataModal = ({
               {categories.map((category) => (
                 <Option value={category.categoryId}>{category.name}</Option>
               ))}
-              <Option value="другое">другое</Option>
+              <Option value="else">else</Option>
             </Select>
           </Form.Item>
-          <Form.Item name="price" style={{ marginBottom: "8px" }}>
-            <Input placeholder="Цена" />
+          <Form.Item
+            name="price"
+            style={{ marginBottom: "8px" }}
+            rules={[{ required: true, message: "Please enter price" }]}
+          >
+            <Input placeholder="Price" />
           </Form.Item>
-          <Form.Item name="description" style={{ marginBottom: "8px" }}>
-            <Input.TextArea placeholder="описание" />
+          <Form.Item
+            name="description"
+            style={{ marginBottom: "8px" }}
+            rules={[{ required: true, message: "Please enter description" }]}
+          >
+            <Input.TextArea placeholder="Description" />
           </Form.Item>
-          <Form.Item name="isPerishable" style={{ marginBottom: "8px" }}>
+          <Form.Item
+            name="isPerishable"
+            style={{ marginBottom: "8px" }}
+            rules={[{ required: true, message: "Please choose is perishable" }]}
+          >
             <Select placeholder="Is perishable?">
               <Option value="true">Perishable</Option>
               <Option value="false">NonPerishable</Option>
             </Select>
           </Form.Item>
-          <Form.Item name="isComposite" style={{ marginBottom: "8px" }}>
-            <Select placeholder="Характеристика продукта">
-              <Option value="false">Единичный</Option>
-              <Option value="true">Комплексный</Option>
+          <Form.Item
+            name="isComposite"
+            style={{ marginBottom: "8px" }}
+            rules={[{ required: true, message: "Please choose is composite" }]}
+          >
+            <Select placeholder="Is composite?">
+              <Option value="false">Single</Option>
+              <Option value="true">Composite</Option>
             </Select>
           </Form.Item>
           <div className="flex justify-between">
@@ -436,10 +519,17 @@ export const AddFullProductDataModal = ({
               className="w-1/2 mr-2"
               size="large"
             >
-              Добавить
+              Add
             </Button>
-            <Button onClick={onClose} className="w-1/2 ml-2" size="large">
-              Отмена
+            <Button
+              onClick={() => {
+                form.resetFields();
+                onClose();
+              }}
+              className="w-1/2 ml-2"
+              size="large"
+            >
+              Cancel
             </Button>
           </div>
         </Form>
@@ -449,7 +539,6 @@ export const AddFullProductDataModal = ({
           open={showCategoryModal}
           onClose={handleExtraModalClose}
           onSuccess={(newCategory) => {
-            setCustomCategory(newCategory);
             form.setFieldValue("category", newCategory.categoryId);
             handleCategoryAdded(); // ✅ auto-select it
           }}
@@ -460,7 +549,6 @@ export const AddFullProductDataModal = ({
           open={showSupplierModal}
           onClose={handleExtraModalClose}
           onSuccess={(newSupplier) => {
-            setCustomSupplier(newSupplier);
             form.setFieldValue("supplier", newSupplier.supplierId);
             handleSupplierAdded();
           }}
@@ -470,7 +558,7 @@ export const AddFullProductDataModal = ({
         <Modal
           title={
             <span className="text-white font-semibold flex justify-center mb-4">
-              Добавьте новую единицу измерения
+              Add new unit of measure
             </span>
           }
           open={showUnitModal}
@@ -489,10 +577,10 @@ export const AddFullProductDataModal = ({
           <Form form={form} layout="vertical">
             <Form.Item
               name="unitOfMeasure"
-              rules={[{ required: true, message: "Единица измерения!!" }]}
+              rules={[{ required: true, message: "Unit of measure!!" }]}
             >
               <Input
-                placeholder="Единица измерения"
+                placeholder="Unit of measure"
                 value={customUnit ?? ""}
                 onChange={(e) => setCustomUnit(e.target.value)}
               />
@@ -505,14 +593,14 @@ export const AddFullProductDataModal = ({
                 className="w-1/2 mr-2"
                 size="large"
               >
-                Добавить
+                Add
               </Button>
               <Button
                 onClick={handleExtraModalClose}
                 className="w-1/2 ml-2"
                 size="large"
               >
-                Отмена
+                Cancel
               </Button>
             </div>
           </Form>
@@ -528,6 +616,7 @@ export const AddFullProductDataModal = ({
             setAlertVisible(true);
             onSuccess();
           }}
+          onCancel={handleOnCancel}
         />
       </Modal>
 
@@ -539,6 +628,7 @@ export const AddFullProductDataModal = ({
           // handle confirmation
           setAlertVisible(false);
           setAlertMessage(null);
+          form.resetFields();
           onClose();
         }}
         onCancel={() => {

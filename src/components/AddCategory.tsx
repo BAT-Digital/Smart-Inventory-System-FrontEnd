@@ -24,7 +24,7 @@ export const AddCategoryModal = ({ open, onClose, onSuccess }: Props) => {
         values.description
       );
 
-      setAlertMessage(`Новая категория ${values.category} была создана`);
+      setAlertMessage(`New category: ${values.category} has been created`);
       setAlertVisible(true);
       onSuccess(newCategory);
       onClose();
@@ -38,7 +38,7 @@ export const AddCategoryModal = ({ open, onClose, onSuccess }: Props) => {
       <Modal
         title={
           <span className="text-white font-semibold flex justify-center mb-4">
-            Новая категория
+            New Category
           </span>
         }
         open={open}
@@ -51,13 +51,13 @@ export const AddCategoryModal = ({ open, onClose, onSuccess }: Props) => {
         <Form form={form} layout="vertical">
           <Form.Item
             name="category"
-            rules={[{ required: true, message: "Название категории!!" }]}
+            rules={[{ required: true, message: "Category name!!" }]}
             style={{ marginBottom: "8px" }}
           >
-            <Input placeholder="Категория" />
+            <Input placeholder="Category" />
           </Form.Item>
           <Form.Item name="description">
-            <Input.TextArea placeholder="Описание" rows={4} />
+            <Input.TextArea placeholder="Description" rows={4} />
           </Form.Item>
           <div className="flex justify-between">
             <Button
@@ -67,10 +67,10 @@ export const AddCategoryModal = ({ open, onClose, onSuccess }: Props) => {
               className="w-1/2 mr-2"
               size="large"
             >
-              Добавить
+              Add
             </Button>
             <Button onClick={onClose} className="w-1/2 ml-2" size="large">
-              Отмена
+              Cancel
             </Button>
           </div>
         </Form>

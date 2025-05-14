@@ -15,13 +15,13 @@ export const DashboardCardGrid = () => {
         className="col-span-1"
         title={
           <div className="flex justify-between items-center">
-            <span>Оборот</span>
-            <Select defaultValue="день" style={{ width: 100 }} size="small">
-              <Option value="день">день</Option>
-              <Option value="неделя">неделя</Option>
-              <Option value="месяц">месяц</Option>
-              <Option value="полгода">полгода</Option>
-              <Option value="год">год</Option>
+            <span>Turnover</span>
+            <Select defaultValue="day" style={{ width: 100 }} size="small">
+              <Option value="day">day</Option>
+              <Option value="week">week</Option>
+              <Option value="month">month</Option>
+              <Option value="half_a_year">half a year</Option>
+              <Option value="year">year</Option>
             </Select>
           </div>
         }
@@ -37,13 +37,13 @@ export const DashboardCardGrid = () => {
           fontSize: 22,
         }}
       >
-        Скачать общую статистику
+        Download statistics
       </Button>
 
       {/* Топ продаваемых продуктов */}
       <Card
         className="col-span-1 row-span-2"
-        title="Топ продаваемых продуктов:"
+        title="Top Selling products:"
         bordered={false}
       >
         {topProducts.map((product) => (
@@ -56,13 +56,13 @@ export const DashboardCardGrid = () => {
         className="col-span-1"
         title={
           <div className="flex justify-between items-center">
-            <span>Заработок</span>
-            <Select defaultValue="день" style={{ width: 100 }} size="small">
-              <Option value="день">день</Option>
-              <Option value="неделя">неделя</Option>
-              <Option value="месяц">месяц</Option>
-              <Option value="полгода">полгода</Option>
-              <Option value="год">год</Option>
+            <span>Income</span>
+            <Select defaultValue="day" style={{ width: 100 }} size="small">
+              <Option value="day">day</Option>
+              <Option value="week">week</Option>
+              <Option value="month">month</Option>
+              <Option value="half_a_year">half a year</Option>
+              <Option value="year">year</Option>
             </Select>
           </div>
         }
@@ -70,7 +70,7 @@ export const DashboardCardGrid = () => {
       ></Card>
 
       {/* Крайние 3 дня */}
-      <Card className="col-span-1" title="Крайние 3 дня:" bordered={false}>
+      <Card className="col-span-1" title="The last 3 days:" bordered={false}>
         {/* Insert bar chart or graph here */}
         <div className="h-24 bg-gray-200 rounded"></div>
       </Card>
@@ -78,7 +78,7 @@ export const DashboardCardGrid = () => {
       {/* Рекомендуется приобрести */}
       <Card
         className="col-span-1"
-        title="Рекомендуется приобрести:"
+        title="Recommended to purchase:"
         bordered={false}
       >
         {batchItems.map((item) => (
@@ -92,7 +92,7 @@ export const DashboardCardGrid = () => {
       {/* Возможная дата будущей поставки */}
       <Card
         className="col-span-1"
-        title="Возможная дата будущей поставки:"
+        title="Possible future delivery date:"
         bordered={false}
       >
         {/* Content */}
@@ -102,7 +102,7 @@ export const DashboardCardGrid = () => {
       {/* Топ продаваемых категорий */}
       <Card
         className="col-span-1"
-        title="Топ продаваемых категорий:"
+        title="Top Selling categories:"
         bordered={false}
       >
         {/* Content */}

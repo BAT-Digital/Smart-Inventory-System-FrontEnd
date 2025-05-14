@@ -4,27 +4,27 @@ import { Link } from "react-router-dom";
 const cardData = [
   {
     id: 1,
-    name: "В ИСПОЛЬЗОВАНИИ",
+    name: "PRODUCTS IN USE",
   },
   {
     id: 2,
-    name: "ПО КАТЕГОРИЯМ",
+    name: "BY CATEGORIES",
   },
   {
     id: 3,
-    name: "ВСЕ ПРОДУКТЫ",
+    name: "ALL PRODUCTS",
   },
   {
     id: 4,
-    name: "ПО ПОСТАВЩИКАМ",
+    name: "BY SUPPLIERS",
   },
   {
     id: 5,
-    name: "ЕДИНИЧНЫЕ",
+    name: "SINGLE PRODUCTS",
   },
   {
     id: 6,
-    name: "КОМПЛЕКСНЫЕ",
+    name: "COMPLEX PRODUCTS",
   },
 ];
 

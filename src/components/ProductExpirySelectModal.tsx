@@ -3,6 +3,7 @@ import { useState } from "react";
 import { AlerModal } from "./AlertModal";
 import { BatchArrivalItem } from "./AddProductDataModal";
 import { SalesItemQuantityModal } from "./SalesItemQuantityModal";
+import axios from "../utils/axios";
 
 const { Text } = Typography;
 
@@ -14,6 +15,7 @@ type Props = {
   onSuccess: () => void;
   transactionId: number;
   productId: number;
+  productBarcode: string;
 };
 
 export const ProductExpirySelectModal = ({
@@ -24,19 +26,46 @@ export const ProductExpirySelectModal = ({
   onSuccess,
   transactionId,
   productId,
+  productBarcode,
 }: Props) => {
   const [form] = Form.useForm();
   const [isQuantityModalOpen, setIsQuantityModalOpen] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [expiryDate, setExpiryDate] = useState<string | null>(null);
+  const [quantity, setQuantity] = useState(0);
+
+  const handleExpiryDateChange = async () => {
+    try {
+      console.log(selectedOption);
+      const response = await axios.get<BatchArrivalItem[]>(
+        `/api/batch-arrival-items/by-barcode-and-expiry`,
+        {
+          params: {
+            barcode: productBarcode,
+            expiryDate: selectedOption,
+          },
+        }
+      );
+
+      // Calculate total quantity remaining
+      const totalQuantity = response.data.reduce(
+        (sum, item) => sum + Number(item.quantityRemaining),
+        0
+      );
+
+      // Set the quantity field value
+      setQuantity(totalQuantity);
+    } catch (error) {
+      console.error("Error fetching batch items by expiry:", error);
+    }
+  };
 
   const handleSubmit = () => {
-    form.validateFields().then((values) => {
+    form.validateFields().then(async (values) => {
       console.log("Form values:", values);
 
-      setExpiryDate(values.expiryDate);
+      await handleExpiryDateChange();
 
       setIsQuantityModalOpen(true);
       onClose(); // Close modal after submitting
@@ -124,7 +153,8 @@ export const ProductExpirySelectModal = ({
         transactionId={transactionId}
         productId={productId}
         productName={productName}
-        expiryDate={expiryDate}
+        expiryDate={selectedOption}
+        quantity={quantity}
       />
     </>
   );

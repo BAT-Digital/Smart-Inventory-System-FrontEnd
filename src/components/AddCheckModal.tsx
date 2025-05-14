@@ -20,7 +20,7 @@ export const AddCheckModal = ({ open, onClose, onSuccess }: Props) => {
 
       await sendTransaction(values.name);
 
-      setAlertMessage(`Новый чек на имя ${values.name} был создан`);
+      setAlertMessage(`New receipt in the name of ${values.name} was created`);
       setAlertVisible(true);
       onSuccess();
       onClose();
@@ -34,7 +34,7 @@ export const AddCheckModal = ({ open, onClose, onSuccess }: Props) => {
       <Modal
         title={
           <span className="text-white font-semibold flex justify-center mb-4">
-            Новый чек
+            New check
           </span>
         }
         open={open}
@@ -45,11 +45,14 @@ export const AddCheckModal = ({ open, onClose, onSuccess }: Props) => {
         width={400}
       >
         <Form form={form} layout="vertical">
-          <Form.Item name="name">
-            <Input placeholder="Название" />
+          <Form.Item
+            name="name"
+            rules={[{ required: true, message: "Please enter the name" }]}
+          >
+            <Input placeholder="Name" />
           </Form.Item>
           <Form.Item name="notes">
-            <Input.TextArea placeholder="Напишите заметки..." rows={4} />
+            <Input.TextArea placeholder="Notes..." rows={4} />
           </Form.Item>
           <div className="flex justify-between">
             <Button
@@ -59,10 +62,17 @@ export const AddCheckModal = ({ open, onClose, onSuccess }: Props) => {
               className="w-1/2 mr-2"
               size="large"
             >
-              Добавить
+              Add
             </Button>
-            <Button onClick={onClose} className="w-1/2 ml-2" size="large">
-              Отмена
+            <Button
+              onClick={() => {
+                form.resetFields();
+                onClose();
+              }}
+              className="w-1/2 ml-2"
+              size="large"
+            >
+              Cancel
             </Button>
           </div>
         </Form>

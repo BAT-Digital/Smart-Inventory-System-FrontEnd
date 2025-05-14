@@ -40,15 +40,20 @@ export const AlerModal: React.FC<CustomAlertProps> = ({
             className="w-1/2 mr-2"
             size="large"
           >
-            Готово
+            Ok
           </Button>
           <Button
             type="primary"
             onClick={onCancel}
             className="w-1/2 ml-2"
+            style={{
+              backgroundColor: "transparent",
+              color: "#FFFFFF",
+              border: "2px solid #FFFFFF",
+            }}
             size="large"
           >
-            Отмена
+            Cancel
           </Button>
         </div>
       ) : (
@@ -59,7 +64,7 @@ export const AlerModal: React.FC<CustomAlertProps> = ({
           className="w-full"
           size="large"
         >
-          Готово
+          Ok
         </Button>
       )}
     </Modal>

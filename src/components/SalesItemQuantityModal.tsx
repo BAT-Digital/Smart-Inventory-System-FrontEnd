@@ -11,6 +11,7 @@ type Props = {
   productId: number;
   productName: string;
   expiryDate: string | null;
+  quantity: number;
 };
 
 export const SalesItemQuantityModal = ({
@@ -21,6 +22,7 @@ export const SalesItemQuantityModal = ({
   productId,
   productName,
   expiryDate,
+  quantity,
 }: Props) => {
   const [form] = Form.useForm();
   const [alertVisible, setAlertVisible] = useState(false);
@@ -42,6 +44,7 @@ export const SalesItemQuantityModal = ({
       setAlertMessage(`${productName} был добавлен`);
       setAlertVisible(true);
       onSuccess();
+      form.resetFields();
       onClose();
     } catch (error) {
       console.error("Submission error:", error);
@@ -64,9 +67,18 @@ export const SalesItemQuantityModal = ({
         width={400}
       >
         <Form form={form} layout="vertical">
-          <Form.Item name="quantity">
-            <Input placeholder="Количество*" />
-          </Form.Item>
+          <div className="flex" style={{ marginBottom: "-10px" }}>
+            <div className="mr-1">
+              <Form.Item name="quantity">
+                <Input placeholder="Количетсво" />
+              </Form.Item>
+            </div>
+            <div className="ml-1">
+              <span style={{ color: "white", fontSize: 18 }}>
+                из {quantity}
+              </span>
+            </div>
+          </div>
           <div className="flex justify-between">
             <Button
               type="primary"
@@ -77,7 +89,14 @@ export const SalesItemQuantityModal = ({
             >
               Добавить
             </Button>
-            <Button onClick={onClose} className="w-1/2 ml-2" size="large">
+            <Button
+              onClick={() => {
+                form.resetFields();
+                onClose();
+              }}
+              className="w-1/2 ml-2"
+              size="large"
+            >
               Отмена
             </Button>
           </div>

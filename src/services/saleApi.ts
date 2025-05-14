@@ -1,7 +1,7 @@
 import axios from "../utils/axios";
 
 export type ProductRequestDTO = {
-  userId: 1;
+  userId: number;
   barcode: string;
   expirationDate: string | null;
   quantity: number;

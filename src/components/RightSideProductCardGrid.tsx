@@ -18,11 +18,12 @@ export const RightSideProductCardGrid: React.FC<
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isQuantityModalOpen, setIsQuantityModalOpen] = useState(false);
   const [productName, setProductName] = useState(" ");
-  const [selectedBarcode, setSelectedBarcode] = useState<string | null>(null);
+  const [selectedBarcode, setSelectedBarcode] = useState<string>("");
   const [batchItems, setBatchItems] = useState<BatchArrivalItem[]>([]);
   const [loadingBatchItems, setLoadingBatchItems] = useState(false);
   const { transactionId } = useParams<{ transactionId: string }>();
   const [productId, setProductId] = useState(0);
+  const [quantity, setQuantity] = useState(0);
 
   const handleProductChange = async (barcode: string) => {
     setSelectedBarcode(barcode);
@@ -46,19 +47,40 @@ export const RightSideProductCardGrid: React.FC<
     }
   };
 
+  const handleQuantity = async (barcode: string) => {
+    try {
+      console.log(barcode);
+      const response = await axios.get<BatchArrivalItem[]>(
+        `/api/batch-arrival-items/by-barcode/${barcode}`
+      );
+
+      // Calculate total quantity remaining
+      const totalQuantity = response.data.reduce(
+        (sum, item) => sum + Number(item.quantityRemaining),
+        0
+      );
+
+      // Set the quantity field value
+      setQuantity(totalQuantity);
+    } catch (error) {
+      console.error("Error fetching batch items:", error);
+    }
+  };
+
   return (
     <>
       <div className="grid grid-cols-3 gap-6 p-4">
         {products.map((product, index) => (
           <div
             key={index}
-            onClick={() => {
+            onClick={async () => {
               setProductName(product.productName);
               setProductId(product.productId);
               if (product.isPerishable) {
                 handleProductChange(product.barcode);
                 setIsModalOpen(true);
               } else {
+                await handleQuantity(product.barcode);
                 setIsQuantityModalOpen(true);
               }
             }}
@@ -110,6 +132,7 @@ export const RightSideProductCardGrid: React.FC<
         onSuccess={onSuccess}
         transactionId={parseInt(transactionId!)}
         productId={productId}
+        productBarcode={selectedBarcode}
       />
 
       <SalesItemQuantityModal
@@ -120,6 +143,7 @@ export const RightSideProductCardGrid: React.FC<
         productId={productId}
         productName={productName}
         expiryDate={null}
+        quantity={quantity}
       />
     </>
   );

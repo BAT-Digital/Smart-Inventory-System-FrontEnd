@@ -1,6 +1,6 @@
 import { Input, Button } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import React from "react";
+import React, { useState } from "react";
 import plus from "../assets/icons/+.png";
 import plusCard from "../assets/icons/plus.png";
 import backArrowCard from "../assets/icons/backArrowCard.png";
@@ -20,13 +20,24 @@ export const TableActions: React.FC<TableActionsProps> = ({
   onSearch,
   onScan,
 }) => {
+  const [searchValue, setSearchValue] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleSearch = () => {
+    onSearch(searchValue);
+  };
   return (
     <div className="flex justify-between items-center mb-4 gap-2 flex-wrap">
       <Input.Search
-        placeholder="Поиск"
-        onSearch={onSearch}
-        style={{ width: 200 }}
+        placeholder="Search"
         allowClear
+        value={searchValue}
+        onChange={handleChange}
+        onSearch={handleSearch}
+        style={{ width: 200 }}
       />
       <div className="flex items-center">
         <Link to="/arrival" onClick={onScan}>
@@ -38,7 +49,7 @@ export const TableActions: React.FC<TableActionsProps> = ({
           onClick={onScan}
           style={{ backgroundColor: "#FFF3B0", color: "#1E1E1E" }}
         >
-          Отсканировать товар
+          Scan item
         </Button>
       </div>
     </div>
@@ -49,6 +60,15 @@ export const AccountingTableActions: React.FC<TableActionsProps> = ({
   onSearch,
   onScan,
 }) => {
+  const [searchValue, setSearchValue] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleSearch = () => {
+    onSearch(searchValue);
+  };
   const navigate = useNavigate();
   return (
     <div className="flex justify-between items-center mb-2 gap-2 flex-wrap">
@@ -62,9 +82,11 @@ export const AccountingTableActions: React.FC<TableActionsProps> = ({
         </button>
         <Input.Search
           placeholder="Поиск"
-          onSearch={onSearch}
-          style={{ width: 200 }}
           allowClear
+          value={searchValue}
+          onChange={handleChange}
+          onSearch={handleSearch}
+          style={{ width: 200 }}
         />
       </div>
       <div className="flex items-center">
@@ -89,6 +111,15 @@ export const AccountingInUseTableActions: React.FC<TableActionsProps> = ({
   onSearch,
   onScan,
 }) => {
+  const [searchValue, setSearchValue] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleSearch = () => {
+    onSearch(searchValue);
+  };
   const navigate = useNavigate();
   return (
     <div className="flex justify-between items-center mb-2 gap-2 flex-wrap">
@@ -101,10 +132,12 @@ export const AccountingInUseTableActions: React.FC<TableActionsProps> = ({
           />
         </button>
         <Input.Search
-          placeholder="Поиск"
-          onSearch={onSearch}
-          style={{ width: 200 }}
+          placeholder="Search"
           allowClear
+          value={searchValue}
+          onChange={handleChange}
+          onSearch={handleSearch}
+          style={{ width: 200 }}
         />
       </div>
       <div className="flex items-center">
@@ -120,7 +153,7 @@ export const AccountingInUseTableActions: React.FC<TableActionsProps> = ({
             size="large"
             className="mr-2"
           >
-            Баркод
+            Barcode
           </Button>
           <Button
             type="primary"
@@ -143,6 +176,15 @@ export const AccountingInUseTableActions: React.FC<TableActionsProps> = ({
 export const AccountingCategoriesProductsTableActions: React.FC<
   CategoriesTableActionsProps
 > = ({ onSearch, onScan, name }) => {
+  const [searchValue, setSearchValue] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleSearch = () => {
+    onSearch(searchValue);
+  };
   const navigate = useNavigate();
   return (
     <div className="flex justify-between items-center mb-2 gap-2 flex-wrap">
@@ -155,10 +197,12 @@ export const AccountingCategoriesProductsTableActions: React.FC<
           />
         </button>
         <Input.Search
-          placeholder="Поиск"
-          onSearch={onSearch}
-          style={{ width: 200 }}
+          placeholder="Search"
           allowClear
+          value={searchValue}
+          onChange={handleChange}
+          onSearch={handleSearch}
+          style={{ width: 200 }}
         />
       </div>
       <div

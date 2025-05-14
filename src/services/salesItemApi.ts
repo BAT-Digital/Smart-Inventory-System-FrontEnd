@@ -19,3 +19,15 @@ export const sendSalesItem = async (salesItemDTO: SalesItemDTO) => {
     throw error;
   }
 };
+
+export const deleteSalesItems = async (ids: number[]) => {
+  try {
+    const response = await axios.delete("/api/sales-items/delete-items", {
+      data: ids,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting sales items:", error);
+    throw error;
+  }
+};

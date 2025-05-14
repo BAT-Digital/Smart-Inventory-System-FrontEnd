@@ -3,29 +3,14 @@ import Logo from "../assets/Logo.png";
 import { login } from "../services/loginApi";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-import { NoticeType } from "antd/es/message/interface";
 
 export const Login = () => {
   const [form] = Form.useForm();
   const navigation = useNavigate();
-  const [messageApi, contextHolder] = message.useMessage();
-
-  const alertMessage = (type: NoticeType, content: string) => {
-    messageApi.open({
-      type: type,
-      content: content,
-    });
-  };
-
-  const info = () => {
-    message.info("This is a normal message");
-  };
 
   const onLogin = async () => {
     try {
       const values = await form.validateFields();
-      console.log(values.username);
-      console.log(values.password);
 
       const { username, id, role } = await login(
         values.username,
@@ -37,7 +22,6 @@ export const Login = () => {
       Cookies.set("role", role, { path: "/" });
 
       navigation("/dashboard");
-      alertMessage("success", "Successful login!");
     } catch (error) {
       console.error("Submission error:", error);
       message.error("Invalid Credentials!!");
@@ -46,7 +30,6 @@ export const Login = () => {
 
   return (
     <>
-      {contextHolder}
       <div
         style={{ backgroundColor: "#335C67" }}
         className="min-h-screen relative"
@@ -93,7 +76,7 @@ export const Login = () => {
                     size="large"
                     className="w-full"
                     style={{ backgroundColor: "#9E2A2B", color: "#FFFFFF" }}
-                    onClick={info}
+                    onClick={onLogin}
                   >
                     Login
                   </Button>

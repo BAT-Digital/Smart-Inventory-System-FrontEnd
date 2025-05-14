@@ -25,7 +25,7 @@ export const AddSupplierModal = ({ open, onClose, onSuccess }: Props) => {
         values.contact_info
       );
 
-      setAlertMessage(`Новый поставщик ${values.supplier} был добавлен`);
+      setAlertMessage(`New supplier: ${values.supplier} has been added`);
       setAlertVisible(true);
       onSuccess(newSupplier);
       onClose();
@@ -39,7 +39,7 @@ export const AddSupplierModal = ({ open, onClose, onSuccess }: Props) => {
       <Modal
         title={
           <span className="text-white font-semibold flex justify-center mb-4">
-            Данные о поставщике
+            Supplier data
           </span>
         }
         open={open}
@@ -52,16 +52,16 @@ export const AddSupplierModal = ({ open, onClose, onSuccess }: Props) => {
         <Form form={form} layout="vertical">
           <Form.Item
             name="supplier"
-            rules={[{ required: true, message: "Название категории!!" }]}
+            rules={[{ required: true, message: "Supplier name!!" }]}
             style={{ marginBottom: "8px" }}
           >
-            <Input placeholder="Поставщик" />
+            <Input placeholder="Supplier" />
           </Form.Item>
           <Form.Item name="address" style={{ marginBottom: "8px" }}>
-            <Input placeholder="Адрес" />
+            <Input placeholder="Address" />
           </Form.Item>
           <Form.Item name="contact_info" style={{ marginBottom: "8px" }}>
-            <Input placeholder="Контактные данные" />
+            <Input placeholder="Contact info" />
           </Form.Item>
           <div className="flex justify-between">
             <Button
