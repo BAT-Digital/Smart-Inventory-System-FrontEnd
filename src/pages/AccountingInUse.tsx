@@ -8,14 +8,15 @@ import { useProductInUse } from "../hooks/useProducts";
 
 export const AccountingInUse = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const {
     productInUseDataSource,
     productInUseloading,
     refetch: reFetchProductsInUse,
-  } = useProductInUse();
+  } = useProductInUse(searchTerm);
 
   const handleSearch = (value: string) => {
-    console.log("Searching:", value);
+    setSearchTerm(value);
   };
 
   const handleScan = () => {

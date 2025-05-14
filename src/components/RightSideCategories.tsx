@@ -1,6 +1,5 @@
 import { Card, Input, Button } from "antd";
 import { RightSideCardGrid } from "./RightSideCardGrid";
-import { useCategories } from "../hooks/useCategories";
 import { useNavigate } from "react-router-dom";
 import { AlerModal } from "./AlertModal";
 import { useState } from "react";
@@ -11,6 +10,7 @@ type RightSideCategoriesProps = {
   handleSell: () => {};
   onDelete: () => void;
   onCancel: () => {};
+  categoryNames: string[];
 };
 
 export const RightSideCategories: React.FC<RightSideCategoriesProps> = ({
@@ -19,12 +19,19 @@ export const RightSideCategories: React.FC<RightSideCategoriesProps> = ({
   handleSell,
   onDelete,
   onCancel,
+  categoryNames,
 }) => {
-  const { categories } = useCategories();
   const navigate = useNavigate();
   const [alertVisible, setAlertVisible] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
 
-  const categoryNames = categories.map((c) => c.name);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleSearch = () => {
+    onSearch(searchValue);
+  };
 
   return (
     <>
@@ -54,9 +61,11 @@ export const RightSideCategories: React.FC<RightSideCategoriesProps> = ({
               <div>
                 <Input.Search
                   placeholder="Search"
-                  onSearch={onSearch}
-                  style={{ width: 200 }}
                   allowClear
+                  value={searchValue}
+                  onChange={handleChange}
+                  onSearch={handleSearch}
+                  style={{ width: 200 }}
                 />
               </div>
             </div>

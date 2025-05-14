@@ -12,6 +12,10 @@ import { message } from "antd";
 import Cookies from "js-cookie";
 import { SalesItemDeleteModal } from "../components/salesItemDeleteModal";
 import { deleteSalesTransaction } from "../services/salesTransactionApi";
+import {
+  useCategoriesSearch,
+  useProductsByCategory,
+} from "../hooks/useCategories";
 
 export const SalesItem = () => {
   const navigate = useNavigate();
@@ -24,10 +28,16 @@ export const SalesItem = () => {
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const navigation = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { salesItems, refetch: reFetchSalesItems } = useSalesItems({
     transactionId,
   });
+
+  const { categories } = useCategoriesSearch(searchTerm);
+  const categoryNames = categories.map((c) => c.name);
+
+  const { products } = useProductsByCategory({ selectedCategory, searchTerm });
 
   const handleCancel = async () => {
     try {
@@ -71,15 +81,17 @@ export const SalesItem = () => {
   };
 
   const handleSearch = (value: string) => {
-    console.log("Searching:", value);
+    setSearchTerm(value);
   };
 
   const handleCategorySelected = (category: string) => {
     setSelectedCategory(category);
+    setSearchTerm("");
   };
 
   const handleBackToCategories = () => {
     setSelectedCategory(null);
+    setSearchTerm("");
   };
 
   return (
@@ -110,6 +122,7 @@ export const SalesItem = () => {
                     setIsModalOpen(true);
                   }}
                   onCancel={handleCancel}
+                  products={products}
                 />
               ) : (
                 <RightSideCategories
@@ -120,6 +133,7 @@ export const SalesItem = () => {
                     setIsModalOpen(true);
                   }}
                   onCancel={handleCancel}
+                  categoryNames={categoryNames}
                 />
               )}
             </div>

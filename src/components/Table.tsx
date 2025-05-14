@@ -1,7 +1,7 @@
 import { Table, Button } from "antd";
 import { useState } from "react";
 import { CompositionProductInfo } from "./CompositionProductInfo";
-import { Product, useCategoryProducts } from "../hooks/useProducts";
+import { Product } from "../hooks/useProducts";
 import {
   fetchCompositionByProductId,
   Ingredient,
@@ -136,8 +136,8 @@ export const AccountingProductTable: React.FC<Props> = ({
 };
 
 type CategoryProps = {
-  type: String;
-  name: String;
+  categoryProducts: Product[];
+  categoryloading: boolean;
 };
 
 const prdouctColumns = [
@@ -184,14 +184,9 @@ const prdouctColumns = [
 ];
 
 export const AccountingCategoryProductTable: React.FC<CategoryProps> = ({
-  type,
-  name,
+  categoryProducts,
+  categoryloading,
 }) => {
-  const { categoryProducts, categoryloading } = useCategoryProducts({
-    type,
-    name,
-  });
-
   const [compositionItems, setCompositionItems] = useState<Ingredient[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 

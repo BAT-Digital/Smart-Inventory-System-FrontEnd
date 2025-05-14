@@ -28,25 +28,62 @@ export const useCategories = () => {
   return { categories, loading, refetch: fetchCategories };
 };
 
-interface Props {
-  category: String;
-}
+export const useCategoriesSearch = (searchTerm?: string) => {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
 
-export const useProductsByCategory = ({ category }: Props) => {
+  const fetchCategories = async (search?: string) => {
+    setLoading(true);
+    try {
+      const params = search ? { params: { search } } : {};
+      axios
+        .get("/api/categories/search", params)
+        .then((res) => setCategories(res.data));
+    } catch (error) {
+      console.error(`Error fetching categories searching:`, error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories(searchTerm);
+  }, [searchTerm]);
+
+  return { categories, loading, refetch: fetchCategories };
+};
+
+type Props = {
+  selectedCategory: string | null;
+  searchTerm?: string;
+};
+
+export const useProductsByCategory = ({
+  selectedCategory,
+  searchTerm,
+}: Props) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const fetchProductsByCategory = async (search?: string) => {
+    setLoading(true);
+    try {
+      const params = search ? { params: { search } } : {};
+      axios
+        .get(`/api/products/by-category/${selectedCategory}`, params)
+        .then((res) => setProducts(res.data));
+    } catch (error) {
+      console.error(`Error fetching products by category:`, error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get(`/api/products/by-category/${category}`)
-      .then((res) => setProducts(res.data))
-      .catch((err) => console.error("Failed to fetch categories:", err))
-      .finally(() => setLoading(false));
-  }, []);
+    fetchProductsByCategory(searchTerm);
+  }, [searchTerm, selectedCategory]);
 
-  console.log(products);
-
-  return { products, loading };
+  return { products, loading, refetch: fetchProductsByCategory };
 };
 
 interface supplierProps {

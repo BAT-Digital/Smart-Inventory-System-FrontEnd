@@ -31,3 +31,36 @@ export const useBatchArrivals = () => {
 
   return { data, loading, refetch: fetchBatchArrivals };
 };
+
+export const useBatchArrivalsSearch = (searchTerm?: string) => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchData = async (search?: string) => {
+    setLoading(true);
+    try {
+      const params = search ? { params: { search } } : {};
+      await axios.get("/api/batch-arrivals/search", params).then((res) => {
+        const mapped = res.data.map((item: any, index: number) => ({
+          key: index,
+          id: item.arrivalId,
+          supplier: item.supplier.name,
+          notes: item.notes || "-",
+          receiver: item.addedBy.username,
+          time: new Date(item.arrivalDate).toLocaleString("ru-RU"),
+        }));
+        setData(mapped);
+      });
+    } catch (error) {
+      console.error("Error fetching batch arrivals:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(searchTerm);
+  }, [searchTerm]);
+
+  return { data, loading, refetch: fetchData };
+};

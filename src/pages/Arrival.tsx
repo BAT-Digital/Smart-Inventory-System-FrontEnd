@@ -4,14 +4,19 @@ import { ReceiptTable } from "../components/Table";
 import { TableActions } from "../components/TableActions";
 import { useState } from "react";
 import { AddDataModal } from "../components/AddDataModal";
-import { useBatchArrivals } from "../hooks/useBatchArrivals";
+import { useBatchArrivalsSearch } from "../hooks/useBatchArrivals";
 
 export const Arrival = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data, loading, refetch: reFetchBatchArrivals } = useBatchArrivals();
+  const [searchTerm, setSearchTerm] = useState("");
+  const {
+    data,
+    loading,
+    refetch: reFetchBatchArrivals,
+  } = useBatchArrivalsSearch(searchTerm);
 
   const handleSearch = (value: string) => {
-    console.log("Searching:", value);
+    setSearchTerm(value);
   };
 
   const handleScan = () => {

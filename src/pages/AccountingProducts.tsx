@@ -6,7 +6,7 @@ import { useState } from "react";
 import { AddFullProductDataModal } from "../components/AddProductDataModal";
 import {
   useComplexProducts,
-  useProducts,
+  useProductsSearch,
   useSoloProducts,
 } from "../hooks/useProducts";
 
@@ -97,22 +97,27 @@ const prdouctColumns = [
 
 export const AccountingProducts: React.FC<Props> = ({ type }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { products, loading, refetch: reFetchProducts } = useProducts();
+  const [searchTerm, setSearchTerm] = useState("");
+  const {
+    products,
+    loading,
+    refetch: reFetchProducts,
+  } = useProductsSearch(searchTerm);
   const {
     complexProducts,
     complexLoading,
 
     refetch: reFetchComplexProducts,
-  } = useComplexProducts();
+  } = useComplexProducts(searchTerm);
   const {
     soloProducts,
     soloLoading,
 
     refetch: reFetchSoloProducts,
-  } = useSoloProducts();
+  } = useSoloProducts(searchTerm);
 
   const handleSearch = (value: string) => {
-    console.log("Searching:", value);
+    setSearchTerm(value);
   };
 
   const handleScan = () => {

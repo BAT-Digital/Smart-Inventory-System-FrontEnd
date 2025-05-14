@@ -38,55 +38,99 @@ export const useProducts = () => {
   return { products, loading, error, refetch: fetchProducts };
 };
 
+export const useProductsSearch = (searchTerm?: string) => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchProducts = async (search?: string) => {
+    setLoading(true);
+    try {
+      const params = search ? { params: { search } } : {};
+      await axios
+        .get<Product[]>("/api/products/search", params)
+        .then((res) => setProducts(res.data));
+    } catch (error) {
+      console.error("Error fetching batch arrivals:", error);
+      setError("Failed to load products");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts(searchTerm);
+  }, [searchTerm]);
+
+  return { products, loading, error, refetch: fetchProducts };
+};
+
 type Props = {
   type: String;
   name: String;
+  searchTerm?: string;
 };
 
-export const useCategoryProducts = ({ type, name }: Props) => {
+export const useCategoryProducts = ({ type, name, searchTerm }: Props) => {
   const [categoryProducts, setCategoryProducts] = useState<Product[]>([]);
   const [categoryloading, setCategoryLoading] = useState<boolean>(true);
   const [categoryerror, setCategoryError] = useState<string | null>(null);
 
+  const fetchCategoryProducts = async (search?: string) => {
+    setCategoryLoading(true);
+    try {
+      const params = search ? { params: { search } } : {};
+      const endpoint =
+        type === "category"
+          ? `/api/products/by-category/${name}`
+          : `/api/products/by-supplier/${name}`;
+
+      axios
+        .get<Product[]>(endpoint, params)
+        .then((res) => setCategoryProducts(res.data));
+    } catch (error) {
+      console.error(`Error fetching products by ${type}:`, error);
+      setCategoryError("Failed to load products");
+    } finally {
+      setCategoryLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const endpoint =
-      type === "category"
-        ? `/api/products/by-category/${name}`
-        : `/api/products/by-supplier/${name}`;
+    fetchCategoryProducts(searchTerm);
+  }, [searchTerm]);
 
-    axios
-      .get<Product[]>(endpoint)
-      .then((res) => setCategoryProducts(res.data))
-      .catch((err) => {
-        console.error("Error fetching products:", err);
-        setCategoryError("Failed to load products");
-      })
-      .finally(() => setCategoryLoading(false));
-  }, [type, name]);
-
-  return { categoryProducts, categoryloading, categoryerror };
+  return {
+    categoryProducts,
+    categoryloading,
+    categoryerror,
+    refetch: fetchCategoryProducts,
+  };
 };
 
-export const useComplexProducts = () => {
+export const useComplexProducts = (searchTerm?: string) => {
   const [complexProducts, setComplexProducts] = useState<Product[]>([]);
   const [complexLoading, setComplexLoading] = useState<boolean>(true);
   const [complexError, setComplexError] = useState<string | null>(null);
 
-  const fetchComplexProducts = useCallback(() => {
+  const fetchComplexProducts = async (search?: string) => {
     setComplexLoading(true);
-    axios
-      .get<Product[]>("/api/products/composite/true")
-      .then((res) => setComplexProducts(res.data))
-      .catch((err) => {
-        console.error("Error fetching products:", err);
-        setComplexError("Failed to load products");
-      })
-      .finally(() => setComplexLoading(false));
-  }, []);
+    try {
+      const params = search ? { params: { search } } : {};
+      axios
+        .get<Product[]>("/api/products/composite/true", params)
+        .then((res) => setComplexProducts(res.data));
+    } catch (error) {
+      console.error("Error fetching batch arrivals:", error);
+      setComplexError("Failed to load products");
+    } finally {
+      setComplexLoading(false);
+    }
+  };
 
   useEffect(() => {
-    fetchComplexProducts();
-  }, [fetchComplexProducts]);
+    fetchComplexProducts(searchTerm);
+  }, [searchTerm]);
 
   return {
     complexProducts,
@@ -96,39 +140,42 @@ export const useComplexProducts = () => {
   };
 };
 
-export const useSoloProducts = () => {
+export const useSoloProducts = (searchTerm?: string) => {
   const [soloProducts, setSoloProducts] = useState<Product[]>([]);
   const [soloLoading, setSoloLoading] = useState<boolean>(true);
   const [soloError, setSoloError] = useState<string | null>(null);
 
-  const fetchSoloProducts = useCallback(() => {
+  const fetchSoloProducts = async (search?: string) => {
     setSoloLoading(true);
-    axios
-      .get<Product[]>("/api/products/composite/false")
-      .then((res) => setSoloProducts(res.data))
-      .catch((err) => {
-        console.error("Error fetching products:", err);
-        setSoloError("Failed to load products");
-      })
-      .finally(() => setSoloLoading(false));
-  }, []);
+    try {
+      const params = search ? { params: { search } } : {};
+      axios
+        .get<Product[]>("/api/products/composite/false", params)
+        .then((res) => setSoloProducts(res.data));
+    } catch (error) {
+      console.error("Error fetching batch arrivals:", error);
+      setSoloError("Failed to load products");
+    } finally {
+      setSoloLoading(false);
+    }
+  };
 
   useEffect(() => {
-    fetchSoloProducts();
-  }, [fetchSoloProducts]);
+    fetchSoloProducts(searchTerm);
+  }, [searchTerm]);
 
   return { soloProducts, soloLoading, soloError, refetch: fetchSoloProducts };
 };
 
-export const useProductInUse = () => {
+export const useProductInUse = (searchTerm?: string) => {
   const [productInUseDataSource, setData] = useState([]);
-  const [productInUseloading, setLoading] = useState(true);
+  const [productInUseloading, setLoading] = useState(false);
 
-  const fetchProductsInUse = useCallback(() => {
+  const fetchProductsInUse = async (search?: string) => {
     setLoading(true);
-    axios
-      .get("/api/products-in-use")
-      .then((res) => {
+    try {
+      const params = search ? { params: { search } } : {};
+      await axios.get("/api/products-in-use/search", params).then((res) => {
         const mapped = res.data.map((item: any, index: number) => ({
           key: index,
           id: item.productId,
@@ -141,14 +188,17 @@ export const useProductInUse = () => {
           date_recieved: new Date(item.assignedDate).toLocaleString("ru-RU"),
         }));
         setData(mapped);
-      })
-      .catch((err) => console.error(err))
-      .finally(() => setLoading(false));
-  }, []);
+      });
+    } catch (error) {
+      console.error("Error fetching productsInUse:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    fetchProductsInUse();
-  }, [fetchProductsInUse]);
+    fetchProductsInUse(searchTerm);
+  }, [searchTerm]);
 
   return {
     productInUseDataSource,
