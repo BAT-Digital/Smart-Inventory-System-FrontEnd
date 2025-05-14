@@ -5,8 +5,8 @@ import { AlerModal } from "./AlertModal";
 import { AddCategoryModal } from "./AddCategory";
 import { AddSupplierModal } from "./AddSupplier";
 import { CompositeDataModal } from "./CompositeDataModal";
-import { Category, useCategories } from "../hooks/useCategories";
-import { Supplier, useSuppliers } from "../hooks/useSuppliers";
+import { useCategories } from "../hooks/useCategories";
+import { useSuppliers } from "../hooks/useSuppliers";
 import { deleteProduct, ProductDTO, sendProduct } from "../services/productApi";
 import { useProducts } from "../hooks/useProducts";
 import axios from "../utils/axios";
@@ -158,7 +158,20 @@ export const AddProductDataModal = ({ open, onClose, onSuccess }: Props) => {
           style={{ marginBottom: "8px" }}
           rules={[{ required: true, message: "Product name*" }]}
         >
-          <Select placeholder="Product*" onChange={handleProductChange}>
+          <Select
+            showSearch
+            placeholder="Product*"
+            onChange={handleProductChange}
+            optionFilterProp="children"
+            filterOption={(
+              input: string,
+              option: { children: string } | undefined
+            ) =>
+              (option?.children ?? "")
+                .toLowerCase()
+                .includes(input.toLowerCase())
+            }
+          >
             {products.map((product) => (
               <Option value={product.barcode}>{product.productName}</Option>
             ))}
@@ -231,9 +244,7 @@ export const AddFullProductDataModal = ({
   const [showUnitModal, setShowUnitModal] = useState(false);
   const [customUnit, setCustomUnit] = useState<string | null>(null);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const [customCategory, setCustomCategory] = useState<Category | null>(null);
   const [showSupplierModal, setShowSupplierModal] = useState(false);
-  const [customSupplier, setCustomSupplier] = useState<Supplier | null>(null);
   const [name, setName] = useState<string>("");
   const [showCompositeModal, setShowCompositeModal] = useState(false);
   const [finalProductId, setFinalProductId] = useState(0);
@@ -410,13 +421,21 @@ export const AddFullProductDataModal = ({
             rules={[{ required: true, message: "Please enter supplier" }]}
           >
             <Select
+              showSearch
               placeholder="Supplier"
+              optionFilterProp="children"
+              filterOption={(
+                input: string,
+                option: { children: string } | undefined
+              ) =>
+                (option?.children ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
               onChange={(value) => {
                 if (value === "else") {
                   setShowSupplierModal(true);
                   form.setFieldValue("supplier", null); // reset the select field to prevent re-trigger
-                } else {
-                  setCustomSupplier(null);
                 }
               }}
               value={form.getFieldValue("supplier")}
@@ -433,13 +452,21 @@ export const AddFullProductDataModal = ({
             rules={[{ required: true, message: "Please enter category" }]}
           >
             <Select
+              showSearch
               placeholder="Category"
+              optionFilterProp="children"
+              filterOption={(
+                input: string,
+                option: { children: string } | undefined
+              ) =>
+                (option?.children ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
               onChange={(value) => {
                 if (value === "else") {
                   setShowCategoryModal(true);
                   form.setFieldValue("category", null); // reset
-                } else {
-                  setCustomCategory(null); // clear custom
                 }
               }}
               value={form.getFieldValue("category")}
@@ -512,7 +539,6 @@ export const AddFullProductDataModal = ({
           open={showCategoryModal}
           onClose={handleExtraModalClose}
           onSuccess={(newCategory) => {
-            setCustomCategory(newCategory);
             form.setFieldValue("category", newCategory.categoryId);
             handleCategoryAdded(); // ✅ auto-select it
           }}
@@ -523,7 +549,6 @@ export const AddFullProductDataModal = ({
           open={showSupplierModal}
           onClose={handleExtraModalClose}
           onSuccess={(newSupplier) => {
-            setCustomSupplier(newSupplier);
             form.setFieldValue("supplier", newSupplier.supplierId);
             handleSupplierAdded();
           }}
