@@ -7,14 +7,12 @@ import {
   Ingredient,
 } from "../hooks/useProductRecipe";
 import { WriteOff } from "../hooks/useWriteOff";
+import { BatchArrival } from "../types/BatchArrivals";
+import { useBatchArrivalItems } from "../hooks/useBatchArrivalItems";
+import { BatchArrivalItemsModal } from "./BatchArrivalItemsModal";
 
 type WriteOffTableProps = {
   writeOffs: WriteOff[];
-  loading: boolean;
-};
-
-type ReceiptTableProps = {
-  data: never[];
   loading: boolean;
 };
 
@@ -69,7 +67,17 @@ export const WriteOffTable = ({ writeOffs, loading }: WriteOffTableProps) => {
   );
 };
 
+type ReceiptTableProps = {
+  data: BatchArrival[];
+  loading: boolean;
+};
+
 export const ReceiptTable = ({ data, loading }: ReceiptTableProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedArrivalId, setSelectedArrivalId] = useState<number>(0);
+
+  const { data: batchItems } = useBatchArrivalItems(selectedArrivalId);
+
   const columns = [
     {
       title: "ID",
@@ -87,6 +95,11 @@ export const ReceiptTable = ({ data, loading }: ReceiptTableProps) => {
       key: "notes",
     },
     {
+      title: "Products",
+      dataIndex: "products",
+      key: "products",
+    },
+    {
       title: "Receiver",
       dataIndex: "receiver",
       key: "receiver",
@@ -98,17 +111,54 @@ export const ReceiptTable = ({ data, loading }: ReceiptTableProps) => {
     },
   ];
 
+  const handleSeeProducts = (arrivalId: number) => {
+    setSelectedArrivalId(arrivalId);
+    setIsModalOpen(true);
+  };
+
+  const mappedData = data.map((item, index: number) => ({
+    key: index,
+    id: item.arrivalId,
+    supplier: item.supplier.name,
+    notes: item.notes || "-",
+    products: (
+      <Button
+        type="primary"
+        block
+        style={{
+          backgroundColor: "#335C67",
+          color: "#FFFFFF",
+        }}
+        onClick={() => {
+          handleSeeProducts(item.arrivalId);
+          setIsModalOpen(true);
+        }}
+      >
+        See
+      </Button>
+    ),
+    receiver: item.addedBy.username,
+    time: new Date(item.arrivalDate).toLocaleString("ru-RU"),
+  }));
+
   return (
-    <div className="px-4">
-      <Table
-        dataSource={data}
-        columns={columns}
-        loading={loading}
-        pagination={{ pageSize: 8 }}
-        bordered
-        className="custom-ant-table custom-border-table"
+    <>
+      <div className="px-4">
+        <Table
+          dataSource={mappedData}
+          columns={columns}
+          loading={loading}
+          pagination={{ pageSize: 7 }}
+          bordered
+          className="custom-ant-table custom-border-table"
+        />
+      </div>
+      <BatchArrivalItemsModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        batchItems={batchItems}
       />
-    </div>
+    </>
   );
 };
 
@@ -161,7 +211,7 @@ export const AccountingProductTable: React.FC<Props> = ({
           setIsModalOpen(true);
         }}
       >
-        Узнать
+        See
       </Button>
     ) : (
       ""
