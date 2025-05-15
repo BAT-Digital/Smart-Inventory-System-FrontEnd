@@ -11,6 +11,7 @@ import { AccountingCategoriesProducts } from "../pages/AccountingCategoriesProdu
 import { Dashboard } from "../pages/Dashboard";
 import { Profile } from "../pages/Profile";
 import { Settings } from "../pages/Settings";
+import { WriteOff } from "../pages/WriteOff";
 
 export default function AppRoutes() {
   return (
@@ -48,6 +49,7 @@ export default function AppRoutes() {
         <Route path="/accounting_in_use" element={<AccountingInUse />} />
         <Route path="/arrival" element={<Arrival />} />
         <Route path="/sales" element={<Sales />} />
+        <Route path="/write-off" element={<WriteOff />} />
         <Route path="/sales_item/:transactionId" element={<SalesItem />} />
       </Routes>
     </Router>

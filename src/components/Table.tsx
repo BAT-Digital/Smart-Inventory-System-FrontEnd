@@ -6,10 +6,67 @@ import {
   fetchCompositionByProductId,
   Ingredient,
 } from "../hooks/useProductRecipe";
+import { WriteOff } from "../hooks/useWriteOff";
+
+type WriteOffTableProps = {
+  writeOffs: WriteOff[];
+  loading: boolean;
+};
 
 type ReceiptTableProps = {
   data: never[];
   loading: boolean;
+};
+
+export const WriteOffTable = ({ writeOffs, loading }: WriteOffTableProps) => {
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Product",
+      dataIndex: "product",
+      key: "product",
+    },
+    {
+      title: "Reason",
+      dataIndex: "reason",
+      key: "reason",
+    },
+    {
+      title: "Quantity",
+      dataIndex: "quantity",
+      key: "quantity",
+    },
+    {
+      title: "Write-Off Date",
+      dataIndex: "writeOffDate",
+      key: "writeOffDate",
+    },
+  ];
+
+  const data = writeOffs.map((writeOff) => ({
+    id: writeOff.writeOffId,
+    product: writeOff.batch.product.productName,
+    reason: writeOff.reason,
+    quantity: writeOff.quantity,
+    writeOffDate: writeOff.writeOffDate,
+  }));
+
+  return (
+    <div className="px-4">
+      <Table
+        dataSource={data}
+        columns={columns}
+        loading={loading}
+        pagination={{ pageSize: 8 }}
+        bordered
+        className="custom-ant-table custom-border-table"
+      />
+    </div>
+  );
 };
 
 export const ReceiptTable = ({ data, loading }: ReceiptTableProps) => {

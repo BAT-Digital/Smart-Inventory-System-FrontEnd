@@ -1,5 +1,5 @@
 import { Input, Button } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import plus from "../assets/icons/+.png";
 import plusCard from "../assets/icons/plus.png";
@@ -40,9 +40,9 @@ export const TableActions: React.FC<TableActionsProps> = ({
         style={{ width: 200 }}
       />
       <div className="flex items-center">
-        <Link to="/arrival" onClick={onScan}>
+        <button className="cursor-pointer" onClick={onScan}>
           <img src={plusCard} alt="" className="h-10 w-auto px-2" />
-        </Link>
+        </button>
         <Button
           type="primary"
           size="large"

@@ -78,6 +78,19 @@ export const Navbar = () => {
                   Sales
                 </Link>
               </Menu.Item>
+              <Menu.Item
+                key="5"
+                className="bg-[#335C67] hover:bg-[#335C67] active:bg-[#335C67]"
+                style={{ backgroundColor: "#335C67" }}
+              >
+                <Link
+                  to="/write-off"
+                  style={{ color: "white" }}
+                  className="mx-3"
+                >
+                  Write Off
+                </Link>
+              </Menu.Item>
             </Menu>
           </div>
         </div>
