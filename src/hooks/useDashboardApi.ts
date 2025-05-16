@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import axios from "../utils/axios";
 import { Product } from "./useProducts";
+import { BatchArrivalItem } from "../types/BatchArrivals";
 
 export const useTopProducts = () => {
   const [topProducts, setTopProducts] = useState<Product[]>([]);
@@ -24,14 +25,6 @@ export const useTopProducts = () => {
   }, [fetchTopProducts]);
 
   return { topProducts, loading, error, refetch: fetchTopProducts };
-};
-
-export type BatchArrivalItem = {
-  product: Product;
-  quantityReceived: number;
-  quantityRemaining: number;
-  expiryDate: string;
-  unitCost: number;
 };
 
 export const useOldestLowRemaining = () => {

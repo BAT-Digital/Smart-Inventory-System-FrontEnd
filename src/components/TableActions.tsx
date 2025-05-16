@@ -1,5 +1,5 @@
 import { Input, Button } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import plus from "../assets/icons/+.png";
 import plusCard from "../assets/icons/plus.png";
@@ -40,9 +40,9 @@ export const TableActions: React.FC<TableActionsProps> = ({
         style={{ width: 200 }}
       />
       <div className="flex items-center">
-        <Link to="/arrival" onClick={onScan}>
+        <button className="cursor-pointer" onClick={onScan}>
           <img src={plusCard} alt="" className="h-10 w-auto px-2" />
-        </Link>
+        </button>
         <Button
           type="primary"
           size="large"
@@ -50,6 +50,47 @@ export const TableActions: React.FC<TableActionsProps> = ({
           style={{ backgroundColor: "#FFF3B0", color: "#1E1E1E" }}
         >
           Scan item
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export const WriteOffTableActions: React.FC<TableActionsProps> = ({
+  onSearch,
+  onScan,
+}) => {
+  const [searchValue, setSearchValue] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleSearch = () => {
+    onSearch(searchValue);
+  };
+  return (
+    <div className="flex justify-between items-center mb-4 gap-2 flex-wrap">
+      <Input.Search
+        placeholder="Search"
+        allowClear
+        value={searchValue}
+        onChange={handleChange}
+        onSearch={handleSearch}
+        style={{ width: 200 }}
+      />
+      <div className="flex items-center">
+        <Button
+          type="primary"
+          onClick={onScan}
+          style={{
+            backgroundColor: "#FFF3B0",
+            color: "#1E1E1E",
+            border: "2px solid #335C67",
+          }}
+          size="large"
+        >
+          <img src={plus} alt="" className="h-4 w-4" />
         </Button>
       </div>
     </div>

@@ -1,16 +1,17 @@
-import { Modal, Input, Button, Form } from "antd";
+import { Modal, Input, Button, Form, Select } from "antd";
 import { useState } from "react";
 import { AlerModal } from "./AlertModal";
-import { sendSupplier } from "../services/supplierApi";
-import { Supplier } from "../hooks/useSuppliers";
+import { sendUser } from "../services/userApi";
+
+const { Option } = Select;
 
 type Props = {
   open: boolean;
   onClose: () => void;
-  onSuccess: (supplier: Supplier) => void;
+  onSuccess: () => void;
 };
 
-export const AddSupplierModal = ({ open, onClose, onSuccess }: Props) => {
+export const AddUserModal = ({ open, onClose, onSuccess }: Props) => {
   const [form] = Form.useForm();
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -19,15 +20,11 @@ export const AddSupplierModal = ({ open, onClose, onSuccess }: Props) => {
     try {
       const values = await form.validateFields();
 
-      const newSupplier: Supplier = await sendSupplier(
-        values.supplier,
-        values.address,
-        values.contact_info
-      );
+      await sendUser(values.username, values.password, values.role);
 
-      setAlertMessage(`New supplier: ${values.supplier} has been added`);
+      setAlertMessage(`New user: ${values.username} has been added`);
       setAlertVisible(true);
-      onSuccess(newSupplier);
+      onSuccess();
       onClose();
     } catch (error) {
       console.error("Submission error:", error);
@@ -39,7 +36,7 @@ export const AddSupplierModal = ({ open, onClose, onSuccess }: Props) => {
       <Modal
         title={
           <span className="text-white font-semibold flex justify-center mb-4">
-            Supplier data
+            Add New User
           </span>
         }
         open={open}
@@ -51,17 +48,20 @@ export const AddSupplierModal = ({ open, onClose, onSuccess }: Props) => {
       >
         <Form form={form} layout="vertical">
           <Form.Item
-            name="supplier"
+            name="username"
             rules={[{ required: true, message: "Supplier name!!" }]}
             style={{ marginBottom: "8px" }}
           >
-            <Input placeholder="Supplier" />
+            <Input placeholder="Username" />
           </Form.Item>
-          <Form.Item name="address" style={{ marginBottom: "8px" }}>
-            <Input placeholder="Address" />
+          <Form.Item name="password" style={{ marginBottom: "8px" }}>
+            <Input placeholder="Password" />
           </Form.Item>
-          <Form.Item name="contact_info" style={{ marginBottom: "8px" }}>
-            <Input placeholder="Contact info" />
+          <Form.Item name="role" style={{ marginBottom: "8px" }}>
+            <Select placeholder="Role">
+              <Option value="ROLE_EMPLOYEE">Empoyee</Option>
+              <Option value="ROLE_ADMIN">Admin</Option>
+            </Select>
           </Form.Item>
           <div className="flex justify-between">
             <Button
@@ -94,13 +94,13 @@ export const AddSupplierModal = ({ open, onClose, onSuccess }: Props) => {
           // handle confirmation
           setAlertVisible(false);
           setAlertMessage(null);
-          form.resetFields();
           onClose();
+          form.resetFields();
         }}
         onCancel={() => {
           // handle cancel
-          form.resetFields();
           setAlertVisible(false);
+          form.resetFields();
         }}
         showCancel={false}
       ></AlerModal>

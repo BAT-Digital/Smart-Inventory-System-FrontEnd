@@ -20,7 +20,6 @@ export const RightSideProductCardGrid: React.FC<
   const [productName, setProductName] = useState(" ");
   const [selectedBarcode, setSelectedBarcode] = useState<string>("");
   const [batchItems, setBatchItems] = useState<BatchArrivalItem[]>([]);
-  const [loadingBatchItems, setLoadingBatchItems] = useState(false);
   const { transactionId } = useParams<{ transactionId: string }>();
   const [productId, setProductId] = useState(0);
   const [quantity, setQuantity] = useState(0);
@@ -34,7 +33,6 @@ export const RightSideProductCardGrid: React.FC<
     }
 
     try {
-      setLoadingBatchItems(true);
       const response = await axios.get<BatchArrivalItem[]>(
         `/api/batch-arrival-items/by-barcode/${barcode}`
       );
@@ -43,7 +41,6 @@ export const RightSideProductCardGrid: React.FC<
       console.error("Error fetching batch items:", error);
       // Handle error as needed
     } finally {
-      setLoadingBatchItems(false);
     }
   };
 
@@ -100,15 +97,6 @@ export const RightSideProductCardGrid: React.FC<
             >
               {/* Left side: Image box */}
               <div className="flex">
-                <div
-                  style={{
-                    width: "70px",
-                    height: "70px",
-                    backgroundColor: "#2F2F2F",
-                    borderRadius: "0.8rem",
-                    flexShrink: 0,
-                  }}
-                />
                 {/* Right side: Text */}
                 <div className="flex flex-col justify-center pl-5">
                   <div className="font-semibold text-white text-lg">

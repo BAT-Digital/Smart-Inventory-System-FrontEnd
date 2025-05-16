@@ -16,17 +16,12 @@ import {
 } from "../services/productInUseApi";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import { BatchArrivalItem } from "../types/BatchArrivals";
 
 type Props = {
   open: boolean;
   onClose: () => void;
   onSuccess: () => void;
-};
-
-export type BatchArrivalItem = {
-  batchItemId: number;
-  quantityRemaining: number;
-  expiryDate: string; // or Date if you prefer
 };
 
 export const AddProductDataModal = ({ open, onClose, onSuccess }: Props) => {
