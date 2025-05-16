@@ -1,9 +1,9 @@
 import { Modal, Button, Form, Radio, Typography } from "antd";
 import { useState } from "react";
 import { AlerModal } from "./AlertModal";
-import { BatchArrivalItem } from "./AddProductDataModal";
 import { SalesItemQuantityModal } from "./SalesItemQuantityModal";
 import axios from "../utils/axios";
+import { BatchArrivalItem } from "../types/BatchArrivals";
 
 const { Text } = Typography;
 

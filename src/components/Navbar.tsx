@@ -6,10 +6,12 @@ import bell from "../assets/icons/bell.png";
 import settings from "../assets/icons/settings.png";
 import profile from "../assets/icons/profile.png";
 import { useNotifications } from "../contexts/NotificationContext";
+import Cookies from "js-cookie";
 
 export const Navbar = () => {
   const { notifications, toggleNotifications } = useNotifications();
   const unreadCount = notifications.length;
+  const userRole = Cookies.get("role");
 
   return (
     <div className="bg-[#335C67] text-white shadow-md">
@@ -78,19 +80,23 @@ export const Navbar = () => {
                   Sales
                 </Link>
               </Menu.Item>
-              <Menu.Item
-                key="5"
-                className="bg-[#335C67] hover:bg-[#335C67] active:bg-[#335C67]"
-                style={{ backgroundColor: "#335C67" }}
-              >
-                <Link
-                  to="/write-off"
-                  style={{ color: "white" }}
-                  className="mx-3"
-                >
-                  Write Off
-                </Link>
-              </Menu.Item>
+              {userRole === "ROLE_ADMIN" && (
+                <>
+                  <Menu.Item
+                    key="5"
+                    className="bg-[#335C67] hover:bg-[#335C67] active:bg-[#335C67]"
+                    style={{ backgroundColor: "#335C67" }}
+                  >
+                    <Link
+                      to="/write-off"
+                      style={{ color: "white" }}
+                      className="mx-3"
+                    >
+                      Write Off
+                    </Link>
+                  </Menu.Item>
+                </>
+              )}
             </Menu>
           </div>
         </div>

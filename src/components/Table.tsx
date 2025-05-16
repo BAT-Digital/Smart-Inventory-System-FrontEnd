@@ -10,6 +10,57 @@ import { WriteOff } from "../hooks/useWriteOff";
 import { BatchArrival } from "../types/BatchArrivals";
 import { useBatchArrivalItems } from "../hooks/useBatchArrivalItems";
 import { BatchArrivalItemsModal } from "./BatchArrivalItemsModal";
+import { User } from "../types/User";
+
+type UserTableProps = {
+  users: User[];
+  loading: boolean;
+};
+
+export const UserTable = ({ users, loading }: UserTableProps) => {
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Username",
+      dataIndex: "username",
+      key: "username",
+    },
+    {
+      title: "Role",
+      dataIndex: "role",
+      key: "role",
+    },
+    {
+      title: "Created date",
+      dataIndex: "created_at",
+      key: "created_at",
+    },
+  ];
+
+  const data = users.map((user) => ({
+    id: user.userId,
+    username: user.username,
+    role: user.role,
+    created_at: new Date(user.createdAt).toLocaleString("Ru-ru"),
+  }));
+
+  return (
+    <div className="mt-2">
+      <Table
+        dataSource={data}
+        columns={columns}
+        loading={loading}
+        pagination={{ pageSize: 6 }}
+        bordered
+        className="custom-ant-table custom-border-table"
+      />
+    </div>
+  );
+};
 
 type WriteOffTableProps = {
   writeOffs: WriteOff[];

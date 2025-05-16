@@ -56,6 +56,47 @@ export const TableActions: React.FC<TableActionsProps> = ({
   );
 };
 
+export const WriteOffTableActions: React.FC<TableActionsProps> = ({
+  onSearch,
+  onScan,
+}) => {
+  const [searchValue, setSearchValue] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleSearch = () => {
+    onSearch(searchValue);
+  };
+  return (
+    <div className="flex justify-between items-center mb-4 gap-2 flex-wrap">
+      <Input.Search
+        placeholder="Search"
+        allowClear
+        value={searchValue}
+        onChange={handleChange}
+        onSearch={handleSearch}
+        style={{ width: 200 }}
+      />
+      <div className="flex items-center">
+        <Button
+          type="primary"
+          onClick={onScan}
+          style={{
+            backgroundColor: "#FFF3B0",
+            color: "#1E1E1E",
+            border: "2px solid #335C67",
+          }}
+          size="large"
+        >
+          <img src={plus} alt="" className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+  );
+};
+
 export const AccountingTableActions: React.FC<TableActionsProps> = ({
   onSearch,
   onScan,
