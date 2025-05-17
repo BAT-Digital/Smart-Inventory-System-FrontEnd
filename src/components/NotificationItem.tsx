@@ -28,7 +28,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, class
         if (!notification.metadata) return null;
         
         const relevantKeys = Object.keys(notification.metadata).filter(key => 
-            !['timestamp'].includes(key) && notification.metadata[key]
+            !['timestamp'].includes(key) && notification.metadata?.[key]
         );
 
         if (relevantKeys.length === 0) return null;
@@ -37,7 +37,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, class
             <div className="notification-metadata text-sm text-gray-500 mt-1">
                 {relevantKeys.map(key => (
                     <span key={key} className="mr-3">
-                        {key.charAt(0).toUpperCase() + key.slice(1)}: {notification.metadata[key]}
+                        {key.charAt(0).toUpperCase() + key.slice(1)}: {notification.metadata?.[key]}
                     </span>
                 ))}
             </div>
