@@ -5,6 +5,7 @@ import classNames from "classnames";
 import { AddFullProductDataModal } from "./AddProductDataModal";
 import { useProductsBySupplier } from "../hooks/useCategories";
 import { submitBatchArrivalItems } from "../services/batchArrivalItemApi";
+import { Product } from "../hooks/useProducts";
 
 type Props = {
   open: boolean;
@@ -13,11 +14,6 @@ type Props = {
   selectedSupplier: string;
   batchArrivalId: number;
   onCancel: () => void;
-};
-
-type Product = {
-  productId: number;
-  productName: string;
 };
 
 export const AddProductModal = ({
@@ -222,16 +218,18 @@ export const AddProductDataBatchModal = ({
                   </Form.Item>
                 </div>
               </div>
-              <Form.Item
-                name={["items", index, "expiryDate"]}
-                rules={[{ required: true, message: "Choose date" }]}
-              >
-                <DatePicker
-                  format="YYYY-MM-DD"
-                  placeholder="Expiry date"
-                  className="w-full"
-                />
-              </Form.Item>
+              {product.isPerishable && (
+                <Form.Item
+                  name={["items", index, "expiryDate"]}
+                  rules={[{ required: true, message: "Choose date" }]}
+                >
+                  <DatePicker
+                    format="YYYY-MM-DD"
+                    placeholder="Expiry date"
+                    className="w-full"
+                  />
+                </Form.Item>
+              )}
             </>
           ))}
         </div>

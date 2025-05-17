@@ -20,10 +20,10 @@ export const sendTransaction = async (credentials: string) => {
   }
 };
 
-export const deleteSalesTransaction = async (transactionId: number) => {
+export const cancelCheck = async (transactionId: number) => {
   try {
-    const response = await axios.delete(
-      `/api/sales-transactions/${transactionId}`
+    const response = await axios.post(
+      `/api/sales/cancel-check/${transactionId}`
     );
     return response.data;
   } catch (error) {

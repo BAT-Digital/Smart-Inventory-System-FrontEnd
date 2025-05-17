@@ -11,7 +11,7 @@ import { AlerModal } from "../components/AlertModal";
 import { message } from "antd";
 import Cookies from "js-cookie";
 import { SalesItemDeleteModal } from "../components/salesItemDeleteModal";
-import { deleteSalesTransaction } from "../services/salesTransactionApi";
+import { cancelCheck } from "../services/salesTransactionApi";
 import {
   useCategoriesSearch,
   useProductsByCategory,
@@ -41,7 +41,7 @@ export const SalesItem = () => {
 
   const handleCancel = async () => {
     try {
-      await deleteSalesTransaction(transactionId);
+      await cancelCheck(transactionId);
       navigation("/sales");
       message.success("Check deleted");
     } catch (error) {

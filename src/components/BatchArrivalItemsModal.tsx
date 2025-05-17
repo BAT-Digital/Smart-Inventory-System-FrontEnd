@@ -25,7 +25,7 @@ export const BatchArrivalItemsModal = ({
         footer={null}
         centered
         className="custom-modal"
-        width={400}
+        width={500}
       >
         <div className="max-h-100" style={{ marginBottom: "8px" }}>
           <div className="">
@@ -39,7 +39,8 @@ export const BatchArrivalItemsModal = ({
                   className="p-3 rounded bg-white hover:bg-gray-100 border-gray-300"
                   style={{ fontSize: 16 }}
                 >
-                  {item.product.productName}
+                  {item.product.productName} | {item.quantityRemaining}{" "}
+                  remaining out of {item.quantityReceived} received
                 </div>
               ))}
             </div>

@@ -1,10 +1,6 @@
 import dayjs from "dayjs";
 import axios from "../utils/axios";
-
-type Product = {
-  productId: number;
-  productName: string;
-};
+import { Product } from "../hooks/useProducts";
 
 type FormValues = {
   items: {
@@ -20,14 +16,25 @@ export const submitBatchArrivalItems = async (
   batchArrivalId: number
 ): Promise<void> => {
   const payload = selectedProducts.map((product, index) => {
-    const item = values.items[index];
-    return {
-      batchArrivalId,
-      productId: product.productId,
-      quantityReceived: parseFloat(item.quantityReceived),
-      unitCost: parseFloat(item.unitCost),
-      expiryDate: item.expiryDate.format("YYYY-MM-DD"),
-    };
+    if (product.isPerishable) {
+      const item = values.items[index];
+      return {
+        batchArrivalId,
+        productId: product.productId,
+        quantityReceived: parseFloat(item.quantityReceived),
+        unitCost: parseFloat(item.unitCost),
+        expiryDate: item.expiryDate.format("YYYY-MM-DD"),
+      };
+    } else {
+      const item = values.items[index];
+      return {
+        batchArrivalId,
+        productId: product.productId,
+        quantityReceived: parseFloat(item.quantityReceived),
+        unitCost: parseFloat(item.unitCost),
+        expiryDate: null,
+      };
+    }
   });
 
   try {

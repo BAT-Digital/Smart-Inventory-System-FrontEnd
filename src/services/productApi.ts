@@ -10,6 +10,7 @@ export type ProductDTO = {
   unitOfMeasure: string;
   supplierId: number;
   description: string;
+  threshold: number;
   price: number;
   volume: number;
 };

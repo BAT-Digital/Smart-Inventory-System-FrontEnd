@@ -277,6 +277,7 @@ export const AddFullProductDataModal = ({
               unitOfMeasure: values.unitOfMeasure,
               supplierId: values.supplier,
               description: values.description,
+              threshold: values.threshold,
               price: values.price,
               volume: values.volume,
             };
@@ -311,6 +312,7 @@ export const AddFullProductDataModal = ({
               unitOfMeasure: values.unitOfMeasure,
               supplierId: values.supplier,
               description: values.description,
+              threshold: values.threshold,
               price: values.price,
               volume: values.volume,
             };
@@ -404,13 +406,6 @@ export const AddFullProductDataModal = ({
             </div>
           </div>
           <Form.Item
-            name="quantity"
-            style={{ marginBottom: "8px" }}
-            rules={[{ required: true, message: "Please enter quantity" }]}
-          >
-            <Input placeholder="Quantity" />
-          </Form.Item>
-          <Form.Item
             name="supplier"
             style={{ marginBottom: "8px" }}
             rules={[{ required: true, message: "Please enter supplier" }]}
@@ -471,6 +466,13 @@ export const AddFullProductDataModal = ({
               ))}
               <Option value="else">else</Option>
             </Select>
+          </Form.Item>
+          <Form.Item
+            name="threshold"
+            style={{ marginBottom: "8px" }}
+            rules={[{ required: true, message: "Please enter threshold" }]}
+          >
+            <Input placeholder="Threshold" />
           </Form.Item>
           <Form.Item
             name="price"
