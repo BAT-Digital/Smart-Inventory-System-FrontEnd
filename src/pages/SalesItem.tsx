@@ -4,7 +4,7 @@ import { LeftSide } from "../components/LeftSide";
 import { RightSideCategories } from "../components/RightSideCategories";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSalesItems } from "../hooks/useSalesItems";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RightSideProducts } from "../components/RightSideProducts";
 import { ProductRequestDTO, sell } from "../services/saleApi";
 import { AlerModal } from "../components/AlertModal";
@@ -16,6 +16,13 @@ import {
   useCategoriesSearch,
   useProductsByCategory,
 } from "../hooks/useCategories";
+import { SalesItemDTO, sendSalesItem } from "../services/salesItemApi";
+import axios from "../utils/axios";
+import { Product } from "../hooks/useProducts";
+import { Client } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
+import { ProductExpirySelectModal } from "../components/ProductExpirySelectModal";
+import { BatchArrivalItem } from "../types/BatchArrivals";
 
 export const SalesItem = () => {
   const navigate = useNavigate();
@@ -28,7 +35,13 @@ export const SalesItem = () => {
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const navigation = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isExpiryModalOpen, setIsExpiryModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [barcode, setBarcode] = useState("");
+
+  const [productName, setProductName] = useState(" ");
+  const [batchItems, setBatchItems] = useState<BatchArrivalItem[]>([]);
+  const [productId, setProductId] = useState(0);
 
   const { salesItems, refetch: reFetchSalesItems } = useSalesItems({
     transactionId,
@@ -38,6 +51,72 @@ export const SalesItem = () => {
   const categoryNames = categories.map((c) => c.name);
 
   const { products } = useProductsByCategory({ selectedCategory, searchTerm });
+
+  useEffect(() => {
+    const client = new Client({
+      webSocketFactory: () => new SockJS("http://192.168.10.9:8080/ws"),
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+    });
+
+    client.onConnect = () => {
+      console.log("Connected to WebSocket");
+      client.subscribe("/topic/barcodes", (message) => {
+        setBarcode(message.body);
+      });
+    };
+
+    client.onStompError = (frame) => {
+      console.error("Broker reported error: " + frame.headers["message"]);
+      console.error("Additional details: " + frame.body);
+    };
+
+    client.activate();
+
+    return () => {
+      client.deactivate();
+    };
+  }, []);
+
+  const handleAddProductByBarcode = async () => {
+    try {
+      const response = await axios.get(`/api/products/barcode/${barcode}`);
+      const product: Product = response.data;
+      setProductName(product.productName);
+      setProductId(product.productId);
+
+      if (!product.isPerishable) {
+        const salesItemDTO: SalesItemDTO = {
+          transactionId: transactionId,
+          productId: product.productId,
+          expiryDate: null,
+          quantity: 1,
+        };
+
+        await sendSalesItem(salesItemDTO);
+        setBarcode("");
+        reFetchSalesItems();
+      } else {
+        try {
+          const response = await axios.get<BatchArrivalItem[]>(
+            `/api/batch-arrival-items/by-barcode/${barcode}`
+          );
+          setBatchItems(response.data);
+        } catch (error) {
+          console.error("Error fetching batch items:", error);
+        }
+        setIsExpiryModalOpen(true);
+        setBarcode("");
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+    }
+  };
+
+  useEffect(() => {
+    handleAddProductByBarcode();
+  }, [barcode]);
 
   const handleCancel = async () => {
     try {
@@ -161,6 +240,18 @@ export const SalesItem = () => {
         onClose={() => setIsModalOpen(false)}
         salesItems={salesItems}
         onSuccess={reFetchSalesItems}
+      />
+
+      <ProductExpirySelectModal
+        open={isExpiryModalOpen}
+        onClose={() => setIsExpiryModalOpen(false)}
+        productName={productName}
+        batchItems={batchItems}
+        onSuccess={reFetchSalesItems}
+        transactionId={transactionId}
+        productId={productId}
+        productBarcode={barcode}
+        type="automatic"
       />
     </>
   );

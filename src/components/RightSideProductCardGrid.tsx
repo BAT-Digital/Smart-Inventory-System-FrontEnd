@@ -3,9 +3,9 @@ import { useParams } from "react-router-dom";
 import { ProductExpirySelectModal } from "./ProductExpirySelectModal";
 import { useState } from "react";
 import { Product } from "../hooks/useProducts";
-import { BatchArrivalItem } from "./AddProductDataModal";
 import axios from "../utils/axios";
 import { SalesItemQuantityModal } from "./SalesItemQuantityModal";
+import { BatchArrivalItem } from "../types/BatchArrivals";
 
 type RightSideProductCardGridProps = {
   products: Product[];
@@ -121,6 +121,7 @@ export const RightSideProductCardGrid: React.FC<
         transactionId={parseInt(transactionId!)}
         productId={productId}
         productBarcode={selectedBarcode}
+        type="manual"
       />
 
       <SalesItemQuantityModal

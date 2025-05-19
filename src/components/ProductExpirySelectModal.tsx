@@ -4,6 +4,7 @@ import { AlerModal } from "./AlertModal";
 import { SalesItemQuantityModal } from "./SalesItemQuantityModal";
 import axios from "../utils/axios";
 import { BatchArrivalItem } from "../types/BatchArrivals";
+import { SalesItemDTO, sendSalesItem } from "../services/salesItemApi";
 
 const { Text } = Typography;
 
@@ -16,6 +17,7 @@ type Props = {
   transactionId: number;
   productId: number;
   productBarcode: string;
+  type: string;
 };
 
 export const ProductExpirySelectModal = ({
@@ -27,6 +29,7 @@ export const ProductExpirySelectModal = ({
   transactionId,
   productId,
   productBarcode,
+  type,
 }: Props) => {
   const [form] = Form.useForm();
   const [isQuantityModalOpen, setIsQuantityModalOpen] = useState(false);
@@ -67,8 +70,22 @@ export const ProductExpirySelectModal = ({
 
       await handleExpiryDateChange();
 
-      setIsQuantityModalOpen(true);
-      onClose(); // Close modal after submitting
+      if (type === "manual") {
+        setIsQuantityModalOpen(true);
+        onClose(); // Close modal after submitting
+      } else {
+        const salesItemDTO: SalesItemDTO = {
+          transactionId: transactionId,
+          productId: productId,
+          expiryDate: selectedOption,
+          quantity: 1,
+        };
+
+        await sendSalesItem(salesItemDTO);
+        onSuccess();
+        form.resetFields();
+        onClose();
+      }
     });
   };
 
