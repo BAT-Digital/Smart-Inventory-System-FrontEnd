@@ -1,11 +1,15 @@
 // src/api/batchArrivalApi.ts
 import axios from "../utils/axios";
 
-export const sendBatchArrival = async (supplierId: number, notes: string) => {
+export const sendBatchArrival = async (
+  supplierId: number,
+  notes: string,
+  addedById: number
+) => {
   const payload = {
     supplierId,
     notes,
-    addedById: 1,
+    addedById,
   };
 
   try {

@@ -1,6 +1,7 @@
 // hooks/useProducts.ts
 import { useCallback, useEffect, useState } from "react";
 import axios from "../utils/axios";
+import { Supplier } from "./useSuppliers";
 
 export type Product = {
   productId: number;
@@ -12,6 +13,7 @@ export type Product = {
   description: string;
   price: string;
   volume: string;
+  supplier: Supplier;
 };
 
 export const useProducts = () => {

@@ -1,12 +1,14 @@
-import { Modal, Input, Button, Form, Select } from "antd";
+import { Modal, Input, Button, Form, Select, message } from "antd";
 import { AddProductModal } from "./AddProductModal";
 import { useEffect, useState } from "react";
 import { AlerModal } from "./AlertModal";
 import { useSuppliers } from "../hooks/useSuppliers";
+import Cookies from "js-cookie";
 import {
   deleteBatchArrival,
   sendBatchArrival,
 } from "../services/batchArrivalApi";
+import { useNavigate } from "react-router-dom";
 const { Option } = Select;
 
 type Props = {
@@ -22,6 +24,7 @@ export const AddDataModal = ({ open, onClose, onSuccess }: Props) => {
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [selectedSupplier, setSelectedSupplier] = useState("something");
   const { suppliers } = useSuppliers();
+  const navigation = useNavigate();
 
   const [batchArrivalId, setBatchArrivalId] = useState<number>(0);
 
@@ -32,17 +35,26 @@ export const AddDataModal = ({ open, onClose, onSuccess }: Props) => {
   }, [selectedSupplier]);
 
   const handleSubmit = async () => {
+    const userIdCookie = Cookies.get("user_id");
+
+    if (!userIdCookie) {
+      message.error("Session expired. Please log in again.");
+      navigation("/");
+      return;
+    }
     try {
       const values = await form.validateFields();
       const supplierObj = suppliers.find((s) => s.name === values.supplier);
       if (!supplierObj) {
         throw new Error("Supplier not found");
       }
+      const addedById = parseInt(userIdCookie);
 
       // Send request to backend
       const response = await sendBatchArrival(
         supplierObj.supplierId,
-        values.notes || ""
+        values.notes || "",
+        addedById
       );
 
       setBatchArrivalId(response.arrivalId);

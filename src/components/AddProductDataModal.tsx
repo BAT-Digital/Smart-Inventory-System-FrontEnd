@@ -1,5 +1,5 @@
 import { Modal, Input, Button, Form, Select, message } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 const { Option } = Select;
 import { AlerModal } from "./AlertModal";
 import { AddCategoryModal } from "./AddCategory";
@@ -17,6 +17,8 @@ import {
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { BatchArrivalItem } from "../types/BatchArrivals";
+import { Client } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
 
 type Props = {
   open: boolean;
@@ -243,9 +245,41 @@ export const AddFullProductDataModal = ({
   const [name, setName] = useState<string>("");
   const [showCompositeModal, setShowCompositeModal] = useState(false);
   const [finalProductId, setFinalProductId] = useState(0);
+  const [barcode, setBarcode] = useState("");
 
   const { categories, refetch: refetchCategories } = useCategories();
   const { suppliers, refetch: refetchSuppliers } = useSuppliers();
+
+  useEffect(() => {
+    const client = new Client({
+      webSocketFactory: () => new SockJS("http://192.168.10.9:8080/ws"),
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+    });
+
+    client.onConnect = () => {
+      console.log("Connected to WebSocket");
+      client.subscribe("/topic/barcodes", (message) => {
+        setBarcode(message.body);
+      });
+    };
+
+    client.onStompError = (frame) => {
+      console.error("Broker reported error: " + frame.headers["message"]);
+      console.error("Additional details: " + frame.body);
+    };
+
+    client.activate();
+
+    return () => {
+      client.deactivate();
+    };
+  }, []);
+
+  useEffect(() => {
+    form.setFieldValue("barcode", barcode);
+  }, [barcode]);
 
   const handleCategoryAdded = () => {
     refetchCategories();

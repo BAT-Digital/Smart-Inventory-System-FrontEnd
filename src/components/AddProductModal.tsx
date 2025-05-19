@@ -1,11 +1,14 @@
 import { Modal, Button, Form, Input, DatePicker } from "antd";
 import plus from "../assets/icons/plustWhite.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import classNames from "classnames";
 import { AddFullProductDataModal } from "./AddProductDataModal";
 import { useProductsBySupplier } from "../hooks/useCategories";
 import { submitBatchArrivalItems } from "../services/batchArrivalItemApi";
 import { Product } from "../hooks/useProducts";
+import axios from "../utils/axios";
+import { Client } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
 
 type Props = {
   open: boolean;
@@ -28,6 +31,55 @@ export const AddProductModal = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDataModalOpen, setIsDataModalOpen] = useState(false);
   const { productsBySupplier } = useProductsBySupplier({ selectedSupplier });
+  const [barcode, setBarcode] = useState("");
+
+  useEffect(() => {
+    const client = new Client({
+      webSocketFactory: () => new SockJS("http://192.168.10.9:8080/ws"),
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+    });
+
+    client.onConnect = () => {
+      console.log("Connected to WebSocket");
+      client.subscribe("/topic/barcodes", (message) => {
+        setBarcode(message.body);
+      });
+    };
+
+    client.onStompError = (frame) => {
+      console.error("Broker reported error: " + frame.headers["message"]);
+      console.error("Additional details: " + frame.body);
+    };
+
+    client.activate();
+
+    return () => {
+      client.deactivate();
+    };
+  }, []);
+
+  const handleScan = async () => {
+    try {
+      const response = await axios.get(`/api/products/barcode/${barcode}`);
+      const product: Product = response.data;
+      const foundProduct = productsBySupplier.find(
+        (item) => item.barcode === product.barcode
+      );
+      if (productsBySupplier.some((item) => item.barcode === product.barcode)) {
+        handleProductClick(foundProduct!);
+      } else {
+        setIsModalOpen(true);
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+    }
+  };
+
+  useEffect(() => {
+    handleScan();
+  }, [barcode]);
 
   const handleProductClick = (product: Product) => {
     setSelectedProducts((prevSelected) => {

@@ -8,20 +8,25 @@ import { useNavigate } from "react-router-dom";
 import { UserTable } from "../components/Table";
 import { useUsers } from "../hooks/useUsers";
 import plus from "../assets/icons/+.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AddUserModal } from "../components/AddUserModal";
 
 export const Profile = () => {
   const navigation = useNavigate();
   const userIdCookie = Cookies.get("user_id");
-  const username = Cookies.get("username");
-  const userRole = Cookies.get("role");
+
+  useEffect(() => {
+    if (!userIdCookie) {
+      message.error("Session expired. Please log in again.");
+      navigation("/");
+    }
+  }, [userIdCookie, navigation]);
 
   if (!userIdCookie) {
-    message.error("Session expired. Please log in again.");
-    navigation("/");
-    return;
+    return null; // Return nothing while redirecting
   }
+  const username = Cookies.get("username");
+  const userRole = Cookies.get("role");
 
   const { users, loading, refetch: ReFetchUsers } = useUsers();
   const [isModalOpen, setIsModalOpen] = useState(false);

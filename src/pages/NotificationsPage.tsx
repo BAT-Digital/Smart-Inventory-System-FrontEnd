@@ -1,4 +1,3 @@
-import React from "react";
 import { Navbar } from "../components/Navbar";
 import background from "../assets/background.png";
 import Notifications from "../components/Notifications";

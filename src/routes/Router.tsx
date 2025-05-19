@@ -12,13 +12,11 @@ import { Dashboard } from "../pages/Dashboard";
 import { Profile } from "../pages/Profile";
 import { Settings } from "../pages/Settings";
 import { WriteOff } from "../pages/WriteOff";
-import BarcodeDisplay from "../pages/BarcodeDisplay";
 
 export default function AppRoutes() {
   return (
     <Router>
       <Routes>
-        <Route path="/barcode-test" element={<BarcodeDisplay />} />
         <Route path="/" element={<Login />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/profile" element={<Profile />} />
