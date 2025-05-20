@@ -159,7 +159,7 @@ export const AccountingProducts: React.FC<Props> = ({ type }) => {
             className="flex items-center justify-center font-bold "
             style={{ fontSize: 16, textDecoration: "underline" }}
           >
-            ПО ПРОДУКТАМ
+            BY PRODUCTS
           </div>
         </div>
       </div>

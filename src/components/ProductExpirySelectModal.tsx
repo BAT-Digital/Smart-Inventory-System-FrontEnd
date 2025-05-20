@@ -95,13 +95,13 @@ export const ProductExpirySelectModal = ({
         title={
           <div className="text-white text-center mb-4 px-4">
             <Text strong style={{ color: "red", fontSize: 16 }}>
-              Внимание!
+              Attention!
             </Text>{" "}
-            В составе позиции находится скоропортящийся продукт –{" "}
+            There is a perishable product –{" "}
             <Text underline style={{ color: "red", fontSize: 16 }}>
               {productName}
             </Text>
-            . Пожалуйста выберите используемый продукт
+            . Please choose product
           </div>
         }
         open={open}
@@ -138,10 +138,10 @@ export const ProductExpirySelectModal = ({
               className="w-1/2 mr-2"
               size="large"
             >
-              Добавить
+              Add
             </Button>
             <Button onClick={onClose} className="w-1/2 ml-2" size="large">
-              Отмена
+              Cancle
             </Button>
           </div>
         </Form>

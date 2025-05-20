@@ -41,7 +41,7 @@ export const SalesItemQuantityModal = ({
 
       await sendSalesItem(salesItemDTO);
 
-      setAlertMessage(`${productName} был добавлен`);
+      setAlertMessage(`${productName} has been added`);
       setAlertVisible(true);
       onSuccess();
       form.resetFields();
@@ -56,7 +56,7 @@ export const SalesItemQuantityModal = ({
       <Modal
         title={
           <span className="text-white font-semibold flex justify-center mb-4">
-            Количество
+            Quantity
           </span>
         }
         open={open}
@@ -70,12 +70,12 @@ export const SalesItemQuantityModal = ({
           <div className="flex" style={{ marginBottom: "-10px" }}>
             <div className="mr-1">
               <Form.Item name="quantity">
-                <Input placeholder="Количетсво" />
+                <Input placeholder="Quantity" />
               </Form.Item>
             </div>
             <div className="ml-1">
               <span style={{ color: "white", fontSize: 18 }}>
-                из {quantity}
+                out of {quantity}
               </span>
             </div>
           </div>
@@ -87,7 +87,7 @@ export const SalesItemQuantityModal = ({
               className="w-1/2 mr-2"
               size="large"
             >
-              Добавить
+              Add
             </Button>
             <Button
               onClick={() => {
@@ -97,7 +97,7 @@ export const SalesItemQuantityModal = ({
               className="w-1/2 ml-2"
               size="large"
             >
-              Отмена
+              Cancle
             </Button>
           </div>
         </Form>

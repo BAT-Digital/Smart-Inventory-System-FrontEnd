@@ -9,6 +9,7 @@ import { Product } from "../hooks/useProducts";
 import axios from "../utils/axios";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
+import { AlerModal } from "./AlertModal";
 
 type Props = {
   open: boolean;
@@ -31,6 +32,7 @@ export const AddProductModal = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDataModalOpen, setIsDataModalOpen] = useState(false);
   const { productsBySupplier } = useProductsBySupplier({ selectedSupplier });
+  const [alertVisible, setAlertVisible] = useState(false);
   const [barcode, setBarcode] = useState("");
 
   useEffect(() => {
@@ -70,7 +72,7 @@ export const AddProductModal = ({
       if (productsBySupplier.some((item) => item.barcode === product.barcode)) {
         handleProductClick(foundProduct!);
       } else {
-        setIsModalOpen(true);
+        setAlertVisible(true);
       }
     } catch (error) {
       console.error("Submission error:", error);
@@ -188,6 +190,15 @@ export const AddProductModal = ({
         selectedProducts={selectedProducts}
         batchArrivalId={batchArrivalId}
       ></AddProductDataBatchModal>
+      <AlerModal
+        visible={alertVisible}
+        message={"No product with that barcode from the supplier"}
+        onReady={() => setAlertVisible(false)}
+        onCancel={() => {
+          setAlertVisible(false);
+        }}
+        showCancel={false}
+      ></AlerModal>
     </>
   );
 };
