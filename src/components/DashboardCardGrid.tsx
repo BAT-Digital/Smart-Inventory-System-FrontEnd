@@ -1,113 +1,177 @@
-import { Card, Button, Select, List } from "antd";
+import { Card, Button, message, Tag } from "antd";
+import { useEffect, useState } from "react";
 import {
-  useOldestLowRemaining,
-  useTopProducts,
+  ForcastProduct,
+  ForecastResponse,
+  ForecastService,
 } from "../hooks/useDashboardApi";
-const { Option } = Select;
 
 export const DashboardCardGrid = () => {
-  const { topProducts } = useTopProducts();
-  const { batchItems } = useOldestLowRemaining();
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 ">
-      {/* Оборот */}
-      <Card
-        className="col-span-1"
-        title={
-          <div className="flex justify-between items-center">
-            <span>Turnover</span>
-            <Select defaultValue="day" style={{ width: 100 }} size="small">
-              <Option value="day">day</Option>
-              <Option value="week">week</Option>
-              <Option value="month">month</Option>
-              <Option value="half_a_year">half a year</Option>
-              <Option value="year">year</Option>
-            </Select>
-          </div>
-        }
-      ></Card>
+  const [loading, setLoading] = useState(false);
+  const [forecastData, setForecastData] = useState<ForecastResponse | null>(
+    null
+  );
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-      {/* Скачать общую статистику */}
+  const fetchLatestForecast = async () => {
+    try {
+      setLoading(true);
+      const data = await ForecastService.getLatestForecast();
+      setForecastData(data);
+      setIsInitialLoad(false);
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const refreshForecast = async () => {
+    try {
+      setLoading(true);
+      const data = await ForecastService.generateNewForecast();
+      setForecastData(data);
+      message.success("Forecast updated successfully");
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initial load
+  useEffect(() => {
+    fetchLatestForecast();
+  }, []);
+
+  if (isInitialLoad) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
+        <Button
+          type="text"
+          className="col-span-1 min-h-full text-lg font-semibold text-black w-full"
+          style={{
+            backgroundColor: "#FFF3B0",
+            color: "#1E1E1E",
+            fontSize: "22px",
+          }}
+          onClick={refreshForecast}
+          loading={loading}
+        >
+          {loading ? "Generating Forecast..." : "Download Statistics"}
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
       <Button
         type="text"
-        className="col-span-1 min-h-35 text-lg font-semibold text-black w-full"
+        className="col-span-1 min-h-full text-lg font-semibold text-black w-full"
         style={{
           backgroundColor: "#FFF3B0",
           color: "#1E1E1E",
-          fontSize: 22,
+          fontSize: "22px",
         }}
+        onClick={refreshForecast}
+        loading={loading}
       >
-        Download statistics
+        {loading ? "Generating Forecast..." : "Download Statistics"}
       </Button>
 
-      {/* Топ продаваемых продуктов */}
-      <Card
-        className="col-span-1 row-span-2"
-        title="Top Selling products:"
-        bordered={false}
-      >
-        {topProducts.map((product) => (
-          <div key={product.productId}>{product.productName}</div>
-        ))}
-      </Card>
+      {forecastData?.topProducts?.map((product) => (
+        <ProductCard
+          key={product.productId}
+          product={product}
+          loading={loading}
+        />
+      ))}
 
-      {/* Заработок */}
-      <Card
-        className="col-span-1"
-        title={
-          <div className="flex justify-between items-center">
-            <span>Income</span>
-            <Select defaultValue="day" style={{ width: 100 }} size="small">
-              <Option value="day">day</Option>
-              <Option value="week">week</Option>
-              <Option value="month">month</Option>
-              <Option value="half_a_year">half a year</Option>
-              <Option value="year">year</Option>
-            </Select>
-          </div>
-        }
-        bordered={false}
-      ></Card>
-
-      {/* Крайние 3 дня */}
-      <Card className="col-span-1" title="The last 3 days:" bordered={false}>
-        {/* Insert bar chart or graph here */}
-        <div className="h-24 bg-gray-200 rounded"></div>
-      </Card>
-
-      {/* Рекомендуется приобрести */}
-      <Card
-        className="col-span-1"
-        title="Recommended to purchase:"
-        bordered={false}
-      >
-        {batchItems.map((item) => (
-          <div key={item.product.productName}>
-            {item.product.productName} :::::: quantity remaining:{" "}
-            {item.quantityRemaining}
-          </div>
-        ))}
-      </Card>
-
-      {/* Возможная дата будущей поставки */}
-      <Card
-        className="col-span-1"
-        title="Possible future delivery date:"
-        bordered={false}
-      >
-        {/* Content */}
-        <div className="h-24 bg-gray-200 rounded"></div>
-      </Card>
-
-      {/* Топ продаваемых категорий */}
-      <Card
-        className="col-span-1"
-        title="Top Selling categories:"
-        bordered={false}
-      >
-        {/* Content */}
-        <div className="h-24 bg-gray-200 rounded"></div>
-      </Card>
+      <SupplierCard products={forecastData?.topProducts} loading={loading} />
+      <CategoryCard products={forecastData?.topProducts} loading={loading} />
     </div>
   );
 };
+
+const ProductCard = ({
+  product,
+  loading,
+}: {
+  product: ForcastProduct;
+  loading: boolean;
+}) => (
+  <Card
+    className="col-span-1"
+    title={
+      <div className="flex justify-between items-center">
+        <span>{product.productName}</span>
+        <Tag color="blue">{product.categoryName}</Tag>
+      </div>
+    }
+    bordered={false}
+    loading={loading}
+  >
+    <div className="space-y-2">
+      <div>
+        <strong>Forecast:</strong> {product.forecasted_sales.toFixed(1)} units
+      </div>
+      <div>
+        <strong>Peak:</strong> {new Date(product.peak_day).toLocaleDateString()}{" "}
+        ({product.peak_value.toFixed(1)} units)
+      </div>
+      <div>
+        <strong>Stock:</strong> {product.currentStock}
+        {product.restockNeeded > 0 && (
+          <span className="text-red-500 ml-2">
+            ‼️ Restock {product.restockNeeded.toFixed(1)} units
+          </span>
+        )}
+      </div>
+    </div>
+  </Card>
+);
+
+const SupplierCard = ({
+  products,
+  loading,
+}: {
+  products?: ForcastProduct[];
+  loading: boolean;
+}) => (
+  <Card
+    className="col-span-1"
+    title="Top Suppliers"
+    bordered={false}
+    loading={loading}
+  >
+    {products && (
+      <ul className="list-disc pl-4">
+        {ForecastService.getTopSuppliers(products).map((supplier) => (
+          <li key={supplier}>{supplier}</li>
+        ))}
+      </ul>
+    )}
+  </Card>
+);
+
+const CategoryCard = ({
+  products,
+  loading,
+}: {
+  products?: ForcastProduct[];
+  loading: boolean;
+}) => (
+  <Card
+    className="col-span-1"
+    title="Top Categories"
+    bordered={false}
+    loading={loading}
+  >
+    {products && (
+      <ul className="list-disc pl-4">
+        {ForecastService.getTopCategories(products).map((category) => (
+          <li key={category}>{category}</li>
+        ))}
+      </ul>
+    )}
+  </Card>
+);

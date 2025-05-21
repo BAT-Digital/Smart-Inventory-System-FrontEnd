@@ -1,52 +1,53 @@
-import { useCallback, useEffect, useState } from "react";
 import axios from "../utils/axios";
-import { Product } from "./useProducts";
-import { BatchArrivalItem } from "../types/BatchArrivals";
 
-export const useTopProducts = () => {
-  const [topProducts, setTopProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+export interface ForcastProduct {
+  productId: number;
+  productName: string;
+  categoryName: string;
+  supplierName: string;
+  forecasted_sales: number;
+  peak_day: string;
+  peak_value: number;
+  currentStock: number;
+  restockNeeded: number;
+}
 
-  const fetchTopProducts = useCallback(() => {
-    setLoading(true);
-    axios
-      .get<Product[]>("/api/dashboard/top-performing-products")
-      .then((res) => setTopProducts(res.data))
-      .catch((err) => {
-        console.error("Error fetching top products:", err);
-        setError("Failed to load top products");
-      })
-      .finally(() => setLoading(false));
-  }, []);
+export interface ForecastResponse {
+  topProducts: ForcastProduct[];
+}
 
-  useEffect(() => {
-    fetchTopProducts();
-  }, [fetchTopProducts]);
+export const ForecastService = {
+  async getLatestForecast(): Promise<ForecastResponse> {
+    try {
+      const response = await axios.get(`/api/forecast`);
+      return response.data;
+    } catch (error) {
+      throw new Error("Failed to fetch latest forecast");
+    }
+  },
 
-  return { topProducts, loading, error, refetch: fetchTopProducts };
-};
+  async generateNewForecast(): Promise<ForecastResponse> {
+    try {
+      const response = await axios.post(`/api/forecast`);
+      return response.data;
+    } catch (error) {
+      throw new Error("Failed to generate new forecast");
+    }
+  },
 
-export const useOldestLowRemaining = () => {
-  const [batchItems, setBatchItems] = useState<BatchArrivalItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  // Utility function to extract unique suppliers
+  getTopSuppliers(products: ForcastProduct[], count: number = 5): string[] {
+    return Array.from(new Set(products.map((p) => p.supplierName))).slice(
+      0,
+      count
+    );
+  },
 
-  const fetchOldestLowRemaining = useCallback(() => {
-    setLoading(true);
-    axios
-      .get<BatchArrivalItem[]>("/api/dashboard/oldest-low-remaining-batches")
-      .then((res) => setBatchItems(res.data))
-      .catch((err) => {
-        console.error("Error fetching top products:", err);
-        setError("Failed to load top products");
-      })
-      .finally(() => setLoading(false));
-  }, []);
-
-  useEffect(() => {
-    fetchOldestLowRemaining();
-  }, [fetchOldestLowRemaining]);
-
-  return { batchItems, loading, error, refetch: fetchOldestLowRemaining };
+  // Utility function to extract unique categories
+  getTopCategories(products: ForcastProduct[], count: number = 5): string[] {
+    return Array.from(new Set(products.map((p) => p.categoryName))).slice(
+      0,
+      count
+    );
+  },
 };
