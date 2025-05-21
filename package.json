@@ -3,11 +3,13 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main": "dist-electron/main.cjs",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "dev": "concurrently \"vite\" \"npm:electron:dev\"",
+    "electron:dev": "wait-on http://localhost:5173 && electron .",
+    "build": "tsc -b && vite build && tsc -p tsconfig.electron.json",
+  "build-electron": "tsc -p tsconfig.electron.json",
+    "start": "electron ."
   },
   "dependencies": {
     "@stomp/stompjs": "^7.1.1",
@@ -33,12 +35,15 @@
     "@types/react-dom": "^19.0.4",
     "@types/sockjs-client": "^1.5.4",
     "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.2",
+    "electron": "^36.2.1",
     "eslint": "^9.22.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.26.1",
-    "vite": "^6.3.1"
+    "vite": "^6.3.1",
+    "wait-on": "^8.0.3"
   }
 }
