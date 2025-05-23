@@ -252,7 +252,7 @@ export const AddFullProductDataModal = ({
 
   useEffect(() => {
     const client = new Client({
-      webSocketFactory: () => new SockJS("http://192.168.10.9:8080/ws"),
+      webSocketFactory: () => new SockJS("http://192.168.171.16:8080/ws"),
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
@@ -278,8 +278,17 @@ export const AddFullProductDataModal = ({
   }, []);
 
   useEffect(() => {
-    form.setFieldValue("barcode", barcode);
+    handleBarcodeScan();
   }, [barcode]);
+
+  const handleBarcodeScan = async () => {
+    try {
+      await axios.get(`/api/products/barcode/${barcode}`);
+      message.error("The product with that barcode already exists");
+    } catch (error) {
+      form.setFieldValue("barcode", barcode);
+    }
+  };
 
   const handleCategoryAdded = () => {
     refetchCategories();

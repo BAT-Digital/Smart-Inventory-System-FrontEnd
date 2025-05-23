@@ -28,7 +28,7 @@ export const RightSideCardGrid: React.FC<RightSideCardGridProps> = ({
             key={index}
             className="flex items-center justify-center text-center font-semibold"
             style={{
-              backgroundColor: categoryColors[category],
+              backgroundColor: "#F6E27F",
               color: "#333",
               borderRadius: "0.8rem",
               height: "100px",

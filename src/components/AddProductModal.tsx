@@ -37,7 +37,7 @@ export const AddProductModal = ({
 
   useEffect(() => {
     const client = new Client({
-      webSocketFactory: () => new SockJS("http://192.168.10.9:8080/ws"),
+      webSocketFactory: () => new SockJS("http://192.168.171.16:8080/ws"),
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
