@@ -23,6 +23,7 @@ export const RightSideProductCardGrid: React.FC<
   const { transactionId } = useParams<{ transactionId: string }>();
   const [productId, setProductId] = useState(0);
   const [quantity, setQuantity] = useState(0);
+  const [composite, setComposite] = useState(false);
 
   const handleProductChange = async (barcode: string) => {
     setSelectedBarcode(barcode);
@@ -73,6 +74,7 @@ export const RightSideProductCardGrid: React.FC<
             onClick={async () => {
               setProductName(product.productName);
               setProductId(product.productId);
+              setComposite(product.isComposite);
               if (product.isPerishable) {
                 handleProductChange(product.barcode);
                 setIsModalOpen(true);
@@ -122,6 +124,7 @@ export const RightSideProductCardGrid: React.FC<
         productId={productId}
         productBarcode={selectedBarcode}
         type="manual"
+        composite={composite}
       />
 
       <SalesItemQuantityModal
@@ -133,6 +136,7 @@ export const RightSideProductCardGrid: React.FC<
         productName={productName}
         expiryDate={null}
         quantity={quantity}
+        composite={composite}
       />
     </>
   );

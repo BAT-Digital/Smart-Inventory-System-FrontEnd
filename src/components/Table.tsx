@@ -247,7 +247,7 @@ export const AccountingProductTable: React.FC<Props> = ({
     key: index.toString(),
     id: product.productId,
     name: product.productName,
-    perishable: product.isPerishable ? "Да" : "Нет",
+    perishable: product.isPerishable ? "Yes" : "No",
     description: product.description || "",
     composition: product.isComposite ? (
       <Button
@@ -362,7 +362,7 @@ export const AccountingCategoryProductTable: React.FC<CategoryProps> = ({
     key: index.toString(),
     id: product.productId,
     name: product.productName,
-    perishable: product.isPerishable ? "Да" : "Нет",
+    perishable: product.isPerishable ? "Yes" : "No",
     description: product.description || "",
     composition: product.isComposite ? (
       <Button

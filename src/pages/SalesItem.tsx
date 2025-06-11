@@ -42,6 +42,7 @@ export const SalesItem = () => {
   const [productName, setProductName] = useState(" ");
   const [batchItems, setBatchItems] = useState<BatchArrivalItem[]>([]);
   const [productId, setProductId] = useState(0);
+  const [composite, setComposite] = useState(false);
 
   const { salesItems, refetch: reFetchSalesItems } = useSalesItems({
     transactionId,
@@ -85,6 +86,7 @@ export const SalesItem = () => {
       const product: Product = response.data;
       setProductName(product.productName);
       setProductId(product.productId);
+      setComposite(product.isComposite);
 
       if (!product.isPerishable) {
         const salesItemDTO: SalesItemDTO = {
@@ -252,6 +254,7 @@ export const SalesItem = () => {
         productId={productId}
         productBarcode={barcode}
         type="automatic"
+        composite={composite}
       />
     </>
   );

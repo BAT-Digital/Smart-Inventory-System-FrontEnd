@@ -3,7 +3,6 @@ import { Menu } from "antd";
 import { Link } from "react-router-dom";
 import miniLogo from "../assets/miniLogo.png";
 import bell from "../assets/icons/bell.png";
-import settings from "../assets/icons/settings.png";
 import profile from "../assets/icons/profile.png";
 import { useNotifications } from "../contexts/NotificationContext";
 import Cookies from "js-cookie";
@@ -80,6 +79,15 @@ export const Navbar = () => {
                   Sales
                 </Link>
               </Menu.Item>
+              <Menu.Item
+                key="4"
+                className="bg-[#335C67] hover:bg-[#335C67] active:bg-[#335C67]"
+                style={{ backgroundColor: "#335C67" }}
+              >
+                <Link to="/sales" style={{ color: "white" }} className="mx-3">
+                  Sales History
+                </Link>
+              </Menu.Item>
               {userRole === "ROLE_ADMIN" && (
                 <>
                   <Menu.Item
@@ -101,9 +109,6 @@ export const Navbar = () => {
           </div>
         </div>
         <div className="flex items-center">
-          <Link to="/settings">
-            <img src={settings} alt="" className="h-7 w-auto px-2" />
-          </Link>
           <button
             onClick={toggleNotifications}
             className="relative cursor-pointer"

@@ -62,15 +62,6 @@ export const Login = () => {
                 >
                   <Input.Password className="h-10" placeholder="Password*" />
                 </Form.Item>
-                <div className="text-right mb-2">
-                  <a
-                    href="#"
-                    className="text-sm hover:underline"
-                    style={{ color: "#1E1E1E", textDecoration: "underline" }}
-                  >
-                    Forgot the password?
-                  </a>
-                </div>
                 <Form.Item>
                   <Button
                     size="large"

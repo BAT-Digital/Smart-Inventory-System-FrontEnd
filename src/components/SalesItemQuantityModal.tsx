@@ -12,6 +12,7 @@ type Props = {
   productName: string;
   expiryDate: string | null;
   quantity: number;
+  composite: boolean;
 };
 
 export const SalesItemQuantityModal = ({
@@ -23,6 +24,7 @@ export const SalesItemQuantityModal = ({
   productName,
   expiryDate,
   quantity,
+  composite,
 }: Props) => {
   const [form] = Form.useForm();
   const [alertVisible, setAlertVisible] = useState(false);
@@ -74,9 +76,13 @@ export const SalesItemQuantityModal = ({
               </Form.Item>
             </div>
             <div className="ml-1">
-              <span style={{ color: "white", fontSize: 18 }}>
-                out of {quantity}
-              </span>
+              {composite ? (
+                ""
+              ) : (
+                <span style={{ color: "white", fontSize: 18 }}>
+                  out of {quantity}
+                </span>
+              )}
             </div>
           </div>
           <div className="flex justify-between">

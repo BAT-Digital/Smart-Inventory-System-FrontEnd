@@ -18,6 +18,7 @@ type Props = {
   productId: number;
   productBarcode: string;
   type: string;
+  composite: boolean;
 };
 
 export const ProductExpirySelectModal = ({
@@ -30,6 +31,7 @@ export const ProductExpirySelectModal = ({
   productId,
   productBarcode,
   type,
+  composite,
 }: Props) => {
   const [form] = Form.useForm();
   const [isQuantityModalOpen, setIsQuantityModalOpen] = useState(false);
@@ -172,6 +174,7 @@ export const ProductExpirySelectModal = ({
         productName={productName}
         expiryDate={selectedOption}
         quantity={quantity}
+        composite={composite}
       />
     </>
   );
