@@ -34,7 +34,7 @@ export const LeftSide: React.FC<Props> = ({ transactionId, salesItems }) => {
     number: index + 1,
     name: salesItem.product.productName,
     quantity: salesItem.quantity,
-    price: "$" + String(parseInt(salesItem.product.price) * salesItem.quantity),
+    price: "₸" + String(parseInt(salesItem.product.price) * salesItem.quantity),
   }));
 
   const name = useSalesItemsName({ transactionId });
@@ -97,7 +97,7 @@ export const LeftSide: React.FC<Props> = ({ transactionId, salesItems }) => {
         {/* Bottom Price */}
         <div className="flex-[2] p-4 border-t flex justify-end bg-[#335C67]">
           <div className="text-lg font-semibold text-white">
-            total: ${total}
+            total: ₸{total}
           </div>
         </div>
       </Card>

@@ -80,18 +80,22 @@ export const Navbar = () => {
                 </Link>
               </Menu.Item>
               <Menu.Item
-                key="4"
+                key="5"
                 className="bg-[#335C67] hover:bg-[#335C67] active:bg-[#335C67]"
                 style={{ backgroundColor: "#335C67" }}
               >
-                <Link to="/sales" style={{ color: "white" }} className="mx-3">
+                <Link
+                  to="/sales-history"
+                  style={{ color: "white" }}
+                  className="mx-3"
+                >
                   Sales History
                 </Link>
               </Menu.Item>
               {userRole === "ROLE_ADMIN" && (
                 <>
                   <Menu.Item
-                    key="5"
+                    key="6"
                     className="bg-[#335C67] hover:bg-[#335C67] active:bg-[#335C67]"
                     style={{ backgroundColor: "#335C67" }}
                   >

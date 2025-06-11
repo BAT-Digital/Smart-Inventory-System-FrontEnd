@@ -11,6 +11,9 @@ import { BatchArrival } from "../types/BatchArrivals";
 import { useBatchArrivalItems } from "../hooks/useBatchArrivalItems";
 import { BatchArrivalItemsModal } from "./BatchArrivalItemsModal";
 import { User } from "../types/User";
+import { SalesTransaction } from "../hooks/useSalesTransactions";
+import { useSalesItems } from "../hooks/useSalesItems";
+import { SalesItemsModal } from "./SalesItemsModal";
 
 type UserTableProps = {
   users: User[];
@@ -208,6 +211,99 @@ export const ReceiptTable = ({ data, loading }: ReceiptTableProps) => {
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         batchItems={batchItems}
+      />
+    </>
+  );
+};
+
+type SalesHistoryTableProps = {
+  salesTransactions: SalesTransaction[];
+  loading: boolean;
+};
+
+export const SalesHistoryTable = ({
+  salesTransactions,
+  loading,
+}: SalesHistoryTableProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [transactionId, setSelectedTransactionId] = useState<number>(0);
+
+  const { salesItems: salesItems } = useSalesItems({ transactionId });
+
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Сredentials",
+      dataIndex: "credentials",
+      key: "credentials",
+    },
+    {
+      title: "Products",
+      dataIndex: "products",
+      key: "products",
+    },
+    {
+      title: "Total Amount",
+      dataIndex: "totalAmount",
+      key: "totalAmount",
+    },
+    {
+      title: "Transaction Date",
+      dataIndex: "transactionDate",
+      key: "transactionDate",
+    },
+  ];
+
+  const handleSeeProducts = (transactionId: number) => {
+    setSelectedTransactionId(transactionId);
+    setIsModalOpen(true);
+  };
+
+  const mappedData = salesTransactions.map((transaction, index: number) => ({
+    key: index,
+    id: transaction.transactionId,
+    credentials: transaction.credentials,
+    products: (
+      <Button
+        type="primary"
+        block
+        style={{
+          backgroundColor: "#335C67",
+          color: "#FFFFFF",
+        }}
+        onClick={() => {
+          handleSeeProducts(transaction.transactionId);
+        }}
+      >
+        See
+      </Button>
+    ),
+    totalAmount: "₸" + String(transaction.totalAmount),
+    transactionDate: new Date(transaction.transactionDate).toLocaleString(
+      "ru-RU"
+    ),
+  }));
+
+  return (
+    <>
+      <div className="px-4">
+        <Table
+          dataSource={mappedData}
+          columns={columns}
+          loading={loading}
+          pagination={{ pageSize: 7 }}
+          bordered
+          className="custom-ant-table custom-border-table"
+        />
+      </div>
+      <SalesItemsModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        salesItems={salesItems}
       />
     </>
   );

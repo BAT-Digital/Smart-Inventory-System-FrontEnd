@@ -22,7 +22,11 @@ const CardGrid: React.FC<Props> = ({ salesTransactions }) => {
               title={
                 <div className="flex justify-between items-center text-base font-semibold text-white">
                   <span>{salesTransaction.credentials}</span>
-                  <span>{salesTransaction.transactionDate}</span>
+                  <span>
+                    {new Date(salesTransaction.transactionDate).toLocaleString(
+                      "ru-RU"
+                    )}
+                  </span>
                 </div>
               }
             >

@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import plus from "../assets/icons/+.png";
 import plusCard from "../assets/icons/plus.png";
 import backArrowCard from "../assets/icons/backArrowCard.png";
+import { DatePicker } from "antd";
+import type { Dayjs } from "dayjs";
 
 interface TableActionsProps {
   onSearch: (value: string) => void;
@@ -51,6 +53,69 @@ export const TableActions: React.FC<TableActionsProps> = ({
         >
           Scan item
         </Button>
+      </div>
+    </div>
+  );
+};
+
+interface SalesHistoryTableActionsProps {
+  onSearch: (from: string | null, to: string | null) => void;
+  total: number;
+}
+
+export const SalesHistoryTableActions: React.FC<
+  SalesHistoryTableActionsProps
+> = ({ onSearch, total }) => {
+  const [fromDate, setFromDate] = useState<Dayjs | null>(null);
+  const [toDate, setToDate] = useState<Dayjs | null>(null);
+
+  const handleFromDateChange = (date: Dayjs | null) => {
+    setFromDate(date);
+  };
+
+  const handleToDateChange = (date: Dayjs | null) => {
+    setToDate(date);
+  };
+
+  const handleSearch = () => {
+    const from = fromDate ? fromDate.format("YYYY-MM-DD") : null;
+    const to = toDate ? toDate.format("YYYY-MM-DD") : null;
+    onSearch(from, to);
+  };
+
+  return (
+    <div className="flex justify-between items-center mb-4 gap-4 flex-wrap">
+      <div className="flex gap-2 flex-wrap items-center">
+        <DatePicker
+          placeholder="From Date"
+          value={fromDate}
+          onChange={handleFromDateChange}
+          style={{ width: 150 }}
+        />
+        <DatePicker
+          placeholder="To Date"
+          value={toDate}
+          onChange={handleToDateChange}
+          style={{ width: 150 }}
+        />
+        <div>
+          <Button
+            type="primary"
+            block
+            style={{
+              backgroundColor: "#FFF3B0",
+              color: "#1E1E1E",
+            }}
+            onClick={handleSearch}
+          >
+            Filter
+          </Button>
+        </div>
+      </div>
+      <div className="flex items-center pr-1">
+        <div className="text-lg font-semibold text-black">
+          Revenue: ₸{total}
+        </div>
       </div>
     </div>
   );
